@@ -3,7 +3,8 @@ AOS.init({
     duration: 800,
     easing: 'ease-in-out',
     once: true,
-    mirror: false
+    mirror: false,
+    offset: 100
 });
 
 // Dark Mode Toggle
@@ -214,12 +215,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('animate-in');
+                const element = entry.target;
+                
+                // Ajouter des animations personnalisées
+                if (element.classList.contains('animate-on-scroll')) {
+                    const animationType = element.dataset.animation || 'fade-in-scale';
+                    element.classList.add(`animate-${animationType}`);
+                }
+                
+                // Animation pour les cartes
+                if (element.classList.contains('card-enhanced')) {
+                    element.style.animationDelay = Math.random() * 0.5 + 's';
+                    element.classList.add('animate-fade-in-scale');
+                }
             }
         });
     }, observerOptions);
     
-    document.querySelectorAll('.card, .timeline-item').forEach(el => {
+    document.querySelectorAll('.card-enhanced, .timeline-item, .animate-on-scroll').forEach(el => {
         observer.observe(el);
     });
 });
@@ -390,12 +403,196 @@ function showNotification(message, type = 'info', duration = 5000) {
     }, duration);
 }
 
+// Amélioration du filtrage des projets
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('[data-filter]');
+    const projectItems = document.querySelectorAll('.project-item');
+    
+    if (filterButtons.length > 0) {
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                
+                // Mettre à jour les boutons actifs
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Filtrer les projets avec animation
+                projectItems.forEach((item, index) => {
+                    const shouldShow = filter === 'all' || 
+                                     (filter === 'featured' && item.getAttribute('data-featured') === 'true') ||
+                                     item.getAttribute('data-status') === filter;
+                    
+                    if (shouldShow) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.classList.add('animate-fade-in-scale');
+                        }, index * 100);
+                    } else {
+                        item.classList.remove('animate-fade-in-scale');
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 200);
+                    }
+                });
+            });
+        });
+    }
+});
+
+// Amélioration de la recherche en temps réel
+function setupLiveSearch() {
+    const searchInput = document.getElementById('liveSearch');
+    if (!searchInput) return;
+    
+    let searchTimeout;
+    
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = this.value.toLowerCase();
+        
+        searchTimeout = setTimeout(() => {
+            const searchableItems = document.querySelectorAll('.searchable-item');
+            let visibleCount = 0;
+            
+            searchableItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                const matches = text.includes(query) || query === '';
+                
+                if (matches) {
+                    item.style.display = 'block';
+                    item.classList.add('search-match');
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                    item.classList.remove('search-match');
+                }
+            });
+            
+            // Afficher/masquer le message "aucun résultat"
+            const noResults = document.getElementById('noSearchResults');
+            if (noResults) {
+                noResults.style.display = visibleCount === 0 && query !== '' ? 'block' : 'none';
+            }
+        }, 300);
+    });
+}
+
+// Amélioration des tooltips
+function setupEnhancedTooltips() {
+    const tooltipElements = document.querySelectorAll('[data-tooltip]');
+    
+    tooltipElements.forEach(element => {
+        element.classList.add('tooltip-enhanced');
+        
+        element.addEventListener('mouseenter', function() {
+            this.classList.add('tooltip-active');
+        });
+        
+        element.addEventListener('mouseleave', function() {
+            this.classList.remove('tooltip-active');
+        });
+    });
+}
+
+// Système de notifications amélioré
+class NotificationSystem {
+    constructor() {
+        this.container = this.createContainer();
+    }
+    
+    createContainer() {
+        const container = document.createElement('div');
+        container.className = 'notification-container';
+        container.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            pointer-events: none;
+        `;
+        document.body.appendChild(container);
+        return container;
+    }
+    
+    show(message, type = 'info', duration = 5000) {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.style.cssText = `
+            background: ${this.getBackgroundColor(type)};
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            pointer-events: auto;
+            cursor: pointer;
+            max-width: 300px;
+            word-wrap: break-word;
+        `;
+        
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span>${message}</span>
+                <i class="fas fa-times" style="margin-left: 10px; cursor: pointer;"></i>
+            </div>
+        `;
+        
+        this.container.appendChild(notification);
+        
+        // Animation d'entrée
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 10);
+        
+        // Fermeture automatique
+        const autoClose = setTimeout(() => {
+            this.remove(notification);
+        }, duration);
+        
+        // Fermeture manuelle
+        notification.addEventListener('click', () => {
+            clearTimeout(autoClose);
+            this.remove(notification);
+        });
+    }
+    
+    remove(notification) {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }
+    
+    getBackgroundColor(type) {
+        const colors = {
+            success: '#28a745',
+            error: '#dc3545',
+            warning: '#ffc107',
+            info: '#17a2b8'
+        };
+        return colors[type] || colors.info;
+    }
+}
+
+// Initialiser le système de notifications
+const notificationSystem = new NotificationSystem();
+window.showNotification = (message, type, duration) => {
+    notificationSystem.show(message, type, duration);
+};
+
 // Initialize all enhanced features
 document.addEventListener('DOMContentLoaded', function() {
     initializeTheme();
     initializeSearch();
     enhanceFormValidation();
     trackPerformance();
+    setupLiveSearch();
+    setupEnhancedTooltips();
 });
 
 // Service Worker Registration

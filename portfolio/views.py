@@ -13,6 +13,7 @@ from .models import (
 )
 from .forms import ContactForm
 import json
+from django.db.models import Q
 
 class BaseView(TemplateView):
     def get_context_data(self, **kwargs):
@@ -73,12 +74,39 @@ class ProjectListView(ListView):
     context_object_name = 'projects'
     paginate_by = 6
     
+    def get_queryset(self):
+        queryset = Project.objects.all()
+        
+        # Filtrage par statut
+        status = self.request.GET.get('status')
+        if status:
+            queryset = queryset.filter(status=status)
+        
+        # Filtrage par projets vedettes
+        featured = self.request.GET.get('featured')
+        if featured == 'true':
+            queryset = queryset.filter(is_featured=True)
+        
+        # Recherche
+        search = self.request.GET.get('search')
+        if search:
+            queryset = queryset.filter(
+                Q(title__icontains=search) |
+                Q(description__icontains=search) |
+                Q(technologies__icontains=search)
+            )
+        
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Ajout des données de base manuellement
         try:
             context['profile'] = Profile.objects.first()
             context['site_settings'] = SiteSettings.objects.first()
+            context['search_query'] = self.request.GET.get('search', '')
+            context['current_status'] = self.request.GET.get('status', '')
+            context['show_featured'] = self.request.GET.get('featured', '')
         except:
             context['profile'] = None
             context['site_settings'] = None

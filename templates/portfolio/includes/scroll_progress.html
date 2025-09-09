@@ -1,0 +1,142 @@
+<!-- Indicateur de progression de scroll -->
+<div class="scroll-progress-container">
+    <div class="scroll-progress-bar" id="scrollProgress"></div>
+</div>
+
+<!-- Bouton retour en haut amélioré -->
+<button class="scroll-to-top" id="scrollToTop" title="Retour en haut">
+    <i class="fas fa-arrow-up"></i>
+    <div class="scroll-progress-circle">
+        <svg class="progress-ring" width="50" height="50">
+            <circle class="progress-ring-circle" 
+                    cx="25" cy="25" r="20" 
+                    fill="transparent" 
+                    stroke="rgba(255,255,255,0.3)" 
+                    stroke-width="2"/>
+            <circle class="progress-ring-progress" 
+                    cx="25" cy="25" r="20" 
+                    fill="transparent" 
+                    stroke="white" 
+                    stroke-width="2"
+                    stroke-linecap="round"/>
+        </svg>
+    </div>
+</button>
+
+<style>
+.scroll-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.scroll-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    width: 0%;
+    transition: width 0.1s ease;
+}
+
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.scroll-to-top:hover {
+    transform: scale(1.1);
+    background: var(--secondary);
+}
+
+.scroll-to-top.visible {
+    display: flex;
+}
+
+.scroll-progress-circle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-progress {
+    stroke-dasharray: 125.6;
+    stroke-dashoffset: 125.6;
+    transition: stroke-dashoffset 0.1s ease;
+}
+
+body.dark-mode .scroll-progress-container {
+    background: rgba(255,255,255,0.1);
+}
+
+@media (max-width: 768px) {
+    .scroll-to-top {
+        width: 45px;
+        height: 45px;
+        bottom: 20px;
+        right: 20px;
+        font-size: 1rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollProgress = document.getElementById('scrollProgress');
+    const scrollToTop = document.getElementById('scrollToTop');
+    const progressRing = document.querySelector('.progress-ring-progress');
+    const circumference = 2 * Math.PI * 20; // rayon = 20
+
+    function updateScrollProgress() {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        
+        // Mettre à jour la barre de progression
+        scrollProgress.style.width = scrollPercent + '%';
+        
+        // Mettre à jour le cercle de progression
+        const offset = circumference - (scrollPercent / 100) * circumference;
+        progressRing.style.strokeDashoffset = offset;
+        
+        // Afficher/masquer le bouton
+        if (scrollTop > 300) {
+            scrollToTop.classList.add('visible');
+        } else {
+            scrollToTop.classList.remove('visible');
+        }
+    }
+
+    window.addEventListener('scroll', updateScrollProgress);
+    
+    scrollToTop.addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+});
+</script>

@@ -502,6 +502,20 @@ h1, h2, h3, h4, h5, h6 {
         right: 20px;
         font-size: 1.2rem;
     }
+    
+    .hero-section .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .masonry-grid {
+        column-count: 1;
+    }
+    
+    .card-enhanced:hover {
+        transform: translateY(-5px) scale(1.01);
+    }
 }
 
 /* Accessibility Improvements */
@@ -532,4 +546,43 @@ h1, h2, h3, h4, h5, h6 {
     .btn {
         border: 2px solid currentColor;
     }
+    
+    .progress-bar {
+        background: #000 !important;
+    }
+    
+    .badge {
+        border: 1px solid currentColor;
+    }
+}
+
+/* Améliorations pour les animations */
+.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.search-match {
+    background: rgba(255, 255, 0, 0.1);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+/* Améliorations pour les notifications */
+.notification-container {
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+/* Améliorations pour la recherche */
+.search-highlight {
+    background: linear-gradient(120deg, #a8e6cf 0%, #dcedc1 100%);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+body.dark-mode .search-highlight {
+    background: linear-gradient(120deg, #2d5a3d 0%, #4a5c2a 100%);
+    color: #a8e6cf;
 }

@@ -1,0 +1,430 @@
+/* Améliorations responsives pour le portfolio */
+
+/* Variables pour les breakpoints */
+:root {
+    --breakpoint-xs: 576px;
+    --breakpoint-sm: 768px;
+    --breakpoint-md: 992px;
+    --breakpoint-lg: 1200px;
+    --breakpoint-xl: 1400px;
+}
+
+/* Améliorations pour très petits écrans */
+@media (max-width: 375px) {
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    .hero-section {
+        padding: 60px 0;
+    }
+    
+    .display-4 {
+        font-size: 1.8rem;
+    }
+    
+    .lead {
+        font-size: 1rem;
+    }
+    
+    .btn-lg {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    .timeline-item-enhanced {
+        padding-left: 40px;
+    }
+    
+    .timeline-enhanced::before {
+        left: 15px;
+    }
+    
+    .timeline-item-enhanced::before {
+        left: 7px;
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* Améliorations pour petits écrans */
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 8px 15px;
+    }
+    
+    .hero-section .profile-image,
+    .hero-section .profile-placeholder {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        border-radius: 0.375rem !important;
+        margin-bottom: 5px;
+    }
+    
+    .masonry-grid {
+        column-count: 1;
+        column-gap: 1rem;
+    }
+    
+    .project-badges {
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .search-filters .btn-group {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .search-filters .btn-group .btn {
+        margin-bottom: 0;
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+}
+
+/* Améliorations pour tablettes */
+@media (min-width: 577px) and (max-width: 768px) {
+    .hero-section .row {
+        align-items: center;
+    }
+    
+    .hero-section .profile-image,
+    .hero-section .profile-placeholder {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .masonry-grid {
+        column-count: 2;
+        column-gap: 1.25rem;
+    }
+    
+    .timeline-item-enhanced {
+        padding-left: 70px;
+    }
+    
+    .card-enhanced:hover {
+        transform: translateY(-8px) scale(1.02);
+    }
+}
+
+/* Améliorations pour écrans moyens */
+@media (min-width: 769px) and (max-width: 992px) {
+    .container {
+        max-width: 750px;
+    }
+    
+    .hero-section .profile-image,
+    .hero-section .profile-placeholder {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .masonry-grid {
+        column-count: 2;
+        column-gap: 1.5rem;
+    }
+    
+    .project-card .card-body {
+        padding: 20px;
+    }
+    
+    .timeline-item-enhanced {
+        padding-left: 80px;
+    }
+}
+
+/* Améliorations pour grands écrans */
+@media (min-width: 993px) and (max-width: 1200px) {
+    .container {
+        max-width: 970px;
+    }
+    
+    .masonry-grid {
+        column-count: 3;
+    }
+    
+    .hero-section .profile-image,
+    .hero-section .profile-placeholder {
+        width: 280px;
+        height: 280px;
+    }
+}
+
+/* Améliorations pour très grands écrans */
+@media (min-width: 1201px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .hero-section .profile-image,
+    .hero-section .profile-placeholder {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .masonry-grid {
+        column-count: 3;
+        column-gap: 2rem;
+    }
+    
+    .card-enhanced:hover {
+        transform: translateY(-12px) scale(1.03);
+    }
+}
+
+/* Améliorations pour écrans ultra-larges */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
+    
+    .masonry-grid {
+        column-count: 4;
+    }
+    
+    .hero-section {
+        min-height: 100vh;
+    }
+    
+    .hero-section .profile-image,
+    .hero-section .profile-placeholder {
+        width: 350px;
+        height: 350px;
+    }
+}
+
+/* Améliorations pour l'orientation paysage sur mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero-section {
+        min-height: auto;
+        padding: 40px 0;
+    }
+    
+    .hero-section .profile-image,
+    .hero-section .profile-placeholder {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .navbar {
+        padding: 0.25rem 0;
+    }
+}
+
+/* Améliorations pour les écrans haute densité */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .profile-image,
+    .project-image {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* Améliorations pour l'impression */
+@media print {
+    .navbar,
+    .scroll-to-top,
+    .scroll-progress-container,
+    .particles,
+    .btn,
+    .modal,
+    .loading-screen {
+        display: none !important;
+    }
+    
+    .hero-section {
+        background: white !important;
+        color: black !important;
+        min-height: auto;
+        padding: 20px 0;
+    }
+    
+    .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+        margin-bottom: 20px;
+    }
+    
+    .timeline-item-enhanced {
+        break-inside: avoid;
+        margin-bottom: 20px;
+    }
+    
+    .timeline-enhanced::before {
+        background: #333 !important;
+    }
+    
+    .text-primary,
+    .text-secondary {
+        color: #333 !important;
+    }
+    
+    .bg-primary,
+    .bg-secondary {
+        background: #f8f9fa !important;
+        color: #333 !important;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+    }
+    
+    .container {
+        max-width: none;
+        padding: 0;
+    }
+}
+
+/* Améliorations pour les préférences d'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .animate-float,
+    .animate-pulse,
+    .particles {
+        animation: none !important;
+    }
+    
+    .hover-lift:hover,
+    .hover-scale:hover,
+    .hover-rotate:hover {
+        transform: none !important;
+    }
+}
+
+@media (prefers-contrast: high) {
+    .card {
+        border: 2px solid #000 !important;
+    }
+    
+    .btn {
+        border: 2px solid currentColor !important;
+    }
+    
+    .timeline-enhanced::before {
+        background: #000 !important;
+    }
+    
+    .progress-bar {
+        background: #000 !important;
+    }
+}
+
+/* Améliorations pour le mode sombre sur mobile */
+@media (max-width: 768px) {
+    body.dark-mode .card {
+        background: #1a1a1a;
+        border-color: #333;
+    }
+    
+    body.dark-mode .navbar {
+        background: #0d0d0d !important;
+    }
+    
+    body.dark-mode .modal-content {
+        background: #1a1a1a;
+    }
+}
+
+/* Optimisations pour les connexions lentes */
+@media (max-width: 768px) and (max-resolution: 150dpi) {
+    .particles {
+        display: none;
+    }
+    
+    .card-enhanced {
+        backdrop-filter: none;
+        background: white;
+    }
+    
+    body.dark-mode .card-enhanced {
+        background: #2d2d2d;
+    }
+    
+    .animate-float,
+    .animate-pulse {
+        animation: none;
+    }
+}
+
+/* Améliorations pour les écrans tactiles */
+@media (hover: none) and (pointer: coarse) {
+    .hover-lift,
+    .hover-scale,
+    .hover-rotate,
+    .hover-glow {
+        transition: none;
+    }
+    
+    .hover-lift:hover,
+    .hover-scale:hover,
+    .hover-rotate:hover {
+        transform: none;
+    }
+    
+    .btn,
+    .card {
+        transition: none;
+    }
+    
+    .tooltip-enhanced::before,
+    .tooltip-enhanced::after {
+        display: none;
+    }
+    
+    /* Augmenter la taille des éléments cliquables */
+    .btn {
+        min-height: 44px;
+        padding: 12px 20px;
+    }
+    
+    .nav-link {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .scroll-to-top {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+}
