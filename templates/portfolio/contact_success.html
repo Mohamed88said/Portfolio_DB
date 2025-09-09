@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Message envoyé" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+            <div class="success-message" data-aos="zoom-in">
+                <div class="success-icon mb-4">
+                    <i class="fas fa-check-circle text-success" style="font-size: 5rem;"></i>
+                </div>
+                
+                <h1 class="display-4 text-success mb-4">{% trans "Message envoyé !" %}</h1>
+                
+                <p class="lead mb-4">
+                    {% trans "Merci pour votre message. Je vous répondrai dans les plus brefs délais." %}
+                </p>
+                
+                <div class="success-actions">
+                    <a href="{% url 'portfolio:home' %}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-home me-2"></i>{% trans "Retour à l'accueil" %}
+                    </a>
+                    <a href="{% url 'portfolio:contact' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-envelope me-2"></i>{% trans "Envoyer un autre message" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.success-message {
+    padding: 3rem 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+body.dark-mode .success-message {
+    background: #2d2d2d;
+}
+
+.success-icon {
+    animation: bounceIn 1s ease-out;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .success-actions .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+</style>
+{% endblock %}

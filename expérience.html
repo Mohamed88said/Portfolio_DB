@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="experience_title">Expériences Professionnelles - Mohamed Saïd Diallo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JT25QS5BC5"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-JT25QS5BC5');
+    </script>
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+    <link rel="manifest" href="site.webmanifest">
+    
+    <style>
+        :root {
+            --primary: #1a0033;
+            --secondary: #330000;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #121212;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 100px;
+            transition: var(--transition);
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Mode Sombre */
+        body.dark-mode {
+            background-color: var(--dark);
+            color: var(--text-light);
+        }
+
+        body.dark-mode .experience-card {
+            background: #222;
+            border-left-color: #444;
+        }
+
+        body.dark-mode .skill-tag {
+            background: #333;
+        }
+
+        /* Header animé */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: slideDown 0.6s ease-out 0.2s forwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #330000, #1a0033, #000033, #33001a);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        /* Navigation animée */
+        nav {
+            display: flex;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+            padding: 15px;
+            backdrop-filter: blur(5px);
+            margin-top: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 30px;
+            transition: var(--transition);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 77, 77, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        nav a:hover::before {
+            left: 100%;
+        }
+
+        /* Conteneurs */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        /* Cartes d'expérience avec animation */
+        .experience-card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            border-left: 4px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .experience-card:nth-child(1) {
+            animation: fadeUp 0.6s ease-out 0.4s forwards;
+        }
+        
+        .experience-card:nth-child(2) {
+            animation: fadeUp 0.6s ease-out 0.6s forwards;
+        }
+        
+        .experience-card:nth-child(3) {
+            animation: fadeUp 0.6s ease-out 0.8s forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .experience-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,77,77,0.1), rgba(77,121,255,0.1));
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 0;
+        }
+
+        .experience-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .experience-card:hover::after {
+            opacity: 1;
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .experience-title {
+            font-size: 1.4rem;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .experience-date {
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .experience-card:hover .experience-date {
+            background: linear-gradient(90deg, var(--accent), #4d79ff);
+            transform: scale(1.05);
+        }
+
+        .experience-company {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .experience-company i {
+            margin-right: 8px;
+            color: var(--accent);
+        }
+
+        .experience-description ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .experience-description li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .experience-description li::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* Compétences */
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .skill-tag {
+            background: var(--light);
+            color: var(--accent);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid var(--accent);
+            transition: var(--transition);
+        }
+
+        .skill-tag:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        body.dark-mode .skill-tag {
+            background: #333;
+            color: var(--accent);
+        }
+
+        body.dark-mode .skill-tag:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Footer comme sur la page d'accueil */
+        footer {
+            padding: 15px 20px;
+            height: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 10;
+            transform: translateY(30px);
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out 0.8s forwards;
+        }
+
+        .footer-left {
+            flex: 1;
+            text-align: left;
+        }
+
+        .footer-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .footer-right {
+            flex: 1;
+            text-align: right;
+        }
+
+        .copyright {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            white-space: nowrap;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        /* Contrôles (mode sombre + langue) */
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: slideDown 0.6s ease-out 0.2s forwards;
+        }
+
+        .dark-mode-toggle, .language-select {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: var(--transition);
+        }
+
+        .dark-mode-toggle:hover, .language-select:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, var(--accent), #4d79ff);
+        }
+
+        .language-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 30px;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        /* Animations */
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes textGlow {
+            0% {
+                text-shadow: 0 0 5px rgba(255, 77, 77, 0.3);
+            }
+            100% {
+                text-shadow: 0 0 15px rgba(77, 121, 255, 0.6);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .experience-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .experience-date {
+                margin-top: 10px;
+            }
+            
+            nav {
+                flex-wrap: wrap;
+            }
+            
+            nav a {
+                margin: 5px;
+                padding: 8px 15px;
+            }
+            
+            .controls {
+                top: 10px;
+                right: 10px;
+            }
+            
+            footer {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .footer-left, .footer-center, .footer-right {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .social-links {
+                gap: 12px;
+            }
+            
+            .social-links a {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+            }
+            
+            .copyright {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Contrôles -->
+    <div class="controls">
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i>
+        </button>
+        <select class="language-select" onchange="changeLanguage(this.value)">
+            <option value="fr">FR</option>
+            <option value="en">EN</option>
+            <option value="ar">AR</option>
+            <option value="es">ES</option>
+            <option value="de">DE</option>
+            <option value="pt">PT</option>
+        </select>
+    </div>
+
+    <header>
+        <div class="animated-bg"></div>
+        <div class="header-content">
+            <h1 data-i18n="experience_title">Expériences Professionnelles</h1>
+            <nav>
+                <a href="index.html" data-i18n="nav_home">Accueil</a>
+                <a href="Parcoursacadémique.html" data-i18n="nav_academic">Parcours Académique</a>
+                <a href="expérience.html" data-i18n="nav_experience">Expériences</a>
+                <a href="certification.html" data-i18n="nav_certifications">Certifications</a>
+                <a href="contact.html" data-i18n="nav_contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Expérience 1 -->
+        <div class="experience-card">
+            <div class="experience-header">
+                <div>
+                    <h2 class="experience-title" data-i18n="exp1_title">Stage Professionnel en Banque</h2>
+                    <div class="experience-company">
+                        <i class="fas fa-building"></i>
+                        <span data-i18n="exp1_company">United Bank for Africa (UBA) Guinée</span>
+                    </div>
+                </div>
+                <span class="experience-date" data-i18n="exp1_date">Juillet 2023 - Septembre 2023</span>
+            </div>
+            <div class="experience-description">
+                <p data-i18n="exp1_desc">Stage intensif de 3 mois au sein d'une des principales banques panafricaines, avec immersion complète dans les différents services bancaires et participation active aux opérations quotidiennes :</p>
+                <ul>
+                    <li data-i18n="exp1_resp1">Accueil, orientation et conseil personnalisé pour une clientèle diversifiée</li>
+                    <li data-i18n="exp1_resp2">Participation active aux campagnes de prospection commerciale et élaboration de stratégies marketing</li>
+                    <li data-i18n="exp1_resp3">Analyse approfondie des dossiers de financement et évaluation des risques crédit</li>
+                    <li data-i18n="exp1_resp4">Maîtrise des outils bancaires internes (Système Core Banking, logiciels de gestion)</li>
+                    <li data-i18n="exp1_resp5">Participation à des réunions stratégiques et contribution à des projets d'amélioration des processus</li>
+                </ul>
+                <p data-i18n="exp1_achievement"><strong>Réalisation marquante :</strong> Proposition d'un système de suivi client qui a été adopté par l'agence pour améliorer la fidélisation.</p>
+            </div>
+            <div class="skills-list">
+                <span class="skill-tag" data-i18n="skill1">Relation client</span>
+                <span class="skill-tag" data-i18n="skill2">Analyse financière</span>
+                <span class="skill-tag" data-i18n="skill3">Prospection commerciale</span>
+                <span class="skill-tag" data-i18n="skill4">Gestion de compte</span>
+                <span class="skill-tag" data-i18n="skill9">Analyse de risque</span>
+                <span class="skill-tag" data-i18n="skill10">Outils bancaires</span>
+            </div>
+        </div>
+
+        <!-- Expérience 2 -->
+        <div class="experience-card">
+            <div class="experience-header">
+                <div>
+                    <h2 class="experience-title" data-i18n="exp2_title">Responsable de l'Axe Débats</h2>
+                    <div class="experience-company">
+                        <i class="fas fa-users"></i>
+                        <span data-i18n="exp2_company">LCIn (Lions Club International) - Université Gamal Abdel Nasser</span>
+                    </div>
+                </div>
+                <span class="experience-date" data-i18n="exp2_date">Septembre 2021 - Juin 2022</span>
+            </div>
+            <div class="experience-description">
+                <p data-i18n="exp2_desc">Responsable du pôle débat au sein de cette organisation étudiante prestigieuse, avec pour mission de développer la culture du débat constructif et de l'éloquence parmi les étudiants :</p>
+                <ul>
+                    <li data-i18n="exp2_resp1">Organisation et animation de 12 débats publics sur des thèmes d'actualité (politique, société, économie)</li>
+                    <li data-i18n="exp2_resp2">Encadrement et formation d'une équipe de 10 membres actifs</li>
+                    <li data-i18n="exp2_resp3">Gestion d'un budget annuel et recherche de partenariats</li>
+                    <li data-i18n="exp2_resp4">Coordination avec les autres pôles pour l'organisation d'événements interdisciplinaires</li>
+                    <li data-i18n="exp2_resp5">Création d'un programme de formation à l'art oratoire pour les nouveaux membres</li>
+                </ul>
+                <p data-i18n="exp2_achievement"><strong>Réalisation marquante :</strong> Organisation d'un tournoi interuniversitaire de débat qui a rassemblé plus de 150 participants.</p>
+            </div>
+            <div class="skills-list">
+                <span class="skill-tag" data-i18n="skill5">Leadership</span>
+                <span class="skill-tag" data-i18n="skill6">Gestion budgétaire</span>
+                <span class="skill-tag" data-i18n="skill7">Gestion de projet</span>
+                <span class="skill-tag" data-i18n="skill8">Animation d'équipe</span>
+                <span class="skill-tag" data-i18n="skill11">Art oratoire</span>
+                <span class="skill-tag" data-i18n="skill12">Négociation</span>
+            </div>
+        </div>
+
+        <!-- Expérience 3 - Nouvelle -->
+        <div class="experience-card">
+            <div class="experience-header">
+                <div>
+                    <h2 class="experience-title" data-i18n="exp3_title">Projet Entrepreneurial Étudiant</h2>
+                    <div class="experience-company">
+                        <i class="fas fa-lightbulb"></i>
+                        <span data-i18n="exp3_company">Initiative Personnelle - Conakry</span>
+                    </div>
+                </div>
+                <span class="experience-date" data-i18n="exp3_date">Janvier 2022 - Présent</span>
+            </div>
+            <div class="experience-description">
+                <p data-i18n="exp3_desc">Développement d'un projet entrepreneurial visant à répondre à un besoin identifié dans ma communauté, combinant innovation et utilité sociale :</p>
+                <ul>
+                    <li data-i18n="exp3_resp1">Conception et mise en œuvre d'une solution digitale pour faciliter l'accès à l'éducation financière</li>
+                    <li data-i18n="exp3_resp2">Recherche de marché et analyse des besoins des utilisateurs</li>
+                    <li data-i18n="exp3_resp3">Développement d'un prototype fonctionnel avec une équipe de 3 personnes</li>
+                    <li data-i18n="exp3_resp4">Présentation du projet à des investisseurs potentiels et recherche de financement</li>
+                    <li data-i18n="exp3_resp5">Participation à des compétitions entrepreneuriales étudiantes</li>
+                </ul>
+                <p data-i18n="exp3_achievement"><strong>Réalisation marquante :</strong> Sélection parmi les 10 finalistes du concours national d'entrepreneuriat étudiant.</p>
+            </div>
+            <div class="skills-list">
+                <span class="skill-tag" data-i18n="skill13">Entrepreneuriat</span>
+                <span class="skill-tag" data-i18n="skill14">Gestion de projet</span>
+                <span class="skill-tag" data-i18n="skill15">Innovation</span>
+                <span class="skill-tag" data-i18n="skill16">Pitch commercial</span>
+                <span class="skill-tag" data-i18n="skill17">Analyse de marché</span>
+                <span class="skill-tag" data-i18n="skill18">Travail d'équipe</span>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-left">
+            <p class="copyright">&copy; <span id="currentYear"></span> Mohamed Saïd Diallo - <span data-i18n="rights">Tous droits réservés</span></p>
+        </div>
+        <div class="footer-center">
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/mohamed-saïdou-diallo-a97728251" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.facebook.com/me/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/mohamedsaid.diallo/?__pwa=1#" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="mailto:mohamedsaiddiallo88@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-right">
+            <!-- Espace pour éventuel contenu supplémentaire -->
+        </div>
+    </footer>
+
+    <script>
+        // ============ TRADUCTIONS ============
+        const translations = {
+            'fr': {
+                'experience_title': 'Expériences Professionnelles',
+                'nav_home': 'Accueil',
+                'nav_academic': 'Parcours Académique',
+                'nav_experience': 'Expériences',
+                'nav_certifications': 'Certifications',
+                'nav_contact': 'Contact',
+                'exp1_title': 'Stage Professionnel en Banque',
+                'exp1_company': 'United Bank for Africa (UBA) Guinée',
+                'exp1_date': 'Juillet 2023 - Septembre 2023',
+                'exp1_desc': 'Stage intensif de 3 mois au sein d\'une des principales banques panafricaines, avec immersion complète dans les différents services bancaires et participation active aux opérations quotidiennes :',
+                'exp1_resp1': 'Accueil, orientation et conseil personnalisé pour une clientèle diversifiée',
+                'exp1_resp2': 'Participation active aux campagnes de prospection commerciale et élaboration de stratégies marketing',
+                'exp1_resp3': 'Analyse approfondie des dossiers de financement et évaluation des risques crédit',
+                'exp1_resp4': 'Maîtrise des outils bancaires internes (Système Core Banking, logiciels de gestion)',
+                'exp1_resp5': 'Participation à des réunions stratégiques et contribution à des projets d\'amélioration des processus',
+                'exp1_achievement': 'Réalisation marquante : Proposition d\'un système de suivi client qui a été adopté par l\'agence pour améliorer la fidélisation.',
+                'exp2_title': 'Responsable de l\'Axe Débats',
+                'exp2_company': 'LCIn (Lions Club International) - Université Gamal Abdel Nasser',
+                'exp2_date': 'Septembre 2021 - Juin 2022',
+                'exp2_desc': 'Responsable du pôle débat au sein de cette organisation étudiante prestigieuse, avec pour mission de développer la culture du débat constructif et de l\'éloquence parmi les étudiants :',
+                'exp2_resp1': 'Organisation et animation de 12 débats publics sur des thèmes d\'actualité (politique, société, économie)',
+                'exp2_resp2': 'Encadrement et formation d\'une équipe de 10 membres actifs',
+                'exp2_resp3': 'Gestion d\'un budget annuel et recherche de partenariats',
+                'exp2_resp4': 'Coordination avec les autres pôles pour l\'organisation d\'événements interdisciplinaires',
+                'exp2_resp5': 'Création d\'un programme de formation à l\'art oratoire pour les nouveaux membres',
+                'exp2_achievement': 'Réalisation marquante : Organisation d\'un tournoi interuniversitaire de débat qui a rassemblé plus de 150 participants.',
+                'exp3_title': 'Projet Entrepreneurial Étudiant',
+                'exp3_company': 'Initiative Personnelle - Conakry',
+                'exp3_date': 'Janvier 2022 - Présent',
+                'exp3_desc': 'Développement d\'un projet entrepreneurial visant à répondre à un besoin identifié dans ma communauté, combinant innovation et utilité sociale :',
+                'exp3_resp1': 'Conception et mise en œuvre d\'une solution digitale pour faciliter l\'accès à l\'éducation financière',
+                'exp3_resp2': 'Recherche de marché et analyse des besoins des utilisateurs',
+                'exp3_resp3': 'Développement d\'un prototype fonctionnel avec une équipe de 3 personnes',
+                'exp3_resp4': 'Présentation du projet à des investisseurs potentiels et recherche de financement',
+                'exp3_resp5': 'Participation à des compétitions entrepreneuriales étudiantes',
+                'exp3_achievement': 'Réalisation marquante : Sélection parmi les 10 finalistes du concours national d\'entrepreneuriat étudiant.',
+                'skill1': 'Relation client',
+                'skill2': 'Analyse financière',
+                'skill3': 'Prospection commerciale',
+                'skill4': 'Gestion de compte',
+                'skill5': 'Leadership',
+                'skill6': 'Gestion budgétaire',
+                'skill7': 'Gestion de projet',
+                'skill8': 'Animation d\'équipe',
+                'skill9': 'Analyse de risque',
+                'skill10': 'Outils bancaires',
+                'skill11': 'Art oratoire',
+                'skill12': 'Négociation',
+                'skill13': 'Entrepreneuriat',
+                'skill14': 'Gestion de projet',
+                'skill15': 'Innovation',
+                'skill16': 'Pitch commercial',
+                'skill17': 'Analyse de marché',
+                'skill18': 'Travail d\'équipe',
+                'rights': 'Tous droits réservés'
+            },
+            'en': {
+                'experience_title': 'Professional Experiences',
+                'nav_home': 'Home',
+                'nav_academic': 'Academic Path',
+                'nav_experience': 'Experiences',
+                'nav_certifications': 'Certifications',
+                'nav_contact': 'Contact',
+                'exp1_title': 'Professional Banking Internship',
+                'exp1_company': 'United Bank for Africa (UBA) Guinea',
+                'exp1_date': 'July 2023 - September 2023',
+                'exp1_desc': 'Intensive 3-month internship at one of the leading pan-African banks, with complete immersion in various banking services and active participation in daily operations:',
+                'exp1_resp1': 'Personalized reception, guidance and advice for a diverse clientele',
+                'exp1_resp2': 'Active participation in commercial prospecting campaigns and marketing strategy development',
+                'exp1_resp3': 'In-depth analysis of financing files and credit risk assessment',
+                'exp1_resp4': 'Mastery of internal banking tools (Core Banking System, management software)',
+                'exp1_resp5': 'Participation in strategic meetings and contribution to process improvement projects',
+                'exp1_achievement': 'Key achievement: Proposal of a client tracking system that was adopted by the agency to improve customer retention.',
+                'exp2_title': 'Debate Department Manager',
+                'exp2_company': 'LCIn (Lions Club International) - Gamal Abdel Nasser University',
+                'exp2_date': 'September 2021 - June 2022',
+                'exp2_desc': 'Head of the debate department within this prestigious student organization, with the mission to develop a culture of constructive debate and eloquence among students:',
+                'exp2_resp1': 'Organization and animation of 12 public debates on current topics (politics, society, economy)',
+                'exp2_resp2': 'Supervision and training of a team of 10 active members',
+                'exp2_resp3': 'Management of an annual budget and partnership development',
+                'exp2_resp4': 'Coordination with other departments for interdisciplinary events organization',
+                'exp2_resp5': 'Creation of a public speaking training program for new members',
+                'exp2_achievement': 'Key achievement: Organization of an inter-university debate tournament that gathered over 150 participants.',
+                'exp3_title': 'Student Entrepreneurial Project',
+                'exp3_company': 'Personal Initiative - Conakry',
+                'exp3_date': 'January 2022 - Present',
+                'exp3_desc': 'Development of an entrepreneurial project aimed at addressing an identified need in my community, combining innovation and social utility:',
+                'exp3_resp1': 'Design and implementation of a digital solution to facilitate access to financial education',
+                'exp3_resp2': 'Market research and user needs analysis',
+                'exp3_resp3': 'Development of a functional prototype with a team of 3 people',
+                'exp3_resp4': 'Presentation of the project to potential investors and fundraising',
+                'exp3_resp5': 'Participation in student entrepreneurship competitions',
+                'exp3_achievement': 'Key achievement: Selection among the top 10 finalists of the national student entrepreneurship competition.',
+                'skill1': 'Customer relationship',
+                'skill2': 'Financial analysis',
+                'skill3': 'Business prospecting',
+                'skill4': 'Account management',
+                'skill5': 'Leadership',
+                'skill6': 'Budget management',
+                'skill7': 'Project management',
+                'skill8': 'Team facilitation',
+                'skill9': 'Risk analysis',
+                'skill10': 'Banking tools',
+                'skill11': 'Public speaking',
+                'skill12': 'Negotiation',
+                'skill13': 'Entrepreneurship',
+                'skill14': 'Project management',
+                'skill15': 'Innovation',
+                'skill16': 'Business pitch',
+                'skill17': 'Market analysis',
+                'skill18': 'Teamwork',
+                'rights': 'All rights reserved'
+            },
+            'ar': {
+                'experience_title': 'الخبرات المهنية',
+                'nav_home': 'الصفحة الرئيسية',
+                'nav_academic': 'المسار الأكاديمي',
+                'nav_experience': 'الخبرات',
+                'nav_certifications': 'الشهادات',
+                'nav_contact': 'اتصل',
+                'exp1_title': 'تدريب مهني في البنك',
+                'exp1_company': 'بنك يو بي إيه (UBA) غينيا',
+                'exp1_date': 'يوليو 2023 - سبتمبر 2023',
+                'exp1_desc': 'تدريب مكثف لمدة 3 أشهر في أحد أهم البنوك الأفريقية، مع انغماس كامل في مختلف الخدمات المصرفية والمشاركة الفعالة في العمليات اليومية:',
+                'exp1_resp1': 'استقبال وتوجيه ونصيحة مخصصة لعملاء متنوعين',
+                'exp1_resp2': 'المشاركة الفعالة في حملات البحث عن العملاء وتطوير استراتيجيات التسويق',
+                'exp1_resp3': 'تحليل متعمق لملفات التمويل وتقييم مخاطر الائتمان',
+                'exp1_resp4': 'إتقان أدوات البنك الداخلية (نظام البنك الأساسي، برامج الإدارة)',
+                'exp1_resp5': 'المشاركة في الاجتماعات الاستراتيجية والمساهمة في مشاريع تحسين العمليات',
+                'exp1_achievement': 'إنجاز بارز: اقتراح نظام متابعة العملاء الذي تم اعتماده من قبل الوكالة لتحسين الاحتفاظ بالعملاء.',
+                'exp2_title': 'مسؤول محور المناظرات',
+                'exp2_company': 'LCIn (ليونز كلوب إنترناشيونال) - جامعة جمال عبد الناصر',
+                'exp2_date': 'سبتمبر 2021 - يونيو 2022',
+                'exp2_desc': 'رئيس قسم المناظرات في هذه المنظمة الطلابية المرموقة، بمهمة تطوير ثقافة المناظرة البناءة والبلاغة بين الطلاب:',
+                'exp2_resp1': 'تنظيم وتيسير 12 مناظرة عامة حول مواضيع راهنة (سياسة، مجتمع، اقتصاد)',
+                'exp2_resp2': 'إشراف وتدريب فريق من 10 أعضاء نشطين',
+                'exp2_resp3': 'إدارة ميزانية سنوية وتطوير الشراكات',
+                'exp2_resp4': 'التنسيق مع الأقسام الأخرى لتنظيم الفعاليات متعددة التخصصات',
+                'exp2_resp5': 'إنشاء برنامج تدريبي لفن الخطابة للأعضاء الجدد',
+                'exp2_achievement': 'إنجاز بارز: تنظيم بطولة مناظرات بين الجامعات جمعت أكثر من 150 مشاركًا.',
+                'exp3_title': 'مشروع ريادي طلابي',
+                'exp3_company': 'مبادرة شخصية - كوناكري',
+                'exp3_date': 'يناير 2022 - حتى الآن',
+                'exp3_desc': 'تطوير مشروع ريادي يهدف إلى تلبية حاجة محددة في مجتمعي، يجمع بين الابتكار والمنفعة الاجتماعية:',
+                'exp3_resp1': 'تصميم وتنفيذ حل رقمي لتسهيل الوصول إلى التثقيف المالي',
+                'exp3_resp2': 'بحث السوق وتحليل احتياجات المستخدمين',
+                'exp3_resp3': 'تطوير نموذج أولي وظيفي مع فريق مكون من 3 أشخاص',
+                'exp3_resp4': 'عرض المشروع على مستثمرين محتملين وجمع التمويل',
+                'exp3_resp5': 'المشاركة في مسابقات ريادة الأعمال الطلابية',
+                'exp3_achievement': 'إنجاز بارز: الاختيار ضمن أفضل 10 متسابقين في المسابقة الوطنية لريادة الأعمال الطلابية.',
+                'skill1': 'علاقات العملاء',
+                'skill2': 'التحليل المالي',
+                'skill3': 'البحث عن العملاء',
+                'skill4': 'إدارة الحسابات',
+                'skill5': 'القيادة',
+                'skill6': 'إدارة الميزانية',
+                'skill7': 'إدارة المشاريع',
+                'skill8': 'تيسير الفريق',
+                'skill9': 'تحليل المخاطر',
+                'skill10': 'أدوات البنك',
+                'skill11': 'فن الخطابة',
+                'skill12': 'التفاوض',
+                'skill13': 'ريادة الأعمال',
+                'skill14': 'إدارة المشاريع',
+                'skill15': 'الابتكار',
+                'skill16': 'عرض الأعمال',
+                'skill17': 'تحليل السوق',
+                'skill18': 'العمل الجماعي',
+                'rights': 'جميع الحقوق محفوظة'
+            },
+            'es': {
+                'experience_title': 'Experiencias Profesionales',
+                'nav_home': 'Inicio',
+                'nav_academic': 'Trayectoria Académica',
+                'nav_experience': 'Experiencias',
+                'nav_certifications': 'Certificaciones',
+                'nav_contact': 'Contacto',
+                'exp1_title': 'Prácticas Profesionales Bancarias',
+                'exp1_company': 'United Bank for Africa (UBA) Guinea',
+                'exp1_date': 'Julio 2023 - Septiembre 2023',
+                'exp1_desc': 'Prácticas intensivas de 3 meses en uno de los principales bancos panafricanos, con inmersión completa en diversos servicios bancarios y participación activa en las operaciones diarias:',
+                'exp1_resp1': 'Recepción, orientación y asesoramiento personalizado para una clientela diversa',
+                'exp1_resp2': 'Participación activa en campañas de prospección comercial y elaboración de estrategias de marketing',
+                'exp1_resp3': 'Análisis en profundidad de expedientes de financiación y evaluación de riesgos crediticios',
+                'exp1_resp4': 'Dominio de herramientas bancarias internas (Sistema Core Banking, software de gestión)',
+                'exp1_resp5': 'Participación en reuniones estratégicas y contribución a proyectos de mejora de procesos',
+                'exp1_achievement': 'Logro destacado: Propuesta de un sistema de seguimiento de clientes que fue adoptado por la agencia para mejorar la fidelización.',
+                'exp2_title': 'Responsable del Eje de Debates',
+                'exp2_company': 'LCIn (Lions Club International) - Universidad Gamal Abdel Nasser',
+                'exp2_date': 'Septiembre 2021 - Junio 2022',
+                'exp2_desc': 'Responsable del área de debate en esta prestigiosa organización estudiantil, con la misión de desarrollar la cultura del debate constructivo y la elocuencia entre los estudiantes:',
+                'exp2_resp1': 'Organización y animación de 12 debates públicos sobre temas de actualidad (política, sociedad, economía)',
+                'exp2_resp2': 'Supervisión y formación de un equipo de 10 miembros activos',
+                'exp2_resp3': 'Gestión de un presupuesto anual y búsqueda de asociaciones',
+                'exp2_resp4': 'Coordinación con otras áreas para la organización de eventos interdisciplinarios',
+                'exp2_resp5': 'Creación de un programa de formación en oratoria para nuevos miembros',
+                'exp2_achievement': 'Logro destacado: Organización de un torneo interuniversitario de debate que reunió a más de 150 participantes.',
+                'exp3_title': 'Proyecto Emprendedor Estudiantil',
+                'exp3_company': 'Iniciativa Personal - Conakry',
+                'exp3_date': 'Enero 2022 - Presente',
+                'exp3_desc': 'Desarrollo de un proyecto emprendedor destinado a responder a una necesidad identificada en mi comunidad, combinando innovación y utilidad social:',
+                'exp3_resp1': 'Diseño e implementación de una solución digital para facilitar el acceso a la educación financiera',
+                'exp3_resp2': 'Investigación de mercado y análisis de necesidades de los usuarios',
+                'exp3_resp3': 'Desarrollo de un prototipo funcional con un equipo de 3 personas',
+                'exp3_resp4': 'Presentación del proyecto a inversores potenciales y búsqueda de financiación',
+                'exp3_resp5': 'Participación en competiciones de emprendimiento estudiantil',
+                'exp3_achievement': 'Logro destacado: Selección entre los 10 finalistas del concurso nacional de emprendimiento estudiantil.',
+                'skill1': 'Relación con clientes',
+                'skill2': 'Análisis financiero',
+                'skill3': 'Prospección comercial',
+                'skill4': 'Gestión de cuentas',
+                'skill5': 'Liderazgo',
+                'skill6': 'Gestión presupuestaria',
+                'skill7': 'Gestión de proyectos',
+                'skill8': 'Facilitación de equipos',
+                'skill9': 'Análisis de riesgos',
+                'skill10': 'Herramientas bancarias',
+                'skill11': 'Oratoria',
+                'skill12': 'Negociación',
+                'skill13': 'Emprendimiento',
+                'skill14': 'Gestión de proyectos',
+                'skill15': 'Innovación',
+                'skill16': 'Presentación comercial',
+                'skill17': 'Análisis de mercado',
+                'skill18': 'Trabajo en equipo',
+                'rights': 'Todos los derechos reservados'
+            },
+            'de': {
+                'experience_title': 'Berufserfahrungen',
+                'nav_home': 'Startseite',
+                'nav_academic': 'Akademischer Werdegang',
+                'nav_experience': 'Erfahrungen',
+                'nav_certifications': 'Zertifizierungen',
+                'nav_contact': 'Kontakt',
+                'exp1_title': 'Bankpraktikum',
+                'exp1_company': 'United Bank for Africa (UBA) Guinea',
+                'exp1_date': 'Juli 2023 - September 2023',
+                'exp1_desc': 'Intensives 3-monatiges Praktikum bei einer der führenden panafrikanischen Banken mit vollständigem Eintauchen in verschiedene Bankdienstleistungen und aktiver Teilnahme am Tagesgeschäft:',
+                'exp1_resp1': 'Persönliche Betreuung, Beratung und Unterstützung für eine vielfältige Kundschaft',
+                'exp1_resp2': 'Aktive Teilnahme an Akquisitionskampagnen und Entwicklung von Marketingstrategien',
+                'exp1_resp3': 'Detaillierte Analyse von Finanzierungsanträgen und Bewertung von Kreditrisiken',
+                'exp1_resp4': 'Beherrschung interner Banktools (Core Banking System, Management-Software)',
+                'exp1_resp5': 'Teilnahme an strategischen Besprechungen und Beitrag zu Prozessverbesserungsprojekten',
+                'exp1_achievement': 'Bemerkenswerte Leistung: Vorschlag eines Kundenverfolgungssystems, das von der Agentur zur Verbesserung der Kundenbindung übernommen wurde.',
+                'exp2_title': 'Leiter der Debattenabteilung',
+                'exp2_company': 'LCIn (Lions Club International) - Gamal Abdel Nasser Universität',
+                'exp2_date': 'September 2021 - Juni 2022',
+                'exp2_desc': 'Leiter der Debattenabteilung in dieser renommierten Studentenorganisation mit der Aufgabe, eine Kultur der konstruktiven Debatte und Beredsamkeit unter den Studenten zu entwickeln:',
+                'exp2_resp1': 'Organisation und Moderation von 12 öffentlichen Debatten zu aktuellen Themen (Politik, Gesellschaft, Wirtschaft)',
+                'exp2_resp2': 'Betreuung und Schulung eines Teams von 10 aktiven Mitgliedern',
+                'exp2_resp3': 'Verwaltung eines Jahresbudgets und Entwicklung von Partnerschaften',
+                'exp2_resp4': 'Koordination mit anderen Abteilungen für interdisziplinäre Veranstaltungen',
+                'exp2_resp5': 'Erstellung eines Schulungsprogramms für öffentliches Sprechen für neue Mitglieder',
+                'exp2_achievement': 'Bemerkenswerte Leistung: Organisation eines hochschulübergreifenden Debattenwettbewerbs mit über 150 Teilnehmern.',
+                'exp3_title': 'Studentisches Unternehmensprojekt',
+                'exp3_company': 'Persönliche Initiative - Conakry',
+                'exp3_date': 'Januar 2022 - Heute',
+                'exp3_desc': 'Entwicklung eines unternehmerischen Projekts zur Lösung eines identifizierten Bedarfs in meiner Gemeinde, das Innovation und sozialen Nutzen kombiniert:',
+                'exp3_resp1': 'Entwurf und Implementierung einer digitalen Lösung zur Verbesserung des Zugangs zu finanzieller Bildung',
+                'exp3_resp2': 'Marktforschung und Analyse der Benutzerbedürfnisse',
+                'exp3_resp3': 'Entwicklung eines funktionalen Prototyps mit einem 3-köpfigen Team',
+                'exp3_resp4': 'Präsentation des Projekts vor potenziellen Investoren und Mittelbeschaffung',
+                'exp3_resp5': 'Teilnahme an studentischen Unternehmenswettbewerben',
+                'exp3_achievement': 'Bemerkenswerte Leistung: Auswahl unter den 10 Finalisten des nationalen Studentenunternehmenswettbewerbs.',
+                'skill1': 'Kundenbeziehung',
+                'skill2': 'Finanzanalyse',
+                'skill3': 'Akquise',
+                'skill4': 'Kontoverwaltung',
+                'skill5': 'Führung',
+                'skill6': 'Budgetverwaltung',
+                'skill7': 'Projektmanagement',
+                'skill8': 'Teamleitung',
+                'skill9': 'Risikoanalyse',
+                'skill10': 'Banktools',
+                'skill11': 'Redekunst',
+                'skill12': 'Verhandlung',
+                'skill13': 'Unternehmertum',
+                'skill14': 'Projektmanagement',
+                'skill15': 'Innovation',
+                'skill16': 'Business-Pitch',
+                'skill17': 'Marktanalyse',
+                'skill18': 'Teamarbeit',
+                'rights': 'Alle Rechte vorbehalten'
+            },
+            'pt': {
+                'experience_title': 'Experiências Profissionais',
+                'nav_home': 'Início',
+                'nav_academic': 'Percurso Académico',
+                'nav_experience': 'Experiências',
+                'nav_certifications': 'Certificações',
+                'nav_contact': 'Contacto',
+                'exp1_title': 'Estágio Profissional Bancário',
+                'exp1_company': 'United Bank for Africa (UBA) Guiné',
+                'exp1_date': 'Julho 2023 - Setembro 2023',
+                'exp1_desc': 'Estágio intensivo de 3 meses num dos principais bancos pan-africanos, com imersão completa nos diversos serviços bancários e participação ativa nas operações diárias:',
+                'exp1_resp1': 'Recepção, orientação e aconselhamento personalizado para uma clientela diversificada',
+                'exp1_resp2': 'Participação ativa em campanhas de prospeção comercial e elaboração de estratégias de marketing',
+                'exp1_resp3': 'Análise aprofundada de dossiês de financiamento e avaliação de riscos de crédito',
+                'exp1_resp4': 'Domínio de ferramentas bancárias internas (Sistema Core Banking, software de gestão)',
+                'exp1_resp5': 'Participação em reuniões estratégicas e contribuição para projetos de melhoria de processos',
+                'exp1_achievement': 'Realização marcante: Proposta de um sistema de acompanhamento de clientes que foi adotado pela agência para melhorar a fidelização.',
+                'exp2_title': 'Responsável pelo Eixo de Debates',
+                'exp2_company': 'LCIn (Lions Club International) - Universidade Gamal Abdel Nasser',
+                'exp2_date': 'Setembro 2021 - Junho 2022',
+                'exp2_desc': 'Responsável pelo polo de debate nesta prestigiada organização estudantil, com a missão de desenvolver a cultura do debate construtivo e da eloquência entre os estudantes:',
+                'exp2_resp1': 'Organização e animação de 12 debates públicos sobre temas atuais (política, sociedade, economia)',
+                'exp2_resp2': 'Orientação e formação de uma equipa de 10 membros ativos',
+                'exp2_resp3': 'Gestão de um orçamento anual e procura de parcerias',
+                'exp2_resp4': 'Coordenação com outros polos para a organização de eventos interdisciplinares',
+                'exp2_resp5': 'Criação de um programa de formação em oratória para novos membros',
+                'exp2_achievement': 'Realização marcante: Organização de um torneio interuniversitário de debate que reuniu mais de 150 participantes.',
+                'exp3_title': 'Projeto Empreendedor Estudantil',
+                'exp3_company': 'Iniciativa Pessoal - Conacri',
+                'exp3_date': 'Janeiro 2022 - Presente',
+                'exp3_desc': 'Desenvolvimento de um projeto empreendedor destinado a responder a uma necessidade identificada na minha comunidade, combinando inovação e utilidade social:',
+                'exp3_resp1': 'Conceção e implementação de uma solução digital para facilitar o acesso à educação financeira',
+                'exp3_resp2': 'Pesquisa de mercado e análise das necessidades dos utilizadores',
+                'exp3_resp3': 'Desenvolvimento de um protótipo funcional com uma equipa de 3 pessoas',
+                'exp3_resp4': 'Apresentação do projeto a potenciais investidores e procura de financiamento',
+                'exp3_resp5': 'Participação em competições de empreendedorismo estudantil',
+                'exp3_achievement': 'Realização marcante: Seleção entre os 10 finalistas do concurso nacional de empreendedorismo estudantil.',
+                'skill1': 'Relação com clientes',
+                'skill2': 'Análise financeira',
+                'skill3': 'Prospeção comercial',
+                'skill4': 'Gestão de contas',
+                'skill5': 'Liderança',
+                'skill6': 'Gestão orçamental',
+                'skill7': 'Gestão de projetos',
+                'skill8': 'Facilitação de equipas',
+                'skill9': 'Análise de risco',
+                'skill10': 'Ferramentas bancárias',
+                'skill11': 'Oratória',
+                'skill12': 'Negociação',
+                'skill13': 'Empreendedorismo',
+                'skill14': 'Gestão de projetos',
+                'skill15': 'Inovação',
+                'skill16': 'Apresentação comercial',
+                'skill17': 'Análise de mercado',
+                'skill18': 'Trabalho em equipa',
+                'rights': 'Todos os direitos reservados'
+            }
+        };
+
+        // ============ FONCTIONS ============
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            
+            const icon = document.querySelector('.dark-mode-toggle i');
+            if (icon) {
+                icon.classList.toggle('fa-moon', !isDarkMode);
+                icon.classList.toggle('fa-sun', isDarkMode);
+            }
+            
+            // Déclencher un événement personnalisé pour synchroniser les autres pages
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        function changeLanguage(lang) {
+            if (!translations[lang]) lang = 'fr';
+            
+            localStorage.setItem('preferredLanguage', lang);
+            
+            // Mettre à jour le sélecteur
+            const select = document.querySelector('.language-select');
+            if (select) select.value = lang;
+            
+            // Appliquer les traductions
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            document.documentElement.lang = lang;
+            
+            // Mettre à jour le titre
+            if (translations[lang]['experience_title']) {
+                document.title = translations[lang]['experience_title'] + ' - Mohamed Saïd Diallo';
+            }
+            
+            // Déclencher un événement pour synchroniser les autres pages
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        // Appliquer les préférences au chargement
+        function applyPreferences() {
+            // Mode sombre
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                const icon = document.querySelector('.dark-mode-toggle i');
+                if (icon) icon.classList.replace('fa-moon', 'fa-sun');
+            }
+            
+            // Langue
+            const lang = localStorage.getItem('preferredLanguage') || 'fr';
+            changeLanguage(lang);
+            
+            // Année du footer
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        }
+
+        // Synchroniser les changements entre onglets
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'darkMode') {
+                const darkModeEnabled = event.newValue === 'enabled';
+                document.body.classList.toggle('dark-mode', darkModeEnabled);
+                const icon = document.querySelector('.dark-mode-toggle i');
+                if (icon) {
+                    icon.classList.toggle('fa-moon', !darkModeEnabled);
+                    icon.classList.toggle('fa-sun', darkModeEnabled);
+                }
+            }
+            
+            if (event.key === 'preferredLanguage') {
+                changeLanguage(event.newValue || 'fr');
+            }
+        });
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', applyPreferences);
+
+        // Exposer les fonctions globalement
+        window.toggleDarkMode = toggleDarkMode;
+        window.changeLanguage = changeLanguage;
+    </script>
+</body>
+</html>

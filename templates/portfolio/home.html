@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{% trans "Accueil" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-100">
+            <div class="col-lg-6" data-aos="fade-right">
+                <h1 class="display-4 fw-bold mb-4">
+                    {% if profile %}
+                        {{ profile.name }}
+                    {% else %}
+                        {% trans "Votre Nom" %}
+                    {% endif %}
+                </h1>
+                <h2 class="h3 mb-4 text-light">
+                    {% if profile %}
+                        {{ profile.title }}
+                    {% else %}
+                        {% trans "Votre Titre Professionnel" %}
+                    {% endif %}
+                </h2>
+                <p class="lead mb-4">
+                    {% if profile %}
+                        {{ profile.bio|truncatewords:30 }}
+                    {% else %}
+                        {% trans "Votre biographie professionnelle apparaîtra ici." %}
+                    {% endif %}
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'portfolio:contact' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-envelope me-2"></i>{% trans "Me Contacter" %}
+                    </a>
+                    {% if profile.cv_file %}
+                        <a href="{{ profile.cv_file.url }}" class="btn btn-outline-light btn-lg" target="_blank">
+                            <i class="fas fa-download me-2"></i>{% trans "Télécharger CV" %}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center" data-aos="fade-left">
+                {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}" 
+                         class="img-fluid rounded-circle shadow-lg profile-image">
+                {% else %}
+                    <div class="profile-placeholder bg-light rounded-circle mx-auto d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user fa-5x text-muted"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Skills Section -->
+{% if featured_skills %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">{% trans "Compétences Principales" %}</h2>
+        <div class="row">
+            {% for skill in featured_skills %}
+                <div class="col-md-6 col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ skill.name }}</h5>
+                            <p class="text-muted">{{ skill.get_category_display }}</p>
+                            <div class="progress mb-3">
+                                {% if skill.proficiency == 'beginner' %}
+                                    <div class="progress-bar bg-info" style="width: 25%"></div>
+                                {% elif skill.proficiency == 'intermediate' %}
+                                    <div class="progress-bar bg-warning" style="width: 50%"></div>
+                                {% elif skill.proficiency == 'advanced' %}
+                                    <div class="progress-bar bg-success" style="width: 75%"></div>
+                                {% else %}
+                                    <div class="progress-bar bg-danger" style="width: 100%"></div>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted">{{ skill.get_proficiency_display }}</small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Recent Experiences -->
+{% if recent_experiences %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">{% trans "Expériences Récentes" %}</h2>
+        <div class="row">
+            {% for experience in recent_experiences %}
+                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ experience.title }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ experience.company }}</h6>
+                            <p class="card-text">{{ experience.description|truncatewords:20 }}</p>
+                            <small class="text-muted">
+                                {{ experience.start_date|date:"M Y" }} - 
+                                {% if experience.is_current %}
+                                    {% trans "Présent" %}
+                                {% else %}
+                                    {{ experience.end_date|date:"M Y" }}
+                                {% endif %}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:experience' %}" class="btn btn-primary">
+                {% trans "Voir Toutes les Expériences" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Featured Projects -->
+{% if featured_projects %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5" data-aos="fade-up">{% trans "Projets Vedettes" %}</h2>
+        <div class="row">
+            {% for project in featured_projects %}
+                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                    <div class="card h-100 shadow-sm">
+                        {% if project.image %}
+                            <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="card-text">{{ project.description|truncatewords:15 }}</p>
+                            <div class="mb-3">
+                                {% for tech in project.technologies|split:"," %}
+                                    <span class="badge bg-secondary me-1">{{ tech|trim }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-between">
+                                {% if project.project_url %}
+                                    <a href="{{ project.project_url }}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                        <i class="fas fa-external-link-alt me-1"></i>{% trans "Voir" %}
+                                    </a>
+                                {% endif %}
+                                {% if project.github_url %}
+                                    <a href="{{ project.github_url }}" class="btn btn-sm btn-outline-dark" target="_blank">
+                                        <i class="fab fa-github me-1"></i>GitHub
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:projects' %}" class="btn btn-primary">
+                {% trans "Voir Tous les Projets" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="certifications_title">Certifications - Mohamed Saïd Diallo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JT25QS5BC5"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-JT25QS5BC5');
+    </script>
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+    <link rel="manifest" href="site.webmanifest">
+    <style>
+        :root {
+            --primary: #1a0033;
+            --secondary: #330000;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #121212;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 120px;
+            transition: var(--transition);
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* RTL Support for Arabic */
+        body[dir="rtl"] {
+            direction: rtl;
+            text-align: right;
+        }
+
+        body[dir="rtl"] .section-title::after {
+            left: auto;
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+        body[dir="rtl"] .modal-details strong {
+            margin-left: 10px;
+            margin-right: 0;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: var(--dark);
+            color: var(--text-light);
+        }
+
+        body.dark-mode .container,
+        body.dark-mode .certification-card {
+            background: #222;
+            border-left-color: #444;
+        }
+
+        body.dark-mode .certification-title {
+            color: var(--text-light);
+        }
+
+        body.dark-mode .certification-date,
+        body.dark-mode .close-modal {
+            color: #aaa;
+        }
+
+        body.dark-mode .modal-header {
+            border-color: #444;
+        }
+
+        body.dark-mode .modal-content {
+            background: #222;
+        }
+
+        body.dark-mode footer {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        body.dark-mode .modal-skill {
+            background: #333;
+        }
+
+        body.dark-mode .certification-btn:hover {
+            color: var(--text-light);
+            border-color: var(--text-light);
+        }
+
+        /* Header animé */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: slideDown 0.6s ease-out 0.2s forwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #330000, #1a0033, #000033, #33001a);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        /* Navigation animée */
+        nav {
+            display: flex;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+            padding: 15px;
+            backdrop-filter: blur(5px);
+            margin-top: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 30px;
+            transition: var(--transition);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 77, 77, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        nav a:hover::before {
+            left: 100%;
+        }
+
+        nav a.active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Conteneurs */
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out 0.4s forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .section-intro {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: #666;
+        }
+
+        body.dark-mode .section-intro {
+            color: #aaa;
+        }
+
+        /* Certifications Grid */
+        .certifications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .certification-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            border-left: 4px solid var(--accent);
+            position: relative;
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        .certification-card:nth-child(1) {
+            animation: fadeUp 0.6s ease-out 0.6s forwards;
+        }
+        
+        .certification-card:nth-child(2) {
+            animation: fadeUp 0.6s ease-out 0.8s forwards;
+        }
+        
+        .certification-card:nth-child(3) {
+            animation: fadeUp 0.6s ease-out 1s forwards;
+        }
+
+        .certification-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .certification-image {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .certification-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .certification-card:hover .certification-image img {
+            transform: scale(1.1);
+        }
+
+        .certification-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .certification-badge.in-progress {
+            background: #4d79ff;
+        }
+
+        .certification-content {
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .certification-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .certification-org {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .certification-org i {
+            margin-right: 8px;
+            color: var(--accent);
+        }
+
+        .certification-date {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .certification-date i {
+            color: var(--accent);
+        }
+
+        .certification-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--accent);
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 20px;
+            transition: var(--transition);
+            font-weight: 600;
+            border: 2px solid var(--accent);
+        }
+
+        .certification-btn:hover {
+            background: transparent;
+            color: var(--accent);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            max-width: 800px;
+            width: 90%;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            border-left: 4px solid var(--accent);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .modal.show .modal-content {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 25px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .close-modal {
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #666;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+        }
+
+        .modal-details {
+            margin-top: 20px;
+        }
+
+        .modal-details p {
+            margin-bottom: 10px;
+            display: flex;
+        }
+
+        .modal-details strong {
+            min-width: 120px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .modal-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .modal-skill {
+            background: var(--light);
+            color: var(--accent);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: 1px solid var(--accent);
+            transition: var(--transition);
+        }
+
+        .modal-skill:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Footer comme sur la page d'expérience */
+        footer {
+            padding: 15px 20px;
+            height: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 10;
+            transform: translateY(30px);
+            opacity: 0;
+            animation: fadeUp 0.6s ease-out 1.2s forwards;
+        }
+
+        .footer-left {
+            flex: 1;
+            text-align: left;
+        }
+
+        .footer-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .footer-right {
+            flex: 1;
+            text-align: right;
+        }
+
+        .copyright {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            white-space: nowrap;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        /* Contrôles (mode sombre + langue) */
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: slideDown 0.6s ease-out 0.2s forwards;
+        }
+
+        .dark-mode-toggle, .language-select {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: var(--transition);
+        }
+
+        .dark-mode-toggle:hover, .language-select:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, var(--accent), #4d79ff);
+        }
+
+        .language-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 30px;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        /* Animations */
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes textGlow {
+            0% {
+                text-shadow: 0 0 5px rgba(255, 77, 77, 0.3);
+            }
+            100% {
+                text-shadow: 0 0 15px rgba(77, 121, 255, 0.6);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .certifications-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            nav {
+                flex-wrap: wrap;
+                padding: 10px;
+            }
+            
+            nav a {
+                margin: 5px;
+                padding: 8px 15px;
+            }
+            
+            .controls {
+                top: 10px;
+                right: 10px;
+            }
+            
+            footer {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .footer-left, .footer-center, .footer-right {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .social-links {
+                gap: 12px;
+            }
+            
+            .social-links a {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+            }
+            
+            .copyright {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Contrôles -->
+    <div class="controls">
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i>
+        </button>
+        <select class="language-select" onchange="changeLanguage(this.value)">
+            <option value="fr">FR</option>
+            <option value="en">EN</option>
+            <option value="ar">AR</option>
+            <option value="es">ES</option>
+            <option value="de">DE</option>
+            <option value="pt">PT</option>
+        </select>
+    </div>
+
+    <header>
+        <div class="animated-bg"></div>
+        <div class="header-content">
+            <h1 data-i18n="header_name">Mohamed Saïd Diallo</h1>
+            <nav>
+                <a href="index.html" data-i18n="nav_home">Accueil</a>
+                <a href="Parcoursacadémique.html" data-i18n="nav_education">Parcours Académique</a>
+                <a href="expérience.html" data-i18n="nav_experience">Expériences</a>
+                <a href="certification.html" class="active" data-i18n="nav_certifications">Certifications</a>
+                <a href="contact.html" data-i18n="nav_contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="container">
+        <h2 class="section-title" data-i18n="certifications_header">Mes Certifications</h2>
+        <p class="section-intro" data-i18n="certifications_intro">Découvrez les certifications que j'ai obtenues tout au long de mon parcours professionnel et académique.</p>
+        
+        <div class="certifications-grid">
+            <!-- Certification 1 -->
+            <div class="certification-card">
+                <div class="certification-image">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Certification en Finance" data-i18n="cert1_img_alt">
+                    <span class="certification-badge" data-i18n="badge_validated">Validée</span>
+                </div>
+                <div class="certification-content">
+                    <h3 class="certification-title" data-i18n="cert1_title">Analyse Financière Avancée</h3>
+                    <div class="certification-org"><i class="fas fa-building"></i> <span data-i18n="cert1_org">Institut des Finances Internationales</span></div>
+                    <div class="certification-date"><i class="fas fa-calendar-alt"></i> <span data-i18n="cert1_date">Mars 2023</span></div>
+                    <a href="#" class="certification-btn" onclick="openModal('certif1')" data-i18n="btn_details">Voir détails</a>
+                </div>
+            </div>
+            
+            <!-- Certification 2 -->
+            <div class="certification-card">
+                <div class="certification-image">
+                    <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1511&q=80" alt="Certification en Gestion de Risque" data-i18n="cert2_img_alt">
+                    <span class="certification-badge" data-i18n="badge_validated">Validée</span>
+                </div>
+                <div class="certification-content">
+                    <h3 class="certification-title" data-i18n="cert2_title">Gestion des Risques Bancaires</h3>
+                    <div class="certification-org"><i class="fas fa-building"></i> <span data-i18n="cert2_org">École Européenne de Finance</span></div>
+                    <div class="certification-date"><i class="fas fa-calendar-alt"></i> <span data-i18n="cert2_date">Novembre 2022</span></div>
+                    <a href="#" class="certification-btn" onclick="openModal('certif2')" data-i18n="btn_details">Voir détails</a>
+                </div>
+            </div>
+            
+            <!-- Certification 3 -->
+            <div class="certification-card">
+                <div class="certification-image">
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Certification en Data Science" data-i18n="cert3_img_alt">
+                    <span class="certification-badge in-progress" data-i18n="badge_in_progress">En cours</span>
+                </div>
+                <div class="certification-content">
+                    <h3 class="certification-title" data-i18n="cert3_title">Data Science pour la Finance</h3>
+                    <div class="certification-org"><i class="fas fa-building"></i> <span data-i18n="cert3_org">Institut Digital Finance</span></div>
+                    <div class="certification-date"><i class="fas fa-calendar-alt"></i> <span data-i18n="cert3_date">En cours - Fin prévue Décembre 2023</span></div>
+                    <a href="#" class="certification-btn" onclick="openModal('certif3')" data-i18n="btn_details">Voir détails</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal -->
+    <div id="certification-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Titre de la certification</h2>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img id="modal-image" src="" alt="" class="modal-image">
+                <div class="modal-details">
+                    <p><strong data-i18n="modal_org">Organisme :</strong> <span id="modal-org"></span></p>
+                    <p><strong data-i18n="modal_date">Date d'obtention :</strong> <span id="modal-date"></span></p>
+                    <p><strong data-i18n="modal_skills">Compétences validées :</strong></p>
+                    <div class="modal-skills" id="modal-skills"></div>
+                    <p><strong data-i18n="modal_description">Description :</strong></p>
+                    <p id="modal-description"></p>
+                    <a id="modal-link" href="#" target="_blank" class="certification-btn" data-i18n="btn_view_certif">Voir la certification</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-left">
+            <p class="copyright">&copy; <span id="currentYear"></span> Mohamed Saïd Diallo - <span data-i18n="rights">Tous droits réservés</span></p>
+        </div>
+        <div class="footer-center">
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/mohamed-saïdou-diallo-a97728251" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.facebook.com/me/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/mohamedsaid.diallo/?__pwa=1#" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="mailto:mohamedsaiddiallo88@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-right">
+            <!-- Espace pour éventuel contenu supplémentaire -->
+        </div>
+    </footer>
+
+    <script>
+        // ============ DONNÉES DES CERTIFICATIONS ============
+        const certificationsData = {
+            'certif1': {
+                title: {
+                    'fr': "Analyse Financière Avancée",
+                    'en': "Advanced Financial Analysis",
+                    'es': "Análisis Financiero Avanzado",
+                    'pt': "Análise Financeira Avançada",
+                    'ar': "التحليل المالي المتقدم",
+                    'de': "Erweiterte Finanzanalyse",
+                    'it': "Analisi Finanziaria Avanzata"
+                },
+                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                org: {
+                    'fr': "Institut des Finances Internationales",
+                    'en': "International Finance Institute",
+                    'es': "Instituto de Finanzas Internacionales",
+                    'pt': "Instituto de Finanças Internacionais",
+                    'ar': "معهد التمويل الدولي",
+                    'de': "Internationales Finanzinstitut",
+                    'it': "Istituto di Finanza Internazionale"
+                },
+                date: {
+                    'fr': "Mars 2023",
+                    'en': "March 2023",
+                    'es': "Marzo 2023",
+                    'pt': "Março 2023",
+                    'ar': "مارس 2023",
+                    'de': "März 2023",
+                    'it': "Marzo 2023"
+                },
+                skills: {
+                    'fr': [
+                        "Analyse des états financiers",
+                        "Évaluation d'entreprise",
+                        "Diagnostic financier",
+                        "Prévisions financières"
+                    ],
+                    'en': [
+                        "Financial statements analysis",
+                        "Business valuation",
+                        "Financial diagnosis",
+                        "Financial forecasts"
+                    ],
+                    'es': [
+                        "Análisis de estados financieros",
+                        "Valoración de empresas",
+                        "Diagnóstico financiero",
+                        "Pronósticos financieros"
+                    ],
+                    'pt': [
+                        "Análise de demonstrações financeiras",
+                        "Avaliação de empresas",
+                        "Diagnóstico financeiro",
+                        "Previsões financeiras"
+                    ],
+                    'ar': [
+                        "تحليل البيانات المالية",
+                        "تقييم الأعمال",
+                        "التشخيص المالي",
+                        "التنبؤات المالية"
+                    ],
+                    'de': [
+                        "Analyse von Finanzberichten",
+                        "Unternehmensbewertung",
+                        "Finanzdiagnose",
+                        "Finanzprognosen"
+                    ],
+                    'it': [
+                        "Analisi degli stati finanziari",
+                        "Valutazione aziendale",
+                        "Diagnosi finanziaria",
+                        "Previsioni finanziarie"
+                    ]
+                },
+                description: {
+                    'fr': "Cette certification valide mes compétences avancées en analyse financière, avec une spécialisation dans le secteur bancaire. Le programme couvrait les méthodes d'évaluation d'entreprise, l'analyse de la performance financière et les techniques de prévision.",
+                    'en': "This certification validates my advanced skills in financial analysis, with a specialization in the banking sector. The program covered business valuation methods, financial performance analysis and forecasting techniques.",
+                    'es': "Esta certificación valida mis habilidades avanzadas en análisis financiero, con especialización en el sector bancario. El programa cubrió métodos de valoración de empresas, análisis de desempeño financiero y técnicas de pronóstico.",
+                    'pt': "Esta certificação valida minhas habilidades avançadas em análise financeira, com especialização no setor bancário. O programa abordou métodos de avaliação de empresas, análise de desempenho financeiro e técnicas de previsão.",
+                    'ar': "هذه الشهادة تتحقق من مهاراتي المتقدمة في التحليل المالي، مع تخصص في القطاع المصرفي. غطى البرنامج طرق تقييم الأعمال، وتحليل الأداء المالي وتقنيات التنبؤ.",
+                    'de': "Diese Zertifizierung bestätigt meine fortgeschrittenen Fähigkeiten in der Finanzanalyse mit Spezialisierung im Bankensektor. Das Programm umfasste Methoden der Unternehmensbewertung, Analyse der Finanzperformance und Prognosetechniken.",
+                    'it': "Questa certificazione convalida le mie competenze avanzate nell'analisi finanziaria, con una specializzazione nel settore bancario. Il programma copriva metodi di valutazione aziendale, analisi delle prestazioni finanziarie e tecniche di previsione."
+                },
+                link: "#"
+            },
+            'certif2': {
+                title: {
+                    'fr': "Gestion des Risques Bancaires",
+                    'en': "Bank Risk Management",
+                    'es': "Gestión de Riesgos Bancarios",
+                    'pt': "Gestão de Riscos Bancários",
+                    'ar': "إدارة المخاطر المصرفية",
+                    'de': "Bankrisikomanagement",
+                    'it': "Gestione del Rischio Bancario"
+                },
+                image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1511&q=80",
+                org: {
+                    'fr': "École Européenne de Finance",
+                    'en': "European Finance School",
+                    'es': "Escuela Europea de Finanzas",
+                    'pt': "Escola Europeia de Finanças",
+                    'ar': "المدرسة الأوروبية للتمويل",
+                    'de': "Europäische Finanzschule",
+                    'it': "Scuola Europea di Finanza"
+                },
+                date: {
+                    'fr': "Novembre 2022",
+                    'en': "November 2022",
+                    'es': "Noviembre 2022",
+                    'pt': "Novembro 2022",
+                    'ar': "نوفمبر 2022",
+                    'de': "November 2022",
+                    'it': "Novembre 2022"
+                },
+                skills: {
+                    'fr': [
+                        "Identification des risques",
+                        "Mesure et quantification",
+                        "Stratégies de mitigation",
+                        "Réglementation Bâle III"
+                    ],
+                    'en': [
+                        "Risk identification",
+                        "Measurement and quantification",
+                        "Mitigation strategies",
+                        "Basel III regulation"
+                    ],
+                    'es': [
+                        "Identificación de riesgos",
+                        "Medición y cuantificación",
+                        "Estrategias de mitigación",
+                        "Regulación Basilea III"
+                    ],
+                    'pt': [
+                        "Identificação de riscos",
+                        "Medição e quantificação",
+                        "Estratégias de mitigação",
+                        "Regulamentação Basileia III"
+                    ],
+                    'ar': [
+                        "تحديد المخاطر",
+                        "القياس والتكميم",
+                        "استراتيجيات التخفيف",
+                        "تنظيم بازل الثالث"
+                    ],
+                    'de': [
+                        "Risikoidentifikation",
+                        "Messung und Quantifizierung",
+                        "Minderungsstrategien",
+                        "Basel III-Regulierung"
+                    ],
+                    'it': [
+                        "Identificazione del rischio",
+                        "Misurazione e quantificazione",
+                        "Strategie di mitigazione",
+                        "Regolamentazione Basilea III"
+                    ]
+                },
+                description: {
+                    'fr': "Certification professionnelle en gestion des risques bancaires couvrant l'ensemble du processus de management du risque, depuis l'identification jusqu'à la mise en place de stratégies de mitigation conformes aux réglementations internationales.",
+                    'en': "Professional certification in bank risk management covering the entire risk management process, from identification to implementation of mitigation strategies compliant with international regulations.",
+                    'es': "Certificación profesional en gestión de riesgos bancarios que cubre todo el proceso de gestión de riesgos, desde la identificación hasta la implementación de estrategias de mitigación conformes con las regulaciones internacionales.",
+                    'pt': "Certificação profissional em gestão de riscos bancários cobrindo todo o processo de gerenciamento de riscos, desde a identificação até a implementação de estratégias de mitigação em conformidade com as regulamentações internacionais.",
+                    'ar': "شهادة مهنية في إدارة المخاطر المصرفية تغطي عملية إدارة المخاطر بأكملها، من التحديد إلى تنفيذ استراتيجيات التخفيف الممتثلة للوائح الدولية.",
+                    'de': "Berufliche Zertifizierung im Bankrisikomanagement, die den gesamten Risikomanagementprozess abdeckt, von der Identifizierung bis zur Umsetzung von Minderungsstrategien, die den internationalen Vorschriften entsprechen.",
+                    'it': "Certificazione professionale nella gestione del rischio bancario che copre l'intero processo di gestione del rischio, dall'identificazione all'implementazione di strategie di mitigazione conformi alle normative internazionali."
+                },
+                link: "#"
+            },
+            'certif3': {
+                title: {
+                    'fr': "Data Science pour la Finance",
+                    'en': "Data Science for Finance",
+                    'es': "Ciencia de Datos para Finanzas",
+                    'pt': "Ciência de Dados para Finanças",
+                    'ar': "علم البيانات للتمويل",
+                    'de': "Data Science für Finanzen",
+                    'it': "Data Science per la Finanza"
+                },
+                image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80",
+                org: {
+                    'fr': "Institut Digital Finance",
+                    'en': "Digital Finance Institute",
+                    'es': "Instituto de Finanzas Digitales",
+                    'pt': "Instituto de Finanças Digitais",
+                    'ar': "معهد التمويل الرقمي",
+                    'de': "Institut für digitale Finanzen",
+                    'it': "Istituto di Finanza Digitale"
+                },
+                date: {
+                    'fr': "En cours - Fin prévue Décembre 2023",
+                    'en': "In progress - Expected completion December 2023",
+                    'es': "En curso - Finalización prevista Diciembre 2023",
+                    'pt': "Em andamento - Conclusão prevista Dezembro 2023",
+                    'ar': "قيد التقدم - من المتوقع الانتهاء ديسمبر 2023",
+                    'de': "In Bearbeitung - Voraussichtlicher Abschluss Dezember 2023",
+                    'it': "In corso - Completamento previsto Dicembre 2023"
+                },
+                skills: {
+                    'fr': [
+                        "Python pour la finance",
+                        "Machine Learning appliqué",
+                        "Analyse prédictive",
+                        "Visualisation de données"
+                    ],
+                    'en': [
+                        "Python for finance",
+                        "Applied Machine Learning",
+                        "Predictive analysis",
+                        "Data visualization"
+                    ],
+                    'es': [
+                        "Python para finanzas",
+                        "Aprendizaje Automático aplicado",
+                        "Análisis predictivo",
+                        "Visualización de datos"
+                    ],
+                    'pt': [
+                        "Python para finanças",
+                        "Aprendizado de Máquina aplicado",
+                        "Análise preditiva",
+                        "Visualização de dados"
+                    ],
+                    'ar': [
+                        "بايثون للتمويل",
+                        "التعلم الآلي التطبيقي",
+                        "التحليل التنبؤي",
+                        "تصور البيانات"
+                    ],
+                    'de': [
+                        "Python für Finanzen",
+                        "Angewandtes maschinelles Lernen",
+                        "Vorhersageanalyse",
+                        "Datenvisualisierung"
+                    ],
+                    'it': [
+                        "Python per la finanza",
+                        "Machine Learning applicato",
+                        "Analisi predittiva",
+                        "Visualizzazione dei dati"
+                    ]
+                },
+                description: {
+                    'fr': "Programme intensif de 6 mois sur l'application des techniques de data science et d'intelligence artificielle dans le secteur financier. Acquisition de compétences en analyse prédictive et en automatisation des processus d'analyse financière.",
+                    'en': "6-month intensive program on the application of data science and artificial intelligence techniques in the financial sector. Acquisition of skills in predictive analysis and automation of financial analysis processes.",
+                    'es': "Programa intensivo de 6 meses sobre la aplicación de técnicas de ciencia de datos e inteligencia artificial en el sector financiero. Adquisición de habilidades en análisis predictivo y automatización de procesos de análisis financiero.",
+                    'pt': "Programa intensivo de 6 meses sobre a aplicação de técnicas de ciência de dados e inteligência artificial no setor financeiro. Aquisição de habilidades em análise preditiva e automação de processos de análise financeira.",
+                    'ar': "برنامج مكثف لمدة 6 أشهر حول تطبيق تقنيات علم البيانات والذكاء الاصطناعي في القطاع المالي. اكتساب المهارات في التحليل التنبؤي وأتمتة عمليات التحليل المالي.",
+                    'de': "6-monatiges intensives Programm zur Anwendung von Data Science- und KI-Techniken im Finanzsektor. Erwerb von Fähigkeiten in der Vorhersageanalyse und Automatisierung von Finanzanalyseprozessen.",
+                    'it': "Programma intensivo di 6 mesi sull'applicazione di tecniche di data science e intelligenza artificiale nel settore finanziario. Acquisizione di competenze nell'analisi predittiva e automazione dei processi di analisi finanziaria."
+                },
+                link: "#"
+            }
+        };
+
+        // ============ TRADUCTIONS ============
+        const translations = {
+            'fr': {
+                // Navigation
+                'nav_home': 'Accueil',
+                'nav_education': 'Parcours Académique',
+                'nav_experience': 'Expériences',
+                'nav_certifications': 'Certifications',
+                'nav_contact': 'Contact',
+                
+                // Titres
+                'certifications_title': 'Certifications - Mohamed Saïd Diallo',
+                'certifications_header': 'Mes Certifications',
+                'certifications_intro': 'Découvrez les certifications que j\'ai obtenues tout au long de mon parcours professionnel et académique.',
+                'header_name': 'Mohamed Saïd Diallo',
+                
+                // Badges
+                'badge_validated': 'Validée',
+                'badge_in_progress': 'En cours',
+                
+                // Boutons
+                'btn_details': 'Voir détails',
+                'btn_view_certif': 'Voir la certification',
+                
+                // Modal
+                'modal_org': 'Organisme :',
+                'modal_date': 'Date d\'obtention :',
+                'modal_skills': 'Compétences validées :',
+                'modal_description': 'Description :',
+                
+                // Footer
+                'rights': 'Tous droits réservés'
+            },
+            'en': {
+                // Navigation
+                'nav_home': 'Home',
+                'nav_education': 'Academic Background',
+                'nav_experience': 'Experiences',
+                'nav_certifications': 'Certifications',
+                'nav_contact': 'Contact',
+                
+                // Titres
+                'certifications_title': 'Certifications - Mohamed Saïd Diallo',
+                'certifications_header': 'My Certifications',
+                'certifications_intro': 'Discover the certifications I have obtained throughout my professional and academic journey.',
+                'header_name': 'Mohamed Saïd Diallo',
+                
+                // Badges
+                'badge_validated': 'Validated',
+                'badge_in_progress': 'In progress',
+                
+                // Boutons
+                'btn_details': 'View details',
+                'btn_view_certif': 'View certification',
+                
+                // Modal
+                'modal_org': 'Organization :',
+                'modal_date': 'Obtained date :',
+                'modal_skills': 'Validated skills :',
+                'modal_description': 'Description :',
+                
+                // Footer
+                'rights': 'All rights reserved'
+            },
+            'es': {
+                // Navigation
+                'nav_home': 'Inicio',
+                'nav_education': 'Formación Académica',
+                'nav_experience': 'Experiencias',
+                'nav_certifications': 'Certificaciones',
+                'nav_contact': 'Contacto',
+                
+                // Titres
+                'certifications_title': 'Certificaciones - Mohamed Saïd Diallo',
+                'certifications_header': 'Mis Certificaciones',
+                'certifications_intro': 'Descubre las certificaciones que he obtenido a lo largo de mi trayectoria profesional y académica.',
+                'header_name': 'Mohamed Saïd Diallo',
+                
+                // Badges
+                'badge_validated': 'Validada',
+                'badge_in_progress': 'En curso',
+                
+                // Boutons
+                'btn_details': 'Ver detalles',
+                'btn_view_certif': 'Ver certificación',
+                
+                // Modal
+                'modal_org': 'Organismo :',
+                'modal_date': 'Fecha de obtención :',
+                'modal_skills': 'Habilidades validadas :',
+                'modal_description': 'Descripción :',
+                
+                // Footer
+                'rights': 'Todos los derechos reservados'
+            },
+            'pt': {
+                // Navigation
+                'nav_home': 'Início',
+                'nav_education': 'Formação Acadêmica',
+                'nav_experience': 'Experiências',
+                'nav_certifications': 'Certificações',
+                'nav_contact': 'Contato',
+                
+                // Titres
+                'certifications_title': 'Certificações - Mohamed Saïd Diallo',
+                'certifications_header': 'Minhas Certificações',
+                'certifications_intro': 'Descubra as certificações que obtive ao longo da minha trajetória profissional e acadêmica.',
+                'header_name': 'Mohamed Saïd Diallo',
+                
+                // Badges
+                'badge_validated': 'Validada',
+                'badge_in_progress': 'Em progresso',
+                
+                // Boutons
+                'btn_details': 'Ver detalhes',
+                'btn_view_certif': 'Ver certificação',
+                
+                // Modal
+                'modal_org': 'Organização :',
+                'modal_date': 'Data de obtenção :',
+                'modal_skills': 'Habilidades validadas :',
+                'modal_description': 'Descrição :',
+                
+                // Footer
+                'rights': 'Todos os direitos reservados'
+            },
+            'ar': {
+                // Navigation
+                'nav_home': 'الرئيسية',
+                'nav_education': 'المسار الأكاديمي',
+                'nav_experience': 'الخبرات',
+                'nav_certifications': 'الشهادات',
+                'nav_contact': 'اتصل',
+                
+                // Titres
+                'certifications_title': 'الشهادات - محمد سعيد دياولو',
+                'certifications_header': 'شهاداتي',
+                'certifications_intro': 'اكتشف الشهادات التي حصلت عليها خلال مسيرتي المهنية والأكاديمية.',
+                'header_name': 'محمد سعيد دياولو',
+                
+                // Badges
+                'badge_validated': 'تم التحقق',
+                'badge_in_progress': 'قيد التقدم',
+                
+                // Boutons
+                'btn_details': 'عرض التفاصيل',
+                'btn_view_certif': 'عرض الشهادة',
+                
+                // Modal
+                'modal_org': 'المنظمة :',
+                'modal_date': 'تاريخ الحصول :',
+                'modal_skills': 'المهارات المصدقة :',
+                'modal_description': 'الوصف :',
+                
+                // Footer
+                'rights': 'جميع الحقوق محفوظة'
+            },
+            'de': {
+                // Navigation
+                'nav_home': 'Startseite',
+                'nav_education': 'Akademischer Werdegang',
+                'nav_experience': 'Erfahrungen',
+                'nav_certifications': 'Zertifizierungen',
+                'nav_contact': 'Kontakt',
+                
+                // Titres
+                'certifications_title': 'Zertifizierungen - Mohamed Saïd Diallo',
+                'certifications_header': 'Meine Zertifizierungen',
+                'certifications_intro': 'Entdecken Sie die Zertifizierungen, die ich im Laufe meiner beruflichen und akademischen Laufbahn erworben habe.',
+                'header_name': 'Mohamed Saïd Diallo',
+                
+                // Badges
+                'badge_validated': 'Bestätigt',
+                'badge_in_progress': 'In Bearbeitung',
+                
+                // Boutons
+                'btn_details': 'Details anzeigen',
+                'btn_view_certif': 'Zertifizierung anzeigen',
+                
+                // Modal
+                'modal_org': 'Organisation :',
+                'modal_date': 'Erwerbsdatum :',
+                'modal_skills': 'Bestätigte Fähigkeiten :',
+                'modal_description': 'Beschreibung :',
+                
+                // Footer
+                'rights': 'Alle Rechte vorbehalten'
+            },
+            'it': {
+                // Navigation
+                'nav_home': 'Home',
+                'nav_education': 'Percorso Accademico',
+                'nav_experience': 'Esperienze',
+                'nav_certifications': 'Certificazioni',
+                'nav_contact': 'Contatto',
+                
+                // Titres
+                'certifications_title': 'Certificazioni - Mohamed Saïd Diallo',
+                'certifications_header': 'Le Mie Certificazioni',
+                'certifications_intro': 'Scopri le certificazioni che ho ottenuto durante il mio percorso professionale e accademico.',
+                'header_name': 'Mohamed Saïd Diallo',
+                
+                // Badges
+                'badge_validated': 'Convalidato',
+                'badge_in_progress': 'In corso',
+                
+                // Boutons
+                'btn_details': 'Vedi dettagli',
+                'btn_view_certif': 'Vedi certificazione',
+                
+                // Modal
+                'modal_org': 'Organizzazione :',
+                'modal_date': 'Data di ottenimento :',
+                'modal_skills': 'Competenze validate :',
+                'modal_description': 'Descrizione :',
+                
+                // Footer
+                'rights': 'Tutti i diritti riservati'
+            }
+        };
+
+        // ============ FONCTIONS ============
+        // Ouvrir le modal
+        function openModal(certifId) {
+            const lang = localStorage.getItem('language') || 'fr';
+            const certif = certificationsData[certifId];
+            const modal = document.getElementById('certification-modal');
+            
+            document.getElementById('modal-title').textContent = certif.title[lang];
+            document.getElementById('modal-image').src = certif.image;
+            document.getElementById('modal-image').alt = certif.title[lang];
+            document.getElementById('modal-org').textContent = certif.org[lang];
+            document.getElementById('modal-date').textContent = certif.date[lang];
+            
+            const skillsList = document.getElementById('modal-skills');
+            skillsList.innerHTML = '';
+            certif.skills[lang].forEach(skill => {
+                const skillElement = document.createElement('div');
+                skillElement.className = 'modal-skill';
+                skillElement.textContent = skill;
+                skillsList.appendChild(skillElement);
+            });
+            
+            document.getElementById('modal-description').textContent = certif.description[lang];
+            document.getElementById('modal-link').href = certif.link;
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Animation d'ouverture
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+
+        // Fermer le modal
+        function closeModal() {
+            const modal = document.getElementById('certification-modal');
+            modal.classList.remove('show');
+            
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        // Mode sombre
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            
+            const icon = document.querySelector('.dark-mode-toggle i');
+            if (icon) {
+                icon.classList.toggle('fa-moon', !isDarkMode);
+                icon.classList.toggle('fa-sun', isDarkMode);
+            }
+            
+            // Déclencher un événement personnalisé pour synchroniser les autres pages
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        function changeLanguage(lang) {
+            if (!translations[lang]) lang = 'fr';
+            
+            localStorage.setItem('preferredLanguage', lang);
+            
+            // Mettre à jour le sélecteur
+            const select = document.querySelector('.language-select');
+            if (select) select.value = lang;
+            
+            // Appliquer les traductions
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            document.documentElement.lang = lang;
+            
+            // Mettre à jour le titre
+            if (translations[lang]['certifications_title']) {
+                document.title = translations[lang]['certifications_title'];
+            }
+            
+            // Déclencher un événement pour synchroniser les autres pages
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        // Appliquer les préférences au chargement
+        function applyPreferences() {
+            // Mode sombre
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                const icon = document.querySelector('.dark-mode-toggle i');
+                if (icon) icon.classList.replace('fa-moon', 'fa-sun');
+            }
+            
+            // Langue
+            const lang = localStorage.getItem('preferredLanguage') || 'fr';
+            changeLanguage(lang);
+            
+            // Année du footer
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        }
+
+        // Synchroniser les changements entre onglets
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'darkMode') {
+                const darkModeEnabled = event.newValue === 'enabled';
+                document.body.classList.toggle('dark-mode', darkModeEnabled);
+                const icon = document.querySelector('.dark-mode-toggle i');
+                if (icon) {
+                    icon.classList.toggle('fa-moon', !darkModeEnabled);
+                    icon.classList.toggle('fa-sun', darkModeEnabled);
+                }
+            }
+            
+            if (event.key === 'preferredLanguage') {
+                changeLanguage(event.newValue || 'fr');
+            }
+        });
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', applyPreferences);
+
+        // Exposer les fonctions globalement
+        window.toggleDarkMode = toggleDarkMode;
+        window.changeLanguage = changeLanguage;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+    </script>
+</body>
+</html>

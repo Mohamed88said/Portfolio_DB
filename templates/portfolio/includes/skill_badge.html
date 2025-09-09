@@ -1,0 +1,51 @@
+{% load portfolio_extras %}
+
+<div class="skill-badge mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-1">
+        <span class="skill-name fw-bold">{{ skill.name }}</span>
+        <div class="skill-meta">
+            {% if skill.years_of_experience > 0 %}
+                <small class="text-muted me-2">{{ skill.years_of_experience }} ans</small>
+            {% endif %}
+            <small class="skill-level badge bg-secondary">{{ skill.get_proficiency_display }}</small>
+        </div>
+    </div>
+    <div class="progress skill-progress" style="height: 8px;">
+        <div class="progress-bar skill-progress-bar" 
+             style="width: {% get_skill_percentage skill.proficiency %}%"
+             data-proficiency="{{ skill.proficiency }}">
+        </div>
+    </div>
+</div>
+
+<style>
+.skill-progress {
+    border-radius: 10px;
+    background-color: #e9ecef;
+}
+
+.skill-progress-bar {
+    border-radius: 10px;
+    transition: width 1s ease-in-out;
+}
+
+.skill-progress-bar[data-proficiency="beginner"] {
+    background-color: #17a2b8;
+}
+
+.skill-progress-bar[data-proficiency="intermediate"] {
+    background-color: #ffc107;
+}
+
+.skill-progress-bar[data-proficiency="advanced"] {
+    background-color: #28a745;
+}
+
+.skill-progress-bar[data-proficiency="expert"] {
+    background-color: #dc3545;
+}
+
+.skill-badge:hover .skill-progress-bar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+</style>

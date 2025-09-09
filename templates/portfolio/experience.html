@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{% trans "Expériences" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5" data-aos="fade-up">
+                <i class="fas fa-briefcase text-primary me-3"></i>
+                {% trans "Expériences Professionnelles" %}
+            </h1>
+        </div>
+    </div>
+
+    {% if experiences %}
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="timeline">
+                {% for experience in experiences %}
+                <div class="timeline-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <h4 class="card-title text-primary mb-0">{{ experience.title }}</h4>
+                                        <span class="badge bg-{{ experience.job_type|yesno:'success,warning,info,primary,secondary' }} ms-3">
+                                            {{ experience.get_job_type_display }}
+                                        </span>
+                                    </div>
+                                    <h5 class="card-subtitle mb-3">
+                                        <i class="fas fa-building me-2"></i>{{ experience.company }}
+                                        {% if experience.location %}
+                                            <span class="ms-3">
+                                                <i class="fas fa-map-marker-alt me-1"></i>{{ experience.location }}
+                                            </span>
+                                        {% endif %}
+                                    </h5>
+                                    
+                                    <div class="mb-3">
+                                        <h6 class="text-muted">{% trans "Description" %}</h6>
+                                        <p class="card-text">{{ experience.description|linebreaks }}</p>
+                                    </div>
+
+                                    {% if experience.achievements %}
+                                    <div class="mb-3">
+                                        <h6 class="text-muted">{% trans "Réalisations" %}</h6>
+                                        <p class="card-text">{{ experience.achievements|linebreaks }}</p>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if experience.technologies %}
+                                    <div class="mb-3">
+                                        <h6 class="text-muted">{% trans "Technologies utilisées" %}</h6>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            {% for tech in experience.technologies|split:"," %}
+                                                <span class="badge bg-secondary">{{ tech|trim }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <div class="experience-period">
+                                        <span class="badge bg-primary fs-6">
+                                            {{ experience.start_date|date:"M Y" }} - 
+                                            {% if experience.is_current %}
+                                                {% trans "Présent" %}
+                                            {% else %}
+                                                {{ experience.end_date|date:"M Y" }}
+                                            {% endif %}
+                                        </span>
+                                        {% if experience.is_current %}
+                                            <div class="mt-2">
+                                                <span class="badge bg-success">
+                                                    <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
+                                                    {% trans "Poste actuel" %}
+                                                </span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-briefcase fa-5x text-muted mb-4"></i>
+        <h3 class="text-muted">{% trans "Aucune expérience ajoutée pour le moment" %}</h3>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

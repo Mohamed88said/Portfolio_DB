@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{% trans "Projets" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5" data-aos="fade-up">
+                <i class="fas fa-project-diagram text-primary me-3"></i>
+                {% trans "Mes Projets" %}
+            </h1>
+        </div>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <div class="btn-group" role="group" aria-label="Project filters">
+                <button type="button" class="btn btn-outline-primary active" data-filter="all">
+                    {% trans "Tous" %}
+                </button>
+                <button type="button" class="btn btn-outline-primary" data-filter="completed">
+                    {% trans "Terminés" %}
+                </button>
+                <button type="button" class="btn btn-outline-primary" data-filter="in_progress">
+                    {% trans "En cours" %}
+                </button>
+                <button type="button" class="btn btn-outline-primary" data-filter="featured">
+                    {% trans "Vedettes" %}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {% if projects %}
+    <div class="row" id="projects-container">
+        {% for project in projects %}
+        <div class="col-lg-4 col-md-6 mb-4 project-item" 
+             data-status="{{ project.status }}" 
+             data-featured="{{ project.is_featured|yesno:'true,false' }}"
+             data-aos="fade-up" 
+             data-aos-delay="{{ forloop.counter0|add:100 }}">
+            <div class="card h-100 shadow-sm project-card">
+                {% if project.image %}
+                <div class="project-image-container">
+                    <img src="{{ project.image.url }}" class="card-img-top project-image" alt="{{ project.title }}">
+                    <div class="project-overlay">
+                        <div class="project-links">
+                            {% if project.project_url %}
+                                <a href="{{ project.project_url }}" class="btn btn-light btn-sm" target="_blank">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            {% endif %}
+                            {% if project.github_url %}
+                                <a href="{{ project.github_url }}" class="btn btn-dark btn-sm" target="_blank">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'portfolio:project_detail' project.pk %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <div class="project-badges">
+                            {% if project.is_featured %}
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-star me-1"></i>{% trans "Vedette" %}
+                                </span>
+                            {% endif %}
+                            <span class="badge bg-{{ project.status|yesno:'success,primary,secondary' }}">
+                                {{ project.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <p class="card-text">{{ project.description|truncatewords:20 }}</p>
+                    
+                    <div class="mb-3">
+                        <h6 class="text-muted mb-2">{% trans "Technologies" %}</h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for tech in project.technologies|split:"," %}
+                                <span class="badge bg-secondary">{{ tech|trim }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="project-dates">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar me-1"></i>
+                            {{ project.start_date|date:"M Y" }} - 
+                            {% if project.end_date %}
+                                {{ project.end_date|date:"M Y" }}
+                            {% else %}
+                                {% trans "En cours" %}
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="card-footer bg-transparent">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'portfolio:project_detail' project.pk %}" class="btn btn-primary btn-sm">
+                            {% trans "Voir détails" %}
+                        </a>
+                        <div class="project-external-links">
+                            {% if project.project_url %}
+                                <a href="{{ project.project_url }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            {% endif %}
+                            {% if project.github_url %}
+                                <a href="{{ project.github_url }}" class="btn btn-outline-dark btn-sm" target="_blank">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <nav aria-label="Projects pagination">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">&laquo; {% trans "Premier" %}</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Précédent" %}</a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Suivant" %}</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{% trans "Dernier" %} &raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    {% endif %}
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-project-diagram fa-5x text-muted mb-4"></i>
+        <h3 class="text-muted">{% trans "Aucun projet ajouté pour le moment" %}</h3>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.project-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.project-image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.project-image {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.project-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.project-image-container:hover .project-overlay {
+    opacity: 1;
+}
+
+.project-image-container:hover .project-image {
+    transform: scale(1.1);
+}
+
+.project-links {
+    display: flex;
+    gap: 10px;
+}
+
+.project-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-end;
+}
+
+.project-item.hidden {
+    display: none;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('[data-filter]');
+    const projectItems = document.querySelectorAll('.project-item');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+            
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Filter projects
+            projectItems.forEach(item => {
+                if (filter === 'all') {
+                    item.classList.remove('hidden');
+                } else if (filter === 'featured') {
+                    if (item.getAttribute('data-featured') === 'true') {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                } else {
+                    if (item.getAttribute('data-status') === filter) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

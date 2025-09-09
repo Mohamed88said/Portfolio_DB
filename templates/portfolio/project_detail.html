@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{{ project.title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'portfolio:home' %}">{% trans "Accueil" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'portfolio:projects' %}">{% trans "Projets" %}</a></li>
+            <li class="breadcrumb-item active">{{ project.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Project Image -->
+        {% if project.image %}
+        <div class="col-lg-6 mb-4" data-aos="fade-right">
+            <div class="project-image-large">
+                <img src="{{ project.image.url }}" class="img-fluid rounded shadow" alt="{{ project.title }}">
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Project Info -->
+        <div class="col-lg-6 mb-4" data-aos="fade-left">
+            <div class="project-header mb-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h1 class="display-5">{{ project.title }}</h1>
+                    <div class="project-badges">
+                        {% if project.is_featured %}
+                            <span class="badge bg-warning fs-6 mb-2">
+                                <i class="fas fa-star me-1"></i>{% trans "Projet Vedette" %}
+                            </span>
+                        {% endif %}
+                        <span class="badge bg-{{ project.status|yesno:'success,primary,secondary' }} fs-6">
+                            {{ project.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+
+                <p class="lead">{{ project.description }}</p>
+            </div>
+
+            <!-- Project Details -->
+            <div class="project-details">
+                <div class="row mb-4">
+                    <div class="col-sm-6">
+                        <h6 class="text-muted">{% trans "Date de début" %}</h6>
+                        <p>{{ project.start_date|date:"d F Y" }}</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <h6 class="text-muted">{% trans "Date de fin" %}</h6>
+                        <p>
+                            {% if project.end_date %}
+                                {{ project.end_date|date:"d F Y" }}
+                            {% else %}
+                                {% trans "En cours" %}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Technologies -->
+                <div class="mb-4">
+                    <h6 class="text-muted">{% trans "Technologies utilisées" %}</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for tech in project.technologies|split:"," %}
+                            <span class="badge bg-secondary fs-6">{{ tech|trim }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Project Links -->
+                <div class="project-actions">
+                    {% if project.project_url %}
+                        <a href="{{ project.project_url }}" class="btn btn-primary btn-lg me-3" target="_blank">
+                            <i class="fas fa-external-link-alt me-2"></i>{% trans "Voir le projet" %}
+                        </a>
+                    {% endif %}
+                    {% if project.github_url %}
+                        <a href="{{ project.github_url }}" class="btn btn-outline-dark btn-lg" target="_blank">
+                            <i class="fab fa-github me-2"></i>{% trans "Code source" %}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Description -->
+    {% if project.detailed_description %}
+    <div class="row mt-5">
+        <div class="col-12" data-aos="fade-up">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>{% trans "Description détaillée" %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="project-description">
+                        {{ project.detailed_description|linebreaks }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Navigation to other projects -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="{% url 'portfolio:projects' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>{% trans "Retour aux projets" %}
+                </a>
+                
+                <div class="project-navigation">
+                    <!-- You can add previous/next project navigation here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.project-image-large img {
+    max-height: 400px;
+    width: 100%;
+    object-fit: cover;
+}
+
+.project-badges {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.project-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.project-actions {
+    margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+    .project-actions {
+        text-align: center;
+    }
+    
+    .project-actions .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+</style>
+{% endblock %}

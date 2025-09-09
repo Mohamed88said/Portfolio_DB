@@ -1,0 +1,65 @@
+{% load i18n %}
+
+<div class="social-links">
+    {% if profile %}
+        {% if profile.linkedin %}
+            <a href="{{ profile.linkedin }}" class="social-link linkedin" target="_blank" title="LinkedIn">
+                <i class="fab fa-linkedin{% if size == 'large' %} fa-2x{% endif %}"></i>
+            </a>
+        {% endif %}
+        {% if profile.github %}
+            <a href="{{ profile.github }}" class="social-link github" target="_blank" title="GitHub">
+                <i class="fab fa-github{% if size == 'large' %} fa-2x{% endif %}"></i>
+            </a>
+        {% endif %}
+        {% if profile.website %}
+            <a href="{{ profile.website }}" class="social-link website" target="_blank" title="{% trans 'Site Web' %}">
+                <i class="fas fa-globe{% if size == 'large' %} fa-2x{% endif %}"></i>
+            </a>
+        {% endif %}
+        {% if profile.email %}
+            <a href="mailto:{{ profile.email }}" class="social-link email" title="Email">
+                <i class="fas fa-envelope{% if size == 'large' %} fa-2x{% endif %}"></i>
+            </a>
+        {% endif %}
+    {% endif %}
+</div>
+
+<style>
+.social-links {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.social-link {
+    color: #6c757d;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.social-link:hover {
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.social-link.linkedin:hover {
+    color: #0077b5;
+}
+
+.social-link.github:hover {
+    color: #333;
+}
+
+.social-link.website:hover {
+    color: #007bff;
+}
+
+.social-link.email:hover {
+    color: #dc3545;
+}
+
+body.dark-mode .social-link.github:hover {
+    color: #fff;
+}
+</style>

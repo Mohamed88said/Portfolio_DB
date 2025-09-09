@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Parcours Académique" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5" data-aos="fade-up">
+                <i class="fas fa-graduation-cap text-primary me-3"></i>
+                {% trans "Parcours Académique" %}
+            </h1>
+        </div>
+    </div>
+
+    <!-- Education Timeline -->
+    {% if educations %}
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="timeline">
+                {% for education in educations %}
+                <div class="timeline-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h4 class="card-title text-primary">{{ education.get_degree_display }}</h4>
+                                    <h5 class="card-subtitle mb-2">{{ education.field_of_study }}</h5>
+                                    <h6 class="text-muted mb-3">
+                                        <i class="fas fa-university me-2"></i>{{ education.institution }}
+                                        {% if education.location %}
+                                            <span class="ms-3">
+                                                <i class="fas fa-map-marker-alt me-1"></i>{{ education.location }}
+                                            </span>
+                                        {% endif %}
+                                    </h6>
+                                    {% if education.description %}
+                                        <p class="card-text">{{ education.description }}</p>
+                                    {% endif %}
+                                    {% if education.grade %}
+                                        <p class="mb-0">
+                                            <strong>{% trans "Mention" %} :</strong> 
+                                            <span class="badge bg-success">{{ education.grade }}</span>
+                                        </p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <div class="education-period">
+                                        <span class="badge bg-primary fs-6">
+                                            {{ education.start_date|date:"Y" }} - 
+                                            {% if education.is_current %}
+                                                {% trans "En cours" %}
+                                            {% else %}
+                                                {{ education.end_date|date:"Y" }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-graduation-cap fa-5x text-muted mb-4"></i>
+        <h3 class="text-muted">{% trans "Aucune formation ajoutée pour le moment" %}</h3>
+    </div>
+    {% endif %}
+
+    <!-- Skills Section -->
+    {% if skills %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <h2 class="text-center mb-5" data-aos="fade-up">
+                <i class="fas fa-cogs text-primary me-3"></i>
+                {% trans "Compétences" %}
+            </h2>
+        </div>
+    </div>
+
+    <div class="row">
+        {% regroup skills by category as skills_by_category %}
+        {% for category in skills_by_category %}
+        <div class="col-lg-6 mb-4" data-aos="fade-up">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        {% if category.grouper == 'technical' %}
+                            <i class="fas fa-code me-2"></i>{% trans "Compétences Techniques" %}
+                        {% elif category.grouper == 'soft' %}
+                            <i class="fas fa-users me-2"></i>{% trans "Soft Skills" %}
+                        {% elif category.grouper == 'language' %}
+                            <i class="fas fa-language me-2"></i>{% trans "Langues" %}
+                        {% else %}
+                            <i class="fas fa-tools me-2"></i>{% trans "Outils" %}
+                        {% endif %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for skill in category.list %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold">{{ skill.name }}</span>
+                            <small class="text-muted">
+                                {{ skill.years_of_experience }} {% trans "ans" %}
+                            </small>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            {% if skill.proficiency == 'beginner' %}
+                                <div class="progress-bar bg-info" style="width: 25%"></div>
+                            {% elif skill.proficiency == 'intermediate' %}
+                                <div class="progress-bar bg-warning" style="width: 50%"></div>
+                            {% elif skill.proficiency == 'advanced' %}
+                                <div class="progress-bar bg-success" style="width: 75%"></div>
+                            {% else %}
+                                <div class="progress-bar bg-danger" style="width: 100%"></div>
+                            {% endif %}
+                        </div>
+                        <small class="text-muted">{{ skill.get_proficiency_display }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

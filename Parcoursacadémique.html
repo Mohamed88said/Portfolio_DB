@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="academic_title">Parcours Académique - Mohamed Saïd Diallo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&display=swap" rel="stylesheet">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JT25QS5BC5"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-JT25QS5BC5');
+    </script>
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png">
+    <link rel="manifest" href="site.webmanifest">
+    
+    <style>
+        :root {
+            --primary: #1a0033;
+            --secondary: #330000;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #121212;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--light);
+            color: var(--text-dark);
+            line-height: 1.8;
+            padding-bottom: 100px;
+            transition: var(--transition);
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mode Sombre */
+        body.dark-mode {
+            background-color: var(--dark);
+            color: var(--text-light);
+        }
+
+        body.dark-mode .container {
+            background: #222;
+            color: var(--text-light);
+        }
+
+        body.dark-mode footer {
+            background: #111;
+        }
+
+        body.dark-mode .timeline-point {
+            background: #222;
+        }
+
+        body.dark-mode .description-card {
+            background: #333;
+            color: white;
+        }
+
+        body.dark-mode .academic-intro {
+            background: rgba(0,0,0,0.2);
+        }
+
+        body.dark-mode .academic-highlights {
+            background: rgba(0,0,0,0.1);
+        }
+
+        /* Header animé */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(-20px);
+            opacity: 0;
+            animation: slideDown 0.8s ease-out 0.3s forwards;
+        }
+
+        @keyframes slideDown {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #330000, #1a0033, #000033, #33001a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 5px rgba(255, 77, 77, 0.3); }
+            100% { text-shadow: 0 0 15px rgba(77, 121, 255, 0.6); }
+        }
+
+        header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        /* Basmalah */
+        .basmala {
+            font-size: 2.8rem;
+            line-height: 1;
+            margin: 0 0 15px 0;
+            font-family: 'Amiri', 'Traditional Arabic', Arial, sans-serif;
+            direction: rtl;
+            display: block;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Navigation animée */
+        nav {
+            display: flex;
+            justify-content: center;
+            background: rgba(0,0,0,0.1);
+            padding: 15px;
+            backdrop-filter: blur(5px);
+            margin-top: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 30px;
+            transition: var(--transition);
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        nav a:nth-child(1) { animation-delay: 0.4s; }
+        nav a:nth-child(2) { animation-delay: 0.5s; }
+        nav a:nth-child(3) { animation-delay: 0.6s; }
+        nav a:nth-child(4) { animation-delay: 0.7s; }
+        nav a:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 77, 77, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        nav a:hover::before {
+            left: 100%;
+        }
+
+        /* Conteneurs */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUpContainer 0.8s ease-out 0.6s forwards;
+        }
+
+        @keyframes fadeInUpContainer {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 0;
+            background: var(--accent);
+            transition: height 0.5s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .container:hover::before {
+            height: 100%;
+        }
+
+        /* Introduction académique */
+        .academic-intro {
+            background: rgba(231, 76, 60, 0.1);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--accent);
+            transition: var(--transition);
+        }
+
+        .academic-intro:hover {
+            transform: translateX(5px);
+        }
+
+        .academic-intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .academic-intro .quote {
+            font-style: italic;
+            font-weight: 600;
+            color: var(--accent);
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .academic-intro .quote::before,
+        .academic-intro .quote::after {
+            content: '"';
+            font-size: 1.5rem;
+            color: var(--accent);
+            opacity: 0.7;
+        }
+
+        /* Points forts académiques */
+        .academic-highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            background: rgba(26, 0, 51, 0.05);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .highlight-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: var(--transition);
+            border-top: 3px solid var(--accent);
+        }
+
+        .highlight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .highlight-card i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .highlight-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        /* Timeline */
+        .timeline-section {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .timeline-header {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .timeline-header h2 {
+            display: inline-block;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .timeline-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: auto;
+            padding: 40px 0;
+            height: 350px;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background: var(--accent);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            z-index: 1;
+        }
+
+        .timeline-point {
+            position: absolute;
+            background: white;
+            color: var(--accent);
+            padding: 12px;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            text-align: center;
+            transition: var(--transition);
+            z-index: 2;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            opacity: 0;
+            animation: fadeInScale 0.5s ease-out forwards;
+        }
+
+        .timeline-point:nth-child(1) { 
+            top: 20px; 
+            left: 30%; 
+            animation-delay: 0.7s;
+        }
+        .timeline-point:nth-child(2) { 
+            top: 80px; 
+            left: 70%; 
+            animation-delay: 0.8s;
+        }
+        .timeline-point:nth-child(3) { 
+            top: 140px; 
+            left: 30%; 
+            animation-delay: 0.9s;
+        }
+        .timeline-point:nth-child(4) { 
+            top: 200px; 
+            left: 70%; 
+            animation-delay: 1.0s;
+        }
+        .timeline-point:nth-child(5) { 
+            top: 260px; 
+            left: 30%; 
+            animation-delay: 1.1s;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .timeline-point:hover {
+            transform: scale(1.1);
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Description Card */
+        .description-card {
+            position: absolute;
+            width: 300px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 10;
+            transform: translateY(20px);
+        }
+
+        .description-card h3 {
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .description-card h3 i {
+            margin-right: 10px;
+        }
+
+        .description-card ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .description-card li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .description-card li::before {
+            content: '•';
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: -15px;
+        }
+
+        /* Contrôles (mode sombre + langue) */
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+            opacity: 0;
+            animation: fadeInControls 0.5s ease-out 0.4s forwards;
+        }
+
+        @keyframes fadeInControls {
+            to { opacity: 1; }
+        }
+
+        .dark-mode-toggle, .language-select {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: var(--transition);
+        }
+
+        .dark-mode-toggle:hover, .language-select:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, var(--accent), #4d79ff);
+        }
+
+        .language-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 30px;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 15px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 15px 20px;
+            height: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInFooter 0.8s ease-out 0.5s forwards;
+        }
+
+        @keyframes fadeInFooter {
+            to { opacity: 1; }
+        }
+
+        .footer-left {
+            flex: 1;
+            text-align: left;
+        }
+
+        .footer-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .footer-right {
+            flex: 1;
+            text-align: right;
+        }
+
+        .copyright {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            white-space: nowrap;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        /* Animations */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .timeline {
+                height: 400px;
+            }
+
+            .timeline-point {
+                width: 50px;
+                height: 50px;
+                font-size: 0.8rem;
+            }
+            
+            .timeline-point:nth-child(1) { top: 20px; left: 20%; }
+            .timeline-point:nth-child(2) { top: 100px; left: 80%; }
+            .timeline-point:nth-child(3) { top: 180px; left: 20%; }
+            .timeline-point:nth-child(4) { top: 260px; left: 80%; }
+            .timeline-point:nth-child(5) { top: 340px; left: 20%; }
+
+            .description-card {
+                width: 250px;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+            }
+            
+            .controls {
+                top: 10px;
+                right: 10px;
+            }
+            
+            nav {
+                flex-wrap: wrap;
+            }
+            
+            nav a {
+                margin: 5px;
+                padding: 8px 15px;
+            }
+            
+            .basmala {
+                font-size: 2.2rem;
+            }
+            
+            footer {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+            
+            .footer-left, .footer-center, .footer-right {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .social-links {
+                gap: 12px;
+            }
+            
+            .social-links a {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+            }
+            
+            .copyright {
+                font-size: 0.7rem;
+            }
+
+            .academic-highlights {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Contrôles -->
+    <div class="controls">
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+            <i class="fas fa-moon"></i>
+        </button>
+        <select class="language-select" onchange="changeLanguage(this.value)">
+            <option value="fr">FR</option>
+            <option value="en">EN</option>
+            <option value="ar">AR</option>
+            <option value="es">ES</option>
+            <option value="de">DE</option>
+            <option value="pt">PT</option>
+        </select>
+    </div>
+
+    <header>
+        <div class="animated-bg"></div>
+        <div class="header-content">
+            <h1>Mohamed Saïd Diallo</h1>
+            <nav>
+                <a href="index.html" data-i18n="nav_home">Accueil</a>
+                <a href="Parcoursacadémique.html" data-i18n="nav_academic">Parcours Académique</a>
+                <a href="expérience.html" data-i18n="nav_experience">Expériences</a>
+                <a href="certification.html" data-i18n="nav_certifications">Certifications</a>
+                <a href="contact.html" data-i18n="nav_contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="container">
+        <h2 data-i18n="journey">Mon Parcours Académique</h2>
+        
+        <div class="academic-intro">
+            <p data-i18n="intro_text1">Mon parcours académique reflète ma passion pour l'apprentissage et mon engagement envers l'excellence. Chaque étape a été soigneusement choisie pour me permettre d'acquérir des compétences solides en économie, finance et gestion, tout en développant ma pensée critique et analytique.</p>
+            <p class="quote" data-i18n="quote">"L'éducation est l'arme la plus puissante qu'on puisse utiliser pour changer le monde" - Nelson Mandela</p>
+            <p data-i18n="intro_text2">Au fil des années, j'ai combiné rigueur académique et engagement associatif pour forger un profil équilibré, alliant connaissances théoriques et expériences pratiques.</p>
+        </div>
+
+        <div class="academic-highlights">
+            <div class="highlight-card">
+                <i class="fas fa-graduation-cap"></i>
+                <h3 data-i18n="highlight1_title">Excellence Académique</h3>
+                <p data-i18n="highlight1_text">Mention Très Bien en Licence 2 d'Économie avec une moyenne de 15.5/20, démontrant ma capacité à exceller dans des environnements académiques exigeants.</p>
+            </div>
+            
+            <div class="highlight-card">
+                <i class="fas fa-chart-line"></i>
+                <h3 data-i18n="highlight2_title">Spécialisation Progressive</h3>
+                <p data-i18n="highlight2_text">Parcours cohérent allant des sciences fondamentales à l'économie appliquée, avec une spécialisation croissante en analyse économique et finance.</p>
+            </div>
+            
+            <div class="highlight-card">
+                <i class="fas fa-globe"></i>
+                <h3 data-i18n="highlight3_title">Ouverture Internationale</h3>
+                <p data-i18n="highlight3_text">Formation dans des établissements de renom en Guinée et en France, me dotant d'une perspective multiculturelle et d'une adaptabilité précieuse.</p>
+            </div>
+        </div>
+
+        <div class="timeline-section">
+            <div class="timeline-header">
+                <h2 data-i18n="timeline_title">Évolution de Mon Parcours</h2>
+                <p data-i18n="timeline_subtitle">Explorez les étapes clés de ma formation académique en survolant les points ci-dessous</p>
+            </div>
+            
+            <div class="timeline">
+                <!-- Ordre inversé (2024 en premier) -->
+                <div class="timeline-point" 
+                     onmouseover="showDescription(event, '2024-2025')" 
+                     onmouseout="hideDescription('2024-2025')">2024-2025</div>
+                <div class="timeline-point" 
+                     onmouseover="showDescription(event, '2023')" 
+                     onmouseout="hideDescription('2023')">2023</div>
+                <div class="timeline-point" 
+                     onmouseover="showDescription(event, '2022')" 
+                     onmouseout="hideDescription('2022')">2022</div>
+                <div class="timeline-point" 
+                     onmouseover="showDescription(event, '2021')" 
+                     onmouseout="hideDescription('2021')">2021</div>
+                <div class="timeline-point" 
+                     onmouseover="showDescription(event, '2020')" 
+                     onmouseout="hideDescription('2020')">2020</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-left">
+            <p class="copyright">&copy; <span id="currentYear"></span> Mohamed Saïd Diallo - <span data-i18n="rights">Tous droits réservés</span></p>
+        </div>
+        <div class="footer-center">
+            <div class="social-links">
+                <a href="https://www.facebook.com/votreprofil" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/votreprofil" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/mohamed-saïdou-diallo-a97728251" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="mailto:mohamedsaiddiallo88@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+        <div class="footer-right">
+            <!-- Espace pour éventuel contenu supplémentaire -->
+        </div>
+    </footer>
+
+    <script>
+        // ============ TRADUCTIONS ============
+        const translations = {
+            'fr': {
+                'academic_title': 'Parcours Académique',
+                'journey': 'Mon Parcours Académique',
+                'rights': 'Tous droits réservés',
+                'nav_home': 'Accueil',
+                'nav_academic': 'Parcours Académique',
+                'nav_experience': 'Expériences',
+                'nav_certifications': 'Certifications',
+                'nav_contact': 'Contact',
+                'intro_text1': "Mon parcours académique reflète ma passion pour l'apprentissage et mon engagement envers l'excellence. Chaque étape a été soigneusement choisie pour me permettre d'acquérir des compétences solides en économie, finance et gestion, tout en développant ma pensée critique et analytique.",
+                'quote': "L'éducation est l'arme la plus puissante qu'on puisse utiliser pour changer le monde",
+                'intro_text2': "Au fil des années, j'ai combiné rigueur académique et engagement associatif pour forger un profil équilibré, alliant connaissances théoriques et expériences pratiques.",
+                'highlight1_title': "Excellence Académique",
+                'highlight1_text': "Mention Très Bien en Licence 2 d'Économie avec une moyenne de 15.5/20, démontrant ma capacité à exceller dans des environnements académiques exigeants.",
+                'highlight2_title': "Spécialisation Progressive",
+                'highlight2_text': "Parcours cohérent allant des sciences fondamentales à l'économie appliquée, avec une spécialisation croissante en analyse économique et finance.",
+                'highlight3_title': "Ouverture Internationale",
+                'highlight3_text': "Formation dans des établissements de renom en Guinée et en France, me dotant d'une perspective multiculturelle et d'une adaptabilité précieuse.",
+                'timeline_title': "Évolution de Mon Parcours",
+                'timeline_subtitle': "Explorez les étapes clés de ma formation académique en survolant les points ci-dessous",
+                '2024-2025_title': "Licence APE",
+                '2024-2025_desc': "Actuellement en Licence 3 APE à l'Université de Rouen, spécialisé en Analyse et Politique Économique. Modules principaux :<ul><li>Finance de marché</li><li>Macroéconomie avancée</li><li>Microéconomie appliquée</li><li>Gestion d'actif et de portefeuille</li><li>Économétrie financière</li></ul>",
+                '2023_title': "Licence 2 en Économie",
+                '2023_desc': "Obtention de ma licence 2 en économie avec mention Très Bien (15.5/20). Spécialisation en :<ul><li>Comptabilité analytique</li><li>Gestion d'entreprise</li><li>Audit financier</li></ul>Stage à l'appui dans une banque commerciale où j'ai analysé les risques de crédit.",
+                '2022_title': "Licence 1 en Management-Finance",
+                '2022_desc': "Première année de licence à l'Université ISCAE de Conakry. Acquisition des fondamentaux :<ul><li>Comptabilité générale</li><li>Finance d'entreprise</li><li>Outils quantitatifs de gestion</li><li>Marketing stratégique</li></ul>Participation active aux séminaires professionnels.",
+                '2021_title': "Responsable Débats LCIn",
+                '2021_desc': "En parallèle de mes études, gestion de l'axe débat au LCIn avec :<ul><li>Coordination d'une équipe de 10 personnes</li><li>Organisation de 5 événements majeurs</li><li>Animation de débats sur des thématiques économiques</li><li>Formation des nouveaux membres</li></ul>",
+                '2020_title': "Baccalauréat Scientifique",
+                '2020_desc': "Obtention de mon baccalauréat scientifique avec mention Assez Bien au Lycée Saint-Georges de Conakry. Spécialités :<ul><li>Mathématiques (16/20)</li><li>Sciences Physiques (14/20)</li></ul>Option : Sciences Mathématiques. Participation aux olympiades de mathématiques."
+            },
+            'en': {
+                'academic_title': 'Academic Journey',
+                'journey': 'My Academic Journey',
+                'rights': 'All rights reserved',
+                'nav_home': 'Home',
+                'nav_academic': 'Academic Path',
+                'nav_experience': 'Experiences',
+                'nav_certifications': 'Certifications',
+                'nav_contact': 'Contact',
+                'intro_text1': "My academic journey reflects my passion for learning and my commitment to excellence. Each step has been carefully chosen to allow me to acquire solid skills in economics, finance and management, while developing my critical and analytical thinking.",
+                'quote': "Education is the most powerful weapon which you can use to change the world",
+                'intro_text2': "Over the years, I have combined academic rigor and associative commitment to forge a balanced profile, combining theoretical knowledge and practical experiences.",
+                'highlight1_title': "Academic Excellence",
+                'highlight1_text': "High Honors in 2nd year of Economics with an average of 15.5/20, demonstrating my ability to excel in demanding academic environments.",
+                'highlight2_title': "Progressive Specialization",
+                'highlight2_text': "Coherent path from fundamental sciences to applied economics, with increasing specialization in economic analysis and finance.",
+                'highlight3_title': "International Openness",
+                'highlight3_text': "Training in renowned institutions in Guinea and France, giving me a multicultural perspective and valuable adaptability.",
+                'timeline_title': "Evolution of My Journey",
+                'timeline_subtitle': "Explore the key stages of my academic training by hovering over the points below",
+                '2024-2025_title': "Bachelor's Degree in APE",
+                '2024-2025_desc': "Currently in 3rd year of Bachelor's degree in Economic Analysis and Policy at University of Rouen. Main courses:<ul><li>Market Finance</li><li>Advanced Macroeconomics</li><li>Applied Microeconomics</li><li>Asset and Portfolio Management</li><li>Financial Econometrics</li></ul>",
+                '2023_title': "2nd Year in Economics",
+                '2023_desc': "Obtained my 2nd year in Economics with High Honors (15.5/20). Specialization in:<ul><li>Analytical Accounting</li><li>Business Management</li><li>Financial Audit</li></ul>Supporting internship in a commercial bank analyzing credit risks.",
+                '2022_title': "1st Year in Management-Finance",
+                '2022_desc': "First year of bachelor's degree at ISCAE University of Conakry. Fundamentals acquisition:<ul><li>General Accounting</li><li>Corporate Finance</li><li>Quantitative Management Tools</li><li>Strategic Marketing</li></ul>Active participation in professional seminars.",
+                '2021_title': "Debate Manager LCIn",
+                '2021_desc': "Alongside my studies, management of the debate axis at LCIn with:<ul><li>Coordination of a 10-person team</li><li>Organization of 5 major events</li><li>Moderation of debates on economic topics</li><li>Training of new members</li></ul>",
+                '2020_title': "Scientific Baccalaureate",
+                '2020_desc': "Obtained my scientific baccalaureate with Fairly Good honors at Saint-Georges High School in Conakry. Specialties:<ul><li>Mathematics (16/20)</li><li>Physical Sciences (14/20)</li></ul>Option: Mathematical Sciences. Participation in mathematics olympiads."
+            },
+            'ar': {
+                'academic_title': 'المسار الأكاديمي',
+                'journey': 'رحلتي الأكاديمية',
+                'rights': 'جميع الحقوق محفوظة',
+                'nav_home': 'الصفحة الرئيسية',
+                'nav_academic': 'المسار الأكاديمي',
+                'nav_experience': 'الخبرات',
+                'nav_certifications': 'الشهادات',
+                'nav_contact': 'اتصل',
+                'intro_text1': "يعكس مساري الأكاديمي شغفي بالتعلم والتزامي بالتميز. تم اختيار كل خطوة بعناية لاكتساب مهارات قوية في الاقتصاد والتمويل والإدارة، مع تطوير تفكيري النقدي والتحليلي.",
+                'quote': "التعليم هو أقوى سلاح يمكنك استخدامه لتغيير العالم",
+                'intro_text2': "على مر السنين، جمعت بين الصرامة الأكاديمية والالتزام الجمعي لصياغة ملف شخصي متوازن يجمع بين المعرفة النظرية والخبرات العملية.",
+                'highlight1_title': "التميز الأكاديمي",
+                'highlight1_text': "امتياز في السنة الثانية من الاقتصاد بمعدل 15.5/20، مما يدل على قدرتي على التفوق في البيئات الأكاديمية المطلوبة.",
+                'highlight2_title': "تخصص تدريجي",
+                'highlight2_text': "مسار متماسك من العلوم الأساسية إلى الاقتصاد التطبيقي، مع تخصص متزايد في التحليل الاقتصادي والتمويل.",
+                'highlight3_title': "انفتاح دولي",
+                'highlight3_text': "التدريب في مؤسسات مرموقة في غينيا وفرنسا، مما منحني منظورًا متعدد الثقافات وقدرة قيمة على التكيف.",
+                'timeline_title': "تطور مساري",
+                'timeline_subtitle': "استكشف المراحل الرئيسية لتدريبي الأكاديمي عن طريق التمرير فوق النقاط أدناه",
+                '2024-2025_title': "إجازة في التحليل والسياسة الاقتصادية",
+                '2024-2025_desc': "حاليا في السنة الثالثة من الإجازة في التحليل والسياسة الاقتصادية بجامعة روان. المواد الرئيسية:<ul><li>تمويل الأسواق</li><li>الاقتصاد الكلي المتقدم</li><li>الاقتصاد الجزئي التطبيقي</li><li>إدارة الأصول والمحافظ</li><li>قياس الاقتصاد المالي</li></ul>",
+                '2023_title': "السنة الثانية في الاقتصاد",
+                '2023_desc': "حصلت على السنة الثانية في الاقتصاد بدرجة امتياز (15.5/20). تخصص في:<ul><li>المحاسبة التحليلية</li><li>إدارة الأعمال</li><li>التدقيق المالي</li></ul>تدريب داعم في بنك تجاري لتحليل مخاطر الائتمان.",
+                '2022_title': "السنة الأولى في الإدارة والمالية",
+                '2022_desc': "السنة الأولى من الإجازة في جامعة إسكاي في كوناكري. اكتساب الأساسيات:<ul><li>المحاسبة العامة</li><li>تمويل الشركات</li><li>أدوات الإدارة الكمية</li><li>التسويق الاستراتيجي</li></ul>مشاركة فعالة في الندوات المهنية.",
+                '2021_title': "مسؤول المناظرات LCIn",
+                '2021_desc': "بالتوازي مع دراستي، إدارة محور المناظرات في LCIn مع:<ul><li>تنسيق فريق من 10 أشخاص</li><li>تنظيم 5 فعاليات كبرى</li><li>تيسير المناقشات حول مواضيع اقتصادية</li><li>تدريب الأعضاء الجدد</li></ul>",
+                '2020_title': "البكالوريا العلمية",
+                '2020_desc': "حصلت على شهادة البكالوريا العلمية بمستوى جيد جدا في ثانوية سان جورج في كوناكري. التخصصات:<ul><li>الرياضيات (16/20)</li><li>العلوم الفيزيائية (14/20)</li></ul>الخيار: العلوم الرياضية. المشاركة في أولمبياد الرياضيات."
+            },
+            'es': {
+                'academic_title': 'Trayectoria Académica',
+                'journey': 'Mi Trayectoria Académica',
+                'rights': 'Todos los derechos reservados',
+                'nav_home': 'Inicio',
+                'nav_academic': 'Trayectoria Académica',
+                'nav_experience': 'Experiencias',
+                'nav_certifications': 'Certificaciones',
+                'nav_contact': 'Contacto',
+                'intro_text1': "Mi trayectoria académica refleja mi pasión por el aprendizaje y mi compromiso con la excelencia. Cada paso ha sido cuidadosamente elegido para permitirme adquirir sólidas habilidades en economía, finanzas y gestión, mientras desarrollo mi pensamiento crítico y analítico.",
+                'quote': "La educación es el arma más poderosa que puedes usar para cambiar el mundo",
+                'intro_text2': "A lo largo de los años, he combinado rigor académico y compromiso asociativo para forjar un perfil equilibrado, combinando conocimientos teóricos y experiencias prácticas.",
+                'highlight1_title': "Excelencia Académica",
+                'highlight1_text': "Matrícula de Honor en 2º año de Economía con una media de 15.5/20, demostrando mi capacidad para sobresalir en entornos académicos exigentes.",
+                'highlight2_title': "Especialización Progresiva",
+                'highlight2_text': "Trayectoria coherente desde las ciencias fundamentales hasta la economía aplicada, con una creciente especialización en análisis económico y finanzas.",
+                'highlight3_title': "Apertura Internacional",
+                'highlight3_text': "Formación en instituciones de renombre en Guinea y Francia, dotándome de una perspectiva multicultural y una valiosa adaptabilidad.",
+                'timeline_title': "Evolución de Mi Trayectoria",
+                'timeline_subtitle': "Explore las etapas clave de mi formación académica pasando el cursor sobre los puntos a continuación",
+                '2024-2025_title': "Licenciatura en APE",
+                '2024-2025_desc': "Actualmente en 3er año de Licenciatura en Análisis y Política Económica en la Universidad de Rouen. Asignaturas principales:<ul><li>Finanzas de Mercado</li><li>Macroeconomía Avanzada</li><li>Microeconomía Aplicada</li><li>Gestión de Activos y Carteras</li><li>Econometría Financiera</li></ul>",
+                '2023_title': "2do Año en Economía",
+                '2023_desc': "Obtuve mi 2do año en Economía con Matrícula de Honor (15.5/20). Especialización en:<ul><li>Contabilidad Analítica</li><li>Gestión Empresarial</li><li>Auditoría Financiera</li></ul>Prácticas de apoyo en un banco comercial analizando riesgos crediticios.",
+                '2022_title': "1er Año en Gestión-Finanzas",
+                '2022_desc': "Primer año de licenciatura en la Universidad ISCAE de Conakry. Adquisición de fundamentos:<ul><li>Contabilidad General</li><li>Finanzas Corporativas</li><li>Herramientas Cuantitativas de Gestión</li><li>Marketing Estratégico</li></ul>Participación activa en seminarios profesionales.",
+                '2021_title': "Responsable de Debates LCIn",
+                '2021_desc': "Paralelamente a mis estudios, gestión del eje de debate en LCIn con:<ul><li>Coordinación de un equipo de 10 personas</li><li>Organización de 5 eventos importantes</li><li>Moderación de debates sobre temas económicos</li><li>Formación de nuevos miembros</li></ul>",
+                '2020_title': "Bachillerato Científico",
+                '2020_desc': "Obtuve mi bachillerato científico con la calificación de Bien en el Liceo Saint-Georges de Conakry. Especialidades:<ul><li>Matemáticas (16/20)</li><li>Ciencias Físicas (14/20)</li></ul>Opción: Ciencias Matemáticas. Participación en olimpiadas de matemáticas."
+            },
+            'de': {
+                'academic_title': 'Akademischer Werdegang',
+                'journey': 'Mein Akademischer Werdegang',
+                'rights': 'Alle Rechte vorbehalten',
+                'nav_home': 'Startseite',
+                'nav_academic': 'Akademischer Werdegang',
+                'nav_experience': 'Erfahrungen',
+                'nav_certifications': 'Zertifizierungen',
+                'nav_contact': 'Kontakt',
+                'intro_text1': "Mein akademischer Werdegang spiegelt meine Leidenschaft für das Lernen und mein Engagement für Exzellenz wider. Jeder Schritt wurde sorgfältig ausgewählt, um mir solide Fähigkeiten in Wirtschaft, Finanzen und Management zu vermitteln und gleichzeitig mein kritisches und analytisches Denken zu entwickeln.",
+                'quote': "Bildung ist die mächtigste Waffe, die du verwenden kannst, um die Welt zu verändern",
+                'intro_text2': "Im Laufe der Jahre habe ich akademische Strenge und assoziatives Engagement kombiniert, um ein ausgewogenes Profil zu entwickeln, das theoretisches Wissen und praktische Erfahrungen vereint.",
+                'highlight1_title': "Akademische Exzellenz",
+                'highlight1_text': "Auszeichnung im 2. Jahr Wirtschaftswissenschaften mit einem Durchschnitt von 15,5/20, was meine Fähigkeit unter Beweis stellt, in anspruchsvollen akademischen Umgebungen zu glänzen.",
+                'highlight2_title': "Fortschreitende Spezialisierung",
+                'highlight2_text': "Kohärenter Weg von den Grundlagenwissenschaften zur angewandten Wirtschaftswissenschaft mit zunehmender Spezialisierung auf Wirtschaftsanalyse und Finanzen.",
+                'highlight3_title': "Internationale Offenheit",
+                'highlight3_text': "Ausbildung in renommierten Einrichtungen in Guinea und Frankreich, die mir eine multikulturelle Perspektive und wertvolle Anpassungsfähigkeit vermittelt hat.",
+                'timeline_title': "Entwicklung meines Werdegangs",
+                'timeline_subtitle': "Entdecken Sie die wichtigsten Stationen meiner akademischen Ausbildung, indem Sie mit der Maus über die folgenden Punkte fahren",
+                '2024-2025_title': "Bachelor in APE",
+                '2024-2025_desc': "Aktuell im 3. Jahr des Bachelorstudiengangs in Wirtschaftsanalyse und -politik an der Universität Rouen. Hauptfächer:<ul><li>Marktfinanzen</li><li>Fortgeschrittene Makroökonomie</li><li>Angewandte Mikroökonomie</li><li>Vermögens- und Portfoliomanagement</li><li>Finanzökonometrie</li></ul>",
+                '2023_title': "2. Jahr in Wirtschaft",
+                '2023_desc': "Abschluss des 2. Jahres in Wirtschaft mit Auszeichnung (15,5/20). Spezialisierung auf:<ul><li>Analytische Buchhaltung</li><li>Unternehmensführung</li><li>Finanzprüfung</li></ul>Unterstützendes Praktikum in einer Geschäftsbank zur Analyse von Kreditrisiken.",
+                '2022_title': "1. Jahr in Management-Finanz",
+                '2022_desc': "Erstes Jahr des Bachelorstudiums an der ISCAE-Universität in Conakry. Grundlagenerwerb:<ul><li>Allgemeine Buchhaltung</li><li>Unternehmensfinanzierung</li><li>Quantitative Management-Tools</li><li>Strategisches Marketing</li></ul>Aktive Teilnahme an Fachseminaren.",
+                '2021_title': "Debattenleiter LCIn",
+                '2021_desc': "Parallel zu meinem Studium Leitung der Debattenachse bei LCIn mit:<ul><li>Koordination eines 10-köpfigen Teams</li><li>Organisation von 5 großen Veranstaltungen</li><li>Moderation von Debatten zu Wirtschaftsthemen</li><li>Schulung neuer Mitglieder</li></ul>",
+                '2020_title': "Wissenschaftliches Abitur",
+                '2020_desc': "Abitur mit der Note Gut am Saint-Georges-Gymnasium in Conakry. Schwerpunkte:<ul><li>Mathematik (16/20)</li><li>Physik (14/20)</li></ul>Wahlfach: Mathematische Wissenschaften. Teilnahme an Mathematik-Olympiaden."
+            },
+            'pt': {
+                'academic_title': 'Percurso Académico',
+                'journey': 'Meu Percurso Académico',
+                'rights': 'Todos os direitos reservados',
+                'nav_home': 'Início',
+                'nav_academic': 'Percurso Académico',
+                'nav_experience': 'Experiências',
+                'nav_certifications': 'Certificações',
+                'nav_contact': 'Contacto',
+                'intro_text1': "O meu percurso académico reflete a minha paixão pela aprendizagem e o meu compromisso com a excelência. Cada etapa foi cuidadosamente escolhida para me permitir adquirir competências sólidas em economia, finanças e gestão, desenvolvendo ao mesmo tempo o meu pensamento crítico e analítico.",
+                'quote': "A educação é a arma mais poderosa que podes usar para mudar o mundo",
+                'intro_text2': "Ao longo dos anos, combinei rigor académico e empenho associativo para forjar um perfil equilibrado, aliando conhecimentos teóricos e experiências práticas.",
+                'highlight1_title': "Excelência Académica",
+                'highlight1_text': "Muito Bom no 2º ano de Economia com média de 15,5/20, demonstrando a minha capacidade de excelência em ambientes académicos exigentes.",
+                'highlight2_title': "Especialização Progressiva",
+                'highlight2_text': "Percursos coerente desde as ciências fundamentais à economia aplicada, com especialização crescente em análise económica e finanças.",
+                'highlight3_title': "Abertura Internacional",
+                'highlight3_text': "Formação em instituições de renome na Guiné e em França, dotando-me de uma perspetiva multicultural e uma valiosa adaptabilidade.",
+                'timeline_title': "Evolução do Meu Percurso",
+                'timeline_subtitle': "Explore as etapas-chave da minha formação académica passando o rato pelos pontos abaixo",
+                '2024-2025_title': "Licenciatura em APE",
+                '2024-2025_desc': "Atualmente no 3º ano da Licenciatura em Análise e Política Económica na Universidade de Rouen. Disciplinas principais:<ul><li>Finanças de Mercado</li><li>Macroeconomia Avançada</li><li>Microeconomia Aplicada</li><li>Gestão de Ativos e Carteiras</li><li>Econometria Financeira</li></ul>",
+                '2023_title': "2º Ano em Economia",
+                '2023_desc': "Concluí o 2º ano em Economia com Muito Bom (15,5/20). Especialização em:<ul><li>Contabilidade Analítica</li><li>Gestão Empresarial</li><li>Auditoria Financeira</li></ul>Estágio de apoio num banco comercial analisando riscos de crédito.",
+                '2022_title': "1º Ano em Gestão-Finanças",
+                '2022_desc': "Primeiro ano da licenciatura na Universidade ISCAE de Conacri. Aquisição de fundamentos:<ul><li>Contabilidade Geral</li><li>Finanças Empresariais</li><li>Ferramentas Quantitativas de Gestão</li><li>Marketing Estratégico</li></ul>Participação ativa em seminários profissionais.",
+                '2021_title': "Responsável por Debates LCIn",
+                '2021_desc': "Paralelamente aos estudos, gestão do eixo de debate no LCIn com:<ul><li>Coordenação de uma equipa de 10 pessoas</li><li>Organização de 5 eventos importantes</li><li>Moderação de debates sobre temas económicos</li><li>Formação de novos membros</li></ul>",
+                '2020_title': "Bacharelato Científico",
+                '2020_desc': "Obtive o meu bacharelato científico com a classificação de Bom no Liceu Saint-Georges em Conacri. Especialidades:<ul><li>Matemática (16/20)</li><li>Ciências Físicas (14/20)</li></ul>Opção: Ciências Matemáticas. Participação em olimpíadas de matemática."
+            }
+        };
+
+        // ============ FONCTIONS ============
+        // Loader
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1000);
+        });
+
+        // Synchronisation entre pages
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'darkMode') {
+                const darkModeEnabled = event.newValue === 'enabled';
+                document.body.classList.toggle('dark-mode', darkModeEnabled);
+                const icon = document.querySelector('.dark-mode-toggle i');
+                if (icon) {
+                    icon.classList.toggle('fa-moon', !darkModeEnabled);
+                    icon.classList.toggle('fa-sun', darkModeEnabled);
+                }
+            }
+            
+            if (event.key === 'preferredLanguage') {
+                changeLanguage(event.newValue || 'fr');
+            }
+        });
+
+        function toggleDarkMode() {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+            
+            const icon = document.querySelector('.dark-mode-toggle i');
+            if (icon) {
+                icon.classList.toggle('fa-moon', !isDarkMode);
+                icon.classList.toggle('fa-sun', isDarkMode);
+            }
+            
+            // Déclencher un événement pour synchroniser les autres pages
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        function changeLanguage(lang) {
+            if (!translations[lang]) lang = 'fr';
+            
+            localStorage.setItem('preferredLanguage', lang);
+            
+            // Mettre à jour le sélecteur
+            const select = document.querySelector('.language-select');
+            if (select) select.value = lang;
+            
+            // Appliquer les traductions
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.value = translations[lang][key];
+                    } else {
+                        element.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+
+            document.documentElement.lang = lang;
+            
+            // Mettre à jour le titre
+            if (translations[lang]['academic_title']) {
+                document.title = translations[lang]['academic_title'] + ' - Mohamed Saïd Diallo';
+            }
+            
+            // Déclencher un événement pour synchroniser les autres pages
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        // Timeline functions
+        function showDescription(event, year) {
+            const existingDesc = document.querySelector('.description-card');
+            if (existingDesc) existingDesc.remove();
+            
+            const lang = localStorage.getItem('preferredLanguage') || 'fr';
+            const titleKey = `${year}_title`;
+            const descKey = `${year}_desc`;
+            
+            const title = translations[lang][titleKey] || translations['fr'][titleKey];
+            const description = translations[lang][descKey] || translations['fr'][descKey];
+            
+            const point = event.currentTarget;
+            
+            const descCard = document.createElement('div');
+            descCard.className = 'description-card';
+            descCard.innerHTML = `
+                <h3><i class="fas fa-graduation-cap"></i> ${title} (${year})</h3>
+                ${description}
+            `;
+            
+            const rect = point.getBoundingClientRect();
+            const isLeft = parseInt(point.style.left) < 50;
+            
+            descCard.style.top = `${rect.top + window.scrollY}px`;
+            descCard.style.left = isLeft 
+                ? `${rect.right + 15}px` 
+                : `${rect.left - 315}px`;
+            
+            document.body.appendChild(descCard);
+            
+            setTimeout(() => {
+                descCard.style.opacity = '1';
+                descCard.style.visibility = 'visible';
+                descCard.style.transform = 'translateY(0)';
+            }, 10);
+        }
+
+        function hideDescription(year) {
+            const descCard = document.querySelector('.description-card');
+            if (descCard) {
+                descCard.style.opacity = '0';
+                descCard.style.visibility = 'hidden';
+                descCard.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    descCard.remove();
+                }, 300);
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mode sombre
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+                const icon = document.querySelector('.dark-mode-toggle i');
+                if (icon) icon.classList.replace('fa-moon', 'fa-sun');
+            }
+            
+            // Langue
+            const savedLang = localStorage.getItem('preferredLanguage') || 'fr';
+            changeLanguage(savedLang);
+            
+            // Année courante
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Animation des liens de navigation
+            document.querySelectorAll('nav a').forEach((link, index) => {
+                link.style.transitionDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>
