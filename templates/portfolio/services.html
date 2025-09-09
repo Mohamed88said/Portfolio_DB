@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Services" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5" data-aos="fade-up">
+                <i class="fas fa-cogs text-primary me-3"></i>
+                {% trans "Mes Services" %}
+            </h1>
+            <p class="text-center lead mb-5" data-aos="fade-up" data-aos-delay="100">
+                {% trans "Découvrez les services que je propose pour vous accompagner dans vos projets" %}
+            </p>
+        </div>
+    </div>
+
+    {% if services %}
+    <div class="row">
+        {% for service in services %}
+        <div class="col-lg-6 col-xl-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+            <div class="card card-enhanced h-100 service-card">
+                <div class="card-body text-center">
+                    <div class="service-icon mb-4">
+                        <i class="{{ service.icon }} fa-3x text-primary"></i>
+                    </div>
+                    <h4 class="card-title">{{ service.name }}</h4>
+                    <p class="card-text">{{ service.short_description }}</p>
+                    
+                    {% if service.price_starting %}
+                    <div class="service-price mb-3">
+                        <span class="h5 text-primary">À partir de {{ service.price_starting }}€</span>
+                        {% if service.duration %}
+                            <small class="text-muted d-block">{{ service.duration }}</small>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#serviceModal{{ service.id }}">
+                        {% trans "En savoir plus" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal pour chaque service -->
+        <div class="modal fade" id="serviceModal{{ service.id }}" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="{{ service.icon }} me-2"></i>{{ service.name }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h6>{% trans "Description détaillée" %}</h6>
+                                <p>{{ service.description|linebreaks }}</p>
+                                
+                                {% if service.deliverables %}
+                                <h6>{% trans "Livrables" %}</h6>
+                                <p>{{ service.deliverables|linebreaks }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                <div class="service-details">
+                                    {% if service.price_starting %}
+                                    <div class="mb-3">
+                                        <strong>{% trans "Prix" %}</strong><br>
+                                        <span class="text-primary">À partir de {{ service.price_starting }}€</span>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if service.duration %}
+                                    <div class="mb-3">
+                                        <strong>{% trans "Durée" %}</strong><br>
+                                        {{ service.duration }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Fermer" %}</button>
+                        <a href="{% url 'portfolio:contact' %}" class="btn btn-primary">{% trans "Demander un devis" %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row mt-5">
+        <div class="col-12 text-center" data-aos="fade-up">
+            <div class="cta-section bg-primary text-white p-5 rounded">
+                <h3 class="mb-3">{% trans "Prêt à démarrer votre projet ?" %}</h3>
+                <p class="lead mb-4">{% trans "Contactez-moi pour discuter de vos besoins et obtenir un devis personnalisé" %}</p>
+                <a href="{% url 'portfolio:contact' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-envelope me-2"></i>{% trans "Me contacter" %}
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-cogs fa-5x text-muted mb-4"></i>
+        <h3 class="text-muted">{% trans "Aucun service configuré pour le moment" %}</h3>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.service-card {
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+}
+
+.service-icon {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-price {
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+    margin: 20px 0;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+}
+</style>
+{% endblock %}

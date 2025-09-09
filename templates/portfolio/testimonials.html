@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Témoignages" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5" data-aos="fade-up">
+                <i class="fas fa-quote-left text-primary me-3"></i>
+                {% trans "Témoignages Clients" %}
+            </h1>
+            <p class="text-center lead mb-5" data-aos="fade-up" data-aos-delay="100">
+                {% trans "Découvrez ce que mes clients pensent de mon travail" %}
+            </p>
+        </div>
+    </div>
+
+    {% if testimonials %}
+    <div class="row">
+        {% for testimonial in testimonials %}
+        <div class="col-lg-6 col-xl-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+            <div class="card card-enhanced h-100 testimonial-card">
+                <div class="card-body">
+                    <div class="testimonial-rating mb-3">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= testimonial.rating %}
+                                <i class="fas fa-star text-warning"></i>
+                            {% else %}
+                                <i class="far fa-star text-muted"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    
+                    <blockquote class="blockquote">
+                        <p class="mb-3">"{{ testimonial.content }}"</p>
+                    </blockquote>
+                    
+                    {% if testimonial.project_related %}
+                    <div class="project-link mb-3">
+                        <small class="text-muted">
+                            <i class="fas fa-project-diagram me-1"></i>
+                            {% trans "Projet" %}: 
+                            <a href="{{ testimonial.project_related.get_absolute_url }}" class="text-decoration-none">
+                                {{ testimonial.project_related.title }}
+                            </a>
+                        </small>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="card-footer bg-transparent">
+                    <div class="d-flex align-items-center">
+                        {% if testimonial.photo %}
+                            <img src="{{ testimonial.photo.url }}" class="rounded-circle me-3" width="50" height="50" alt="{{ testimonial.name }}">
+                        {% else %}
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h6 class="mb-0">{{ testimonial.name }}</h6>
+                            <small class="text-muted">{{ testimonial.position }}</small>
+                            {% if testimonial.company %}
+                                <small class="text-muted d-block">{{ testimonial.company }}</small>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mt-5">
+        <div class="col-12" data-aos="fade-up">
+            <div class="testimonial-stats bg-light p-5 rounded">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-item">
+                            <h3 class="text-primary mb-2">{{ testimonials.count }}</h3>
+                            <p class="mb-0">{% trans "Témoignages" %}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-item">
+                            <h3 class="text-primary mb-2">
+                                {% widthratio testimonials|length 1 5 %}★
+                            </h3>
+                            <p class="mb-0">{% trans "Note moyenne" %}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-item">
+                            <h3 class="text-primary mb-2">100%</h3>
+                            <p class="mb-0">{% trans "Clients satisfaits" %}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="stat-item">
+                            <h3 class="text-primary mb-2">{{ testimonials|length }}+</h3>
+                            <p class="mb-0">{% trans "Projets réalisés" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row mt-5">
+        <div class="col-12 text-center" data-aos="fade-up">
+            <div class="cta-section bg-primary text-white p-5 rounded">
+                <h3 class="mb-3">{% trans "Vous souhaitez travailler avec moi ?" %}</h3>
+                <p class="lead mb-4">{% trans "Rejoignez mes clients satisfaits et donnons vie à votre projet" %}</p>
+                <a href="{% url 'portfolio:contact' %}" class="btn btn-light btn-lg me-3">
+                    <i class="fas fa-envelope me-2"></i>{% trans "Me contacter" %}
+                </a>
+                <a href="{% url 'portfolio:projects' %}" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-eye me-2"></i>{% trans "Voir mes projets" %}
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-quote-left fa-5x text-muted mb-4"></i>
+        <h3 class="text-muted">{% trans "Aucun témoignage disponible pour le moment" %}</h3>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.testimonial-card {
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+}
+
+.testimonial-card::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-size: 4rem;
+    color: var(--primary);
+    opacity: 0.3;
+    font-family: serif;
+}
+
+.testimonial-rating {
+    text-align: center;
+}
+
+.testimonial-stats {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.stat-item h3 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+body.dark-mode .testimonial-stats {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+}
+</style>
+{% endblock %}

@@ -125,6 +125,187 @@
 </section>
 {% endif %}
 
+<!-- Services Section -->
+{% if services %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5 text-gradient" data-aos="fade-up">{% trans "Mes Services" %}</h2>
+        <div class="row">
+            {% for service in services %}
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                    <div class="card card-enhanced h-100 text-center hover-lift">
+                        <div class="card-body">
+                            <div class="service-icon mb-3">
+                                <i class="{{ service.icon }} fa-3x text-primary"></i>
+                            </div>
+                            <h5 class="card-title">{{ service.name }}</h5>
+                            <p class="card-text">{{ service.short_description }}</p>
+                            {% if service.price_starting %}
+                                <div class="service-price">
+                                    <span class="h6 text-primary">À partir de {{ service.price_starting }}€</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:services' %}" class="btn btn-gradient btn-lg hover-lift">
+                {% trans "Voir Tous les Services" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Testimonials Section -->
+{% if testimonials %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5 text-gradient" data-aos="fade-up">{% trans "Témoignages Clients" %}</h2>
+        <div class="row">
+            {% for testimonial in testimonials %}
+                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                    <div class="card card-enhanced h-100 hover-lift">
+                        <div class="card-body">
+                            <div class="testimonial-rating mb-3 text-center">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= testimonial.rating %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-muted"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <blockquote class="blockquote text-center">
+                                <p class="mb-3">"{{ testimonial.content|truncatewords:20 }}"</p>
+                            </blockquote>
+                        </div>
+                        <div class="card-footer bg-transparent text-center">
+                            <div class="testimonial-author">
+                                {% if testimonial.photo %}
+                                    <img src="{{ testimonial.photo.url }}" class="rounded-circle mb-2" width="50" height="50" alt="{{ testimonial.name }}">
+                                {% endif %}
+                                <h6 class="mb-0">{{ testimonial.name }}</h6>
+                                <small class="text-muted">{{ testimonial.position }}, {{ testimonial.company }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:testimonials' %}" class="btn btn-gradient btn-lg hover-lift">
+                {% trans "Voir Tous les Témoignages" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Recent Blog Posts -->
+{% if recent_blog_posts %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5 text-gradient" data-aos="fade-up">{% trans "Articles Récents" %}</h2>
+        <div class="row">
+            {% for post in recent_blog_posts %}
+                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                    <div class="card card-enhanced h-100 hover-lift">
+                        {% if post.featured_image %}
+                            <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <p class="card-text">{{ post.excerpt|default:post.content|truncatewords:15 }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">{{ post.published_at|date:"d M Y" }}</small>
+                                <span class="badge bg-light text-dark">{{ post.reading_time }} min</span>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="{{ post.get_absolute_url }}" class="btn btn-gradient btn-sm hover-lift">
+                                {% trans "Lire l'article" %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:blog' %}" class="btn btn-gradient btn-lg hover-lift">
+                {% trans "Voir Tous les Articles" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Achievements Section -->
+{% if achievements %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5 text-gradient" data-aos="fade-up">{% trans "Réalisations Récentes" %}</h2>
+        <div class="row">
+            {% for achievement in achievements %}
+                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                    <div class="card card-enhanced h-100 hover-lift">
+                        <div class="card-body text-center">
+                            <div class="achievement-icon mb-3">
+                                {% if achievement.category == 'award' %}
+                                    <i class="fas fa-trophy text-warning fa-3x"></i>
+                                {% elif achievement.category == 'recognition' %}
+                                    <i class="fas fa-medal text-success fa-3x"></i>
+                                {% elif achievement.category == 'milestone' %}
+                                    <i class="fas fa-flag text-primary fa-3x"></i>
+                                {% elif achievement.category == 'publication' %}
+                                    <i class="fas fa-book text-info fa-3x"></i>
+                                {% elif achievement.category == 'speaking' %}
+                                    <i class="fas fa-microphone text-danger fa-3x"></i>
+                                {% endif %}
+                            </div>
+                            <h5 class="card-title">{{ achievement.title }}</h5>
+                            <p class="card-text">{{ achievement.description|truncatewords:15 }}</p>
+                            <small class="text-muted">{{ achievement.date_achieved|date:"M Y" }}</small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'portfolio:achievements' %}" class="btn btn-gradient btn-lg hover-lift">
+                {% trans "Voir Toutes les Réalisations" %}
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Newsletter Section -->
+<section class="py-5 newsletter-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center" data-aos="fade-up">
+                <div class="newsletter-card bg-primary text-white p-5 rounded">
+                    <h3 class="mb-3">{% trans "Restez informé" %}</h3>
+                    <p class="lead mb-4">{% trans "Recevez mes derniers articles et actualités directement dans votre boîte mail" %}</p>
+                    <form id="homeNewsletterForm" class="row g-3 justify-content-center">
+                        <div class="col-md-6">
+                            <input type="email" class="form-control" name="email" placeholder="{% trans 'Votre adresse email' %}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-light w-100">
+                                <i class="fas fa-paper-plane me-2"></i>{% trans "S'abonner" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- Featured Projects -->
 {% if featured_projects %}
 <section class="py-5 bg-light">

@@ -1,0 +1,221 @@
+/* Dashboard et statistiques */
+.dashboard-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+.dashboard-stat {
+    text-align: center;
+    padding: 2rem;
+}
+
+.dashboard-stat h3 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-stat p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.dashboard-chart {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+body.dark-mode .dashboard-chart {
+    background: #2d2d2d;
+    color: white;
+}
+
+/* Widgets de statistiques */
+.stats-widget {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 15px;
+    padding: 1.5rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.stats-widget .widget-icon {
+    font-size: 2.5rem;
+    opacity: 0.8;
+}
+
+.stats-widget .widget-number {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.stats-widget .widget-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+/* Graphiques et visualisations */
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin: 2rem 0;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset 0.35s;
+    transform-origin: 50% 50%;
+}
+
+/* Tableaux de données */
+.data-table {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.data-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.data-table th,
+.data-table td {
+    padding: 1rem;
+    border: none;
+}
+
+.data-table tbody tr:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+body.dark-mode .data-table {
+    background: #2d2d2d;
+    color: white;
+}
+
+body.dark-mode .data-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Indicateurs de performance */
+.performance-indicator {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+}
+
+.performance-indicator .indicator-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.performance-indicator.positive .indicator-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.performance-indicator.negative .indicator-icon {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.performance-indicator.neutral .indicator-icon {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+}
+
+body.dark-mode .performance-indicator {
+    background: #2d2d2d;
+    color: white;
+}
+
+/* Métriques en temps réel */
+.realtime-metric {
+    text-align: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+}
+
+.realtime-metric .metric-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: block;
+}
+
+.realtime-metric .metric-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.realtime-metric .metric-change {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.realtime-metric .metric-change.positive {
+    color: #4ade80;
+}
+
+.realtime-metric .metric-change.negative {
+    color: #f87171;
+}
+
+/* Animations pour les métriques */
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.metric-animated {
+    animation: countUp 0.6s ease-out;
+}
+
+/* Responsive pour dashboard */
+@media (max-width: 768px) {
+    .dashboard-stat h3 {
+        font-size: 2rem;
+    }
+    
+    .stats-widget {
+        text-align: center;
+    }
+    
+    .performance-indicator {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+}
