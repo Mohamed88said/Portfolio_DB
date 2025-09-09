@@ -4,6 +4,7 @@ from .models import (
     Profile, Education, Experience, Skill, 
     Certification, Project, Contact, SiteSettings,
     BlogPost, Testimonial, Service, Achievement, Newsletter, VisitorStats
+    BlogPost, Testimonial, Service, Achievement, Newsletter, VisitorStats
 )
 
 @admin.register(Profile)
@@ -98,6 +99,26 @@ class BlogPostAdmin(admin.ModelAdmin):
         (_('Métadonnées'), {
             'fields': ('tags', 'reading_time', 'is_published', 'is_featured')
         }),
+        (_('Statistiques'), {
+            'fields': ('views_count', 'created_at', 'updated_at', 'published_at'),
+            'classes': ('collapse',)
+        }),
+    )
+@admin.register(BlogPost)
+class BlogPostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'is_published', 'is_featured', 'views_count', 'published_at')
+    list_filter = ('is_published', 'is_featured', 'created_at', 'published_at')
+    search_fields = ('title', 'content', 'tags')
+    prepopulated_fields = {'slug': ('title',)}
+    readonly_fields = ('views_count', 'created_at', 'updated_at')
+    
+    fieldsets = (
+        (_('Contenu'), {
+            'fields': ('title', 'slug', 'content', 'excerpt', 'featured_image')
+        }),
+        (_('Métadonnées'), {
+            'fields': ('tags', 'reading_time', 'is_published', 'is_featured')
+        }),
 @admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ('name', 'company', 'rating', 'is_featured', 'created_at')
@@ -125,6 +146,39 @@ class NewsletterAdmin(admin.ModelAdmin):
     search_fields = ('email', 'name')
     readonly_fields = ('subscribed_at',)
         }),
+@admin.register(VisitorStats)
+class VisitorStatsAdmin(admin.ModelAdmin):
+    list_display = ('ip_address', 'page_visited', 'visit_date')
+    list_filter = ('visit_date', 'page_visited')
+    search_fields = ('ip_address', 'page_visited')
+    readonly_fields = ('ip_address', 'user_agent', 'page_visited', 'referrer', 'visit_date', 'session_id')
+@admin.register(Testimonial)
+class TestimonialAdmin(admin.ModelAdmin):
+    list_display = ('name', 'company', 'rating', 'is_featured', 'created_at')
+    list_filter = ('rating', 'is_featured', 'created_at')
+    search_fields = ('name', 'company', 'content')
+    date_hierarchy = 'visit_date'
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price_starting', 'is_active', 'order')
+    list_filter = ('is_active',)
+    search_fields = ('name', 'description')
+    list_editable = ('order', 'is_active')
+    
+@admin.register(Achievement)
+class AchievementAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'date_achieved', 'organization')
+    list_filter = ('category', 'date_achieved')
+    search_fields = ('title', 'description', 'organization')
+    date_hierarchy = 'date_achieved'
+    def has_add_permission(self, request):
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ('email', 'name', 'is_active', 'subscribed_at')
+    list_filter = ('is_active', 'subscribed_at')
+    search_fields = ('email', 'name')
+    readonly_fields = ('subscribed_at',)
+        return False
 @admin.register(VisitorStats)
 class VisitorStatsAdmin(admin.ModelAdmin):
     list_display = ('ip_address', 'page_visited', 'visit_date')
