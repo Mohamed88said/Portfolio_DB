@@ -639,32 +639,83 @@ class Timeline(models.Model):
     def __str__(self):
         return f"{self.date.year} - {self.title}"
 
+# models.py - Ajoutez cette classe
 class Collaboration(models.Model):
-    """Collaborations et partenariats"""
-    partner_name = models.CharField(_("Nom du partenaire"), max_length=200)
-    partner_logo = models.ImageField(_("Logo du partenaire"), upload_to='collaborations/', blank=True)
-    collaboration_type = models.CharField(_("Type de collaboration"), max_length=50, choices=[
-        ('client', _('Client')),
-        ('partner', _('Partenaire')),
-        ('employer', _('Employeur')),
-        ('mentor', _('Mentor')),
-        ('mentee', _('Mentoré')),
-        ('contributor', _('Contributeur')),
-    ])
-    description = models.TextField(_("Description"))
-    start_date = models.DateField(_("Date de début"))
-    end_date = models.DateField(_("Date de fin"), null=True, blank=True)
-    is_ongoing = models.BooleanField(_("En cours"), default=False)
-    website = models.URLField(_("Site web"), blank=True)
-    testimonial = models.TextField(_("Témoignage"), blank=True)
+    STATUS_CHOICES = (
+        ('completed', 'Terminé'),
+        ('ongoing', 'En cours'),
+        ('planned', 'Planifié'),
+    )
     
+    CATEGORY_CHOICES = (
+        ('web', 'Développement Web'),
+        ('mobile', 'Application Mobile'),
+        ('ai', 'Intelligence Artificielle'),
+        ('data', 'Data Science'),
+        ('design', 'Design UI/UX'),
+        ('consulting', 'Consulting'),
+        ('other', 'Autre'),
+    )
+    
+    title = models.CharField(_('Titre'), max_length=200)
+    slug = models.SlugField(_('Slug'), max_length=200, unique=True)
+    description = models.TextField(_('Description'))
+    detailed_description = models.TextField(_('Description détaillée'), blank=True)
+    image = models.ImageField(_('Image'), upload_to='collaborations/', blank=True, null=True)
+    status = models.CharField(_('Statut'), max_length=20, choices=STATUS_CHOICES, default='completed')
+    category = models.CharField(_('Catégorie'), max_length=20, choices=CATEGORY_CHOICES, default='web')
+    client = models.CharField(_('Client'), max_length=200, blank=True)
+    technologies = models.CharField(_('Technologies'), max_length=500, help_text=_('Séparées par des virgules'))
+    
+    start_date = models.DateField(_('Date de début'))
+    end_date = models.DateField(_('Date de fin'), blank=True, null=True)
+    is_featured = models.BooleanField(_('En vedette'), default=False)
+    is_active = models.BooleanField(_('Actif'), default=True)
+    
+    project_url = models.URLField(_('URL du projet'), blank=True)
+    github_url = models.URLField(_('URL GitHub'), blank=True)
+    demo_url = models.URLField(_('URL de démo'), blank=True)
+    
+    budget = models.DecimalField(_('Budget'), max_digits=10, decimal_places=2, blank=True, null=True)
+    team_size = models.PositiveIntegerField(_('Taille de l\'équipe'), blank=True, null=True)
+    challenges_faced = models.TextField(_('Défis rencontrés'), blank=True)
+    results_achieved = models.TextField(_('Résultats obtenus'), blank=True)
+    
+    order = models.PositiveIntegerField(_('Ordre d\'affichage'), default=0)
+    created_at = models.DateTimeField(_('Créé le'), auto_now_add=True)
+    updated_at = models.DateTimeField(_('Modifié le'), auto_now=True)
+
     class Meta:
-        verbose_name = _("Collaboration")
-        verbose_name_plural = _("Collaborations")
-        ordering = ['-start_date']
-    
+        verbose_name = _('Collaboration')
+        verbose_name_plural = _('Collaborations')
+        ordering = ['order', '-created_at']
+
     def __str__(self):
-        return f"{self.partner_name} - {self.get_collaboration_type_display()}"
+        return self.title
+
+    def get_duration(self):
+        if self.end_date:
+            delta = self.end_date - self.start_date
+            return f"{delta.days // 30} mois"
+        return "En cours"
+
+    def get_technologies_list(self):
+        return [tech.strip() for tech in self.technologies.split(',')]
+
+    def get_status_class(self):
+        return f'status-{self.status}'
+
+    @property
+    def is_ongoing(self):
+        return self.status == 'ongoing'
+
+    @property
+    def is_completed(self):
+        return self.status == 'completed'
+
+    @property
+    def is_planned(self):
+        return self.status == 'planned'
 
 class Resource(models.Model):
     """Ressources téléchargeables"""

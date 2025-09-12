@@ -10,6 +10,7 @@ from .models import (
     Contact, SiteSettings, BlogPost, BlogCategory, Testimonial, 
     Service, Achievement, Newsletter, VisitorStats, SiteCustomization
 )
+from .models import Collaboration  # Import the Collaboration model
 
 # Custom Admin Site
 class PortfolioAdminSite(AdminSite):
@@ -350,3 +351,56 @@ admin.site.register(Newsletter, NewsletterAdmin)
 admin.site.register(VisitorStats, VisitorStatsAdmin)
 admin.site.register(SiteCustomization, SiteCustomizationAdmin)
 admin.site.register(SiteSettings, SiteSettingsAdmin)
+
+
+# admin.py - Ajoutez cette classe
+@admin.register(Collaboration, site=admin_site)
+class CollaborationAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'status', 'client', 'start_date', 'is_featured', 'is_active', 'order')
+    list_filter = ('category', 'status', 'is_featured', 'is_active', 'start_date')
+    search_fields = ('title', 'description', 'client', 'technologies')
+    prepopulated_fields = {'slug': ('title',)}
+    list_editable = ('is_featured', 'is_active', 'order')
+    readonly_fields = ('created_at', 'updated_at')
+    date_hierarchy = 'start_date'
+    ordering = ['order', '-created_at']
+    
+    fieldsets = (
+        (_('Informations générales'), {
+            'fields': ('title', 'slug', 'description', 'detailed_description', 'image')
+        }),
+        (_('Classification'), {
+            'fields': ('category', 'status', 'is_featured', 'is_active', 'client', 'order')
+        }),
+        (_('Technologie et liens'), {
+            'fields': ('technologies', 'project_url', 'github_url', 'demo_url')
+        }),
+        (_('Période et équipe'), {
+            'fields': ('start_date', 'end_date', 'team_size', 'budget')
+        }),
+        (_('Détails du projet'), {
+            'fields': ('challenges_faced', 'results_achieved'),
+            'classes': ('collapse',)
+        }),
+        (_('Métadonnées'), {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['mark_as_featured', 'mark_as_active', 'mark_as_completed']
+    
+    def mark_as_featured(self, request, queryset):
+        updated = queryset.update(is_featured=True)
+        self.message_user(request, f"{updated} collaboration(s) mise(s) en vedette.")
+    mark_as_featured.short_description = _("Mettre en vedette")
+    
+    def mark_as_active(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f"{updated} collaboration(s) activée(s).")
+    mark_as_active.short_description = _("Activer")
+    
+    def mark_as_completed(self, request, queryset):
+        updated = queryset.update(status='completed')
+        self.message_user(request, f"{updated} collaboration(s) marquée(s) comme terminée(s).")
+    mark_as_completed.short_description = _("Marquer comme terminé")

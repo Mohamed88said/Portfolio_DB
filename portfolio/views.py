@@ -766,15 +766,26 @@ class TimelineView(BaseView):
         ).order_by('category')
         return context
 
-class CollaborationsView(BaseView):
+# views.py
+from django.shortcuts import render
+from django.views.generic import ListView
+from django.db.models import Count
+from .models import Collaboration
+
+class CollaborationsView(ListView):
+    model = Collaboration
     template_name = 'portfolio/collaborations.html'
+    context_object_name = 'collaborations'
+    
+    def get_queryset(self):
+        return Collaboration.objects.filter(is_active=True).order_by('order', '-created_at')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['collaborations'] = Collaboration.objects.all().order_by('-start_date')
-        context['collaboration_types'] = Collaboration.objects.values('collaboration_type').annotate(
-            count=Count('collaboration_type')
-        ).order_by('collaboration_type')
+        # Ajouter les catégories pour les filtres si nécessaire
+        context['categories'] = Collaboration.objects.values('category').annotate(
+            count=Count('category')
+        ).order_by('category')
         return context
 
 class ResourcesView(BaseView):

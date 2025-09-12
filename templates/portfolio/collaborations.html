@@ -1,0 +1,379 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Collaborations - Mon Portfolio{% endblock %}
+
+{% block extra_css %}
+<style>
+    .collaboration-section {
+        padding: 80px 0;
+        background-color: #f8f9fa;
+    }
+    
+    .collaboration-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+        margin-bottom: 30px;
+        height: 100%;
+    }
+    
+    .collaboration-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    
+    .collaboration-image {
+        height: 250px;
+        object-fit: cover;
+        width: 100%;
+    }
+    
+    .collaboration-content {
+        padding: 25px;
+    }
+    
+    .collaboration-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 15px;
+    }
+    
+    .collaboration-description {
+        color: #6c757d;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .collaboration-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 15px 0;
+        border-top: 1px solid #eee;
+    }
+    
+    .collaboration-date {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    
+    .collaboration-status {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .status-completed {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .status-ongoing {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-planned {
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .tech-badge {
+        background-color: #e9ecef;
+        color: #495057;
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .btn-collaboration {
+        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 25px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .btn-collaboration:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        color: white;
+    }
+    
+    .btn-outline {
+        background: transparent;
+        border: 2px solid #667eea;
+        color: #667eea;
+    }
+    
+    .btn-outline:hover {
+        background: #667eea;
+        color: white;
+    }
+    
+    .section-title {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .section-subtitle {
+        color: #6c757d;
+        text-align: center;
+        margin-bottom: 60px;
+        font-size: 1.2rem;
+    }
+    
+    .filter-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+        padding: 10px 25px;
+        border: 2px solid #667eea;
+        border-radius: 25px;
+        background: transparent;
+        color: #667eea;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-btn.active,
+    .filter-btn:hover {
+        background: #667eea;
+        color: white;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #dee2e6;
+    }
+    
+    .project-links {
+        margin-top: 20px;
+    }
+    
+    @media (max-width: 768px) {
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .filter-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .filter-btn {
+            width: 200px;
+        }
+        
+        .collaboration-meta {
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="collaboration-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="section-title">Mes Collaborations</h1>
+                <p class="section-subtitle">Découvrez les projets passionnants sur lesquels j'ai eu le plaisir de travailler</p>
+            </div>
+        </div>
+
+        <!-- Filtres -->
+        <div class="row">
+            <div class="col-12">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">Tous</button>
+                    <button class="filter-btn" data-filter="completed">Terminés</button>
+                    <button class="filter-btn" data-filter="ongoing">En cours</button>
+                    <button class="filter-btn" data-filter="planned">Planifiés</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="collaborations-container">
+            {% for collaboration in collaborations %}
+            <div class="col-lg-4 col-md-6 mb-4" data-status="{{ collaboration.status }}">
+                <div class="collaboration-card">
+                    {% if collaboration.image %}
+                    <img src="{{ collaboration.image.url }}" alt="{{ collaboration.title }}" class="collaboration-image">
+                    {% else %}
+                    <img src="https://via.placeholder.com/400x250/667eea/ffffff?text={{ collaboration.title|urlencode }}" alt="{{ collaboration.title }}" class="collaboration-image">
+                    {% endif %}
+                    
+                    <div class="collaboration-content">
+                        <h3 class="collaboration-title">{{ collaboration.title }}</h3>
+                        
+                        {% if collaboration.client %}
+                        <p class="text-muted mb-2"><small>Pour {{ collaboration.client }}</small></p>
+                        {% endif %}
+                        
+                        <p class="collaboration-description">
+                            {{ collaboration.description|truncatewords:30 }}
+                        </p>
+                        
+                        {% if collaboration.technologies %}
+                        <div class="tech-stack">
+                            {% for tech in collaboration.get_technologies_list %}
+                            <span class="tech-badge">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="collaboration-meta">
+                            <span class="collaboration-date">
+                                {{ collaboration.start_date|date:"M Y" }}
+                                {% if collaboration.end_date %}
+                                - {{ collaboration.end_date|date:"M Y" }}
+                                {% else %}
+                                - Présent
+                                {% endif %}
+                            </span>
+                            <span class="collaboration-status status-{{ collaboration.status }}">
+                                {{ collaboration.get_status_display }}
+                            </span>
+                        </div>
+                        
+                        <div class="project-links">
+                            {% if collaboration.project_url %}
+                            <a href="{{ collaboration.project_url }}" target="_blank" class="btn-collaboration">
+                                <i class="fas fa-external-link-alt"></i> Voir le projet
+                            </a>
+                            {% endif %}
+                            
+                            {% if collaboration.github_url %}
+                            <a href="{{ collaboration.github_url }}" target="_blank" class="btn-collaboration btn-outline">
+                                <i class="fab fa-github"></i> Code source
+                            </a>
+                            {% endif %}
+                            
+                            {% if collaboration.demo_url %}
+                            <a href="{{ collaboration.demo_url }}" target="_blank" class="btn-collaboration">
+                                <i class="fas fa-play"></i> Démo
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <h3>Aucune collaboration pour le moment</h3>
+                    <p>Revenez bientôt pour découvrir mes prochains projets !</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const collaborations = document.querySelectorAll('#collaborations-container > div[data-status]');
+        const emptyState = document.getElementById('empty-state');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Retirer la classe active de tous les boutons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Ajouter la classe active au bouton cliqué
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                
+                let visibleCount = 0;
+                
+                // Filtrer les collaborations
+                collaborations.forEach(collab => {
+                    const status = collab.getAttribute('data-status');
+                    
+                    if (filter === 'all' || status === filter) {
+                        collab.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        collab.style.display = 'none';
+                    }
+                });
+                
+                // Afficher/masquer l'état vide
+                const emptyStateElement = document.querySelector('.empty-state');
+                if (visibleCount === 0 && emptyStateElement) {
+                    emptyStateElement.style.display = 'block';
+                } else if (emptyStateElement) {
+                    emptyStateElement.style.display = 'none';
+                }
+            });
+        });
+
+        // Animation au scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Appliquer l'animation à toutes les cartes
+        collaborations.forEach(collab => {
+            collab.style.opacity = '0';
+            collab.style.transform = 'translateY(30px)';
+            collab.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(collab);
+        });
+    });
+</script>
+{% endblock %}
