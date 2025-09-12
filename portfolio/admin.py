@@ -353,9 +353,118 @@ admin.site.register(Newsletter, NewsletterAdmin)
 admin.site.register(VisitorStats, VisitorStatsAdmin)
 admin.site.register(SiteCustomization, SiteCustomizationAdmin)
 admin.site.register(SiteSettings, SiteSettingsAdmin)
+admin.site.register(Collaboration, CollaborationAdmin)
+admin.site.register(Resource, ResourceAdmin)
+
+# Nouveaux modèles avancés
+@admin.register(Tag, site=admin_site)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'color_preview', 'usage_count', 'is_featured', 'created_at')
+    list_filter = ('is_featured', 'created_at')
+    search_fields = ('name', 'description')
+    prepopulated_fields = {'slug': ('name',)}
+    list_editable = ('is_featured',)
+    readonly_fields = ('usage_count', 'created_at')
+    ordering = ['-usage_count', 'name']
+    
+    def color_preview(self, obj):
+        return format_html(
+            '<div style="width: 20px; height: 20px; background-color: {}; border-radius: 3px; display: inline-block;"></div>',
+            obj.color
+        )
+    color_preview.short_description = _('Couleur')
+
+@admin.register(SearchQuery, site=admin_site)
+class SearchQueryAdmin(admin.ModelAdmin):
+    list_display = ('query', 'results_count', 'search_date', 'clicked_result')
+    list_filter = ('search_date', 'results_count')
+    search_fields = ('query', 'clicked_result')
+    readonly_fields = ('query', 'results_count', 'ip_address', 'user_agent', 'search_date', 'clicked_result')
+    date_hierarchy = 'search_date'
+    ordering = ['-search_date']
+    
+    def has_add_permission(self, request):
+        return False
+    
+    def has_change_permission(self, request, obj=None):
+        return False
+
+@admin.register(FAQ, site=admin_site)
+class FAQAdmin(admin.ModelAdmin):
+    list_display = ('question_short', 'category', 'order', 'is_active', 'views_count', 'helpful_votes')
+    list_filter = ('category', 'is_active', 'created_at')
+    search_fields = ('question', 'answer')
+    list_editable = ('order', 'is_active')
+    readonly_fields = ('views_count', 'helpful_votes', 'created_at', 'updated_at')
+    ordering = ['category', 'order']
+    
+    def question_short(self, obj):
+        return obj.question[:100] + '...' if len(obj.question) > 100 else obj.question
+    question_short.short_description = _('Question')
+    
+    fieldsets = (
+        (_('Contenu'), {
+            'fields': ('question', 'answer', 'category')
+        }),
+        (_('Affichage'), {
+            'fields': ('order', 'is_active')
+        }),
+        (_('Statistiques'), {
+            'fields': ('views_count', 'helpful_votes', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+@admin.register(Timeline, site=admin_site)
+class TimelineAdmin(admin.ModelAdmin):
+    list_display = ('title', 'date', 'category', 'is_milestone', 'color_preview')
+    list_filter = ('category', 'is_milestone', 'date')
+    search_fields = ('title', 'description')
+    list_editable = ('is_milestone',)
+    date_hierarchy = 'date'
+    ordering = ['-date']
+    
+    def color_preview(self, obj):
+        return format_html(
+            '<div style="width: 20px; height: 20px; background-color: {}; border-radius: 3px; display: inline-block;"></div>',
+            obj.color
+        )
+    color_preview.short_description = _('Couleur')
+    
+    fieldsets = (
+        (_('Informations générales'), {
+            'fields': ('title', 'description', 'date', 'category')
+        }),
+        (_('Apparence'), {
+            'fields': ('icon', 'color', 'is_milestone', 'image')
+        }),
+        (_('Lien'), {
+            'fields': ('link',)
+        }),
+    )
+
+@admin.register(Analytics, site=admin_site)
+class AnalyticsAdmin(admin.ModelAdmin):
+    list_display = ('date', 'page_views', 'unique_visitors', 'bounce_rate', 'avg_session_duration')
+    list_filter = ('date',)
+    readonly_fields = ('date', 'page_views', 'unique_visitors', 'bounce_rate', 'avg_session_duration', 'top_pages', 'referrers', 'devices', 'countries')
+    date_hierarchy = 'date'
+    ordering = ['-date']
+    
+    def has_add_permission(self, request):
+        return False
+    
+    def has_change_permission(self, request, obj=None):
+        return False
+
+# Enregistrer les nouveaux modèles dans l'admin par défaut aussi
+admin.site.register(Tag, TagAdmin)
+admin.site.register(SearchQuery, SearchQueryAdmin)
+admin.site.register(FAQ, FAQAdmin)
+admin.site.register(Timeline, TimelineAdmin)
+admin.site.register(Analytics, AnalyticsAdmin)
 
 
-# admin.py - Ajoutez cette classe
 @admin.register(Collaboration, site=admin_site)
 class CollaborationAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'status', 'client', 'start_date', 'is_featured', 'is_active', 'order')
@@ -410,7 +519,6 @@ class CollaborationAdmin(admin.ModelAdmin):
 
 
 
-# admin.py - Ajoutez cette classe
 @admin.register(Resource, site=admin_site)
 class ResourceAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'file_type', 'download_count', 'is_public', 'created_at')
@@ -456,4 +564,3 @@ class ResourceAdmin(admin.ModelAdmin):
         self.message_user(request, f"{updated} compteur(s) de téléchargement(s) réinitialisé(s).")
     reset_download_count.short_description = _("Réinitialiser les compteurs")
 
-admin.site.register(Resource, ResourceAdmin)
