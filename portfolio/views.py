@@ -61,6 +61,8 @@ class BaseView(TemplateView):
             ip = request.META.get('REMOTE_ADDR')
         return ip
 
+
+
 class HomeView(BaseView):
     template_name = 'portfolio/home.html'
     
@@ -68,13 +70,16 @@ class HomeView(BaseView):
         context = super().get_context_data(**kwargs)
         try:
             context['featured_projects'] = Project.objects.filter(is_featured=True)[:3]
-            context['featured_skills'] = Skill.objects.filter(is_featured=True)[:6]
+            # Utilisation de only() pour spécifier les champs nécessaires uniquement
+            context['featured_skills'] = Skill.objects.filter(is_featured=True).only('name', 'category', 'proficiency')[:6]
             context['recent_experiences'] = Experience.objects.all()[:3]
             context['testimonials'] = Testimonial.objects.filter(is_featured=True, is_approved=True)[:3]
             context['services'] = Service.objects.filter(is_active=True)[:4]
             context['recent_blog_posts'] = BlogPost.objects.filter(is_published=True)[:3]
             context['achievements'] = Achievement.objects.all()[:3]
-        except:
+        except Exception as e:
+            # Ajout d'un message d'erreur pour le débogage
+            print(f"Erreur lors du chargement des données: {e}")
             # Si les tables n'existent pas encore, retourne des listes vides
             context['featured_projects'] = []
             context['featured_skills'] = []
@@ -84,6 +89,8 @@ class HomeView(BaseView):
             context['recent_blog_posts'] = []
             context['achievements'] = []
         return context
+
+
 
 class AcademicView(BaseView):
     template_name = 'portfolio/academic.html'
