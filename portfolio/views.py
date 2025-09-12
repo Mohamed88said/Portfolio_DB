@@ -1064,6 +1064,43 @@ class DownloadCVView(TemplateView):
         except Exception:
             raise Http404("CV non disponible")
 
+class FAQHelpfulAPIView(TemplateView):
+    def post(self, request, faq_id):
+        try:
+            faq = get_object_or_404(FAQ, id=faq_id)
+            faq.helpful_votes += 1
+            faq.save()
+            return JsonResponse({'success': True, 'votes': faq.helpful_votes})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
+class NewsletterSubscribeView(TemplateView):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            email = data.get('email')
+            name = data.get('name', '')
+            
+            if not email:
+                return JsonResponse({'success': False, 'message': 'Email requis'})
+            
+            newsletter, created = Newsletter.objects.get_or_create(
+                email=email,
+                defaults={'name': name}
+            )
+            
+            if created:
+                return JsonResponse({'success': True, 'message': 'Inscription réussie à la newsletter!'})
+            else:
+                if newsletter.is_active:
+                    return JsonResponse({'success': False, 'message': 'Email déjà inscrit'})
+                else:
+                    newsletter.is_active = True
+                    newsletter.save()
+                    return JsonResponse({'success': True, 'message': 'Réinscription réussie!'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)})
+
 # Customization API
 @method_decorator(csrf_exempt, name='dispatch')
 class CustomizationPreviewAPIView(SuperuserRequiredMixin, TemplateView):

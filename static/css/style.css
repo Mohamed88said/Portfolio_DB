@@ -481,6 +481,26 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Enhanced Mobile Styles */
 @media (max-width: 768px) {
+    .navbar-nav .dropdown-menu {
+        position: static;
+        float: none;
+        width: auto;
+        margin-top: 0;
+        background-color: transparent;
+        border: 0;
+        box-shadow: none;
+    }
+    
+    .navbar-nav .dropdown-item {
+        color: rgba(255,255,255,.75);
+        padding: 0.5rem 1rem;
+    }
+    
+    .navbar-nav .dropdown-item:hover {
+        color: white;
+        background-color: rgba(255,255,255,.1);
+    }
+    
     .timeline-item-enhanced {
         padding-left: 60px;
     }

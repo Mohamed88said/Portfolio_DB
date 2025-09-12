@@ -39,7 +39,8 @@ urlpatterns = [
     path('api/search-suggestions/', views.SearchSuggestionsAPIView.as_view(), name='search_suggestions_api'),
     path('api/tag-cloud/', views.TagCloudAPIView.as_view(), name='tag_cloud_api'),
     path('api/customization/preview/', views.CustomizationPreviewAPIView.as_view(), name='customization_preview_api'),
-    path('api/customization/preview/', views.CustomizationPreviewAPIView.as_view(), name='customization_preview_api'),
+    path('api/faq/<int:faq_id>/helpful/', views.FAQHelpfulAPIView.as_view(), name='faq_helpful_api'),
+    path('api/newsletter/subscribe/', views.NewsletterSubscribeView.as_view(), name='newsletter_subscribe_api'),
     
     # Downloads
     path('download-cv/', views.DownloadCVView.as_view(), name='download_cv'),

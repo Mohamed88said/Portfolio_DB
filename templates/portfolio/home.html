@@ -36,8 +36,15 @@
                     <a href="{% url 'portfolio:contact' %}" class="btn btn-gradient btn-lg hover-lift">
                         <i class="fas fa-envelope me-2"></i>{% trans "Me Contacter" %}
                     </a>
+                    <a href="{% url 'portfolio:testimonial_add' %}" class="btn btn-glass btn-lg hover-lift">
+                        <i class="fas fa-quote-left me-2"></i>{% trans "Laisser un témoignage" %}
+                    </a>
                     {% if profile.cv_file %}
                         <a href="{{ profile.cv_file.url }}" class="btn btn-glass btn-lg hover-lift" target="_blank">
+                            <i class="fas fa-download me-2"></i>{% trans "Télécharger CV" %}
+                        </a>
+                    {% else %}
+                        <a href="{% url 'portfolio:download_cv' %}" class="btn btn-glass btn-lg hover-lift">
                             <i class="fas fa-download me-2"></i>{% trans "Télécharger CV" %}
                         </a>
                     {% endif %}

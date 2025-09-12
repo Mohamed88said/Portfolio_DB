@@ -8,10 +8,9 @@ from django.utils.decorators import method_decorator
 from .models import (
     Profile, Education, Experience, Skill, Certification, Project, 
     Contact, SiteSettings, BlogPost, BlogCategory, Testimonial, 
-    Service, Achievement, Newsletter, VisitorStats, SiteCustomization
+    Service, Achievement, Newsletter, VisitorStats, SiteCustomization,
+    Tag, SearchQuery, FAQ, Timeline, Collaboration, Resource, Analytics
 )
-from .models import Collaboration  # Import the Collaboration model
-from .models import Resource  # Import the Resource model
 
 
 # Custom Admin Site

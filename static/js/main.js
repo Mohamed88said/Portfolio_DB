@@ -49,6 +49,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Form Validation and AJAX Submission
 document.addEventListener('DOMContentLoaded', function() {
     const contactForm = document.getElementById('contactForm');
+    const testimonialForm = document.getElementById('testimonialForm');
+    const newsletterForms = document.querySelectorAll('[id*="newsletterForm"]');
+    
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -88,6 +91,65 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+    
+    // Gestion du formulaire de témoignage
+    if (testimonialForm) {
+        testimonialForm.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<span class="loading"></span> Envoi en cours...';
+            submitBtn.disabled = true;
+            
+            // Le formulaire se soumet normalement, on restaure juste l'état en cas d'erreur
+            setTimeout(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 3000);
+        });
+    }
+    
+    // Gestion des formulaires newsletter
+    newsletterForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<span class="loading"></span> Inscription...';
+            submitBtn.disabled = true;
+            
+            fetch('{% url "portfolio:newsletter_subscribe_api" %}', {
+                method: 'POST',
+                body: JSON.stringify({
+                    email: formData.get('email'),
+                    name: formData.get('name') || ''
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    this.reset();
+                } else {
+                    showAlert(data.message, 'danger');
+                }
+            })
+            .catch(error => {
+                showAlert('Erreur lors de l\'inscription', 'danger');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    });
 });
 
 // Show Alert Function
