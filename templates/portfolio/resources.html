@@ -1,0 +1,435 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{% trans "Ressources" %} - {{ block.super }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .resources-section {
+        padding: 80px 0;
+        background-color: #f8f9fa;
+    }
+    
+    .resource-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+        margin-bottom: 30px;
+        height: 100%;
+    }
+    
+    .resource-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    
+    .resource-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        color: #667eea;
+    }
+    
+    .resource-content {
+        padding: 30px;
+    }
+    
+    .resource-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 15px;
+    }
+    
+    .resource-description {
+        color: #6c757d;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .resource-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding: 15px 0;
+        border-top: 1px solid #eee;
+    }
+    
+    .resource-category {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background-color: #e9ecef;
+        color: #495057;
+    }
+    
+    .resource-file-type {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background-color: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .resource-stats {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .btn-download {
+        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        color: white;
+    }
+    
+    .btn-preview {
+        background: transparent;
+        border: 2px solid #667eea;
+        color: #667eea;
+        padding: 10px 25px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-preview:hover {
+        background: #667eea;
+        color: white;
+    }
+    
+    .section-title {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .section-subtitle {
+        color: #6c757d;
+        text-align: center;
+        margin-bottom: 60px;
+        font-size: 1.2rem;
+    }
+    
+    .filter-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+        padding: 10px 25px;
+        border: 2px solid #667eea;
+        border-radius: 25px;
+        background: transparent;
+        color: #667eea;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-btn.active,
+    .filter-btn:hover {
+        background: #667eea;
+        color: white;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+    }
+    
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        color: #dee2e6;
+    }
+    
+    .file-size {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .download-count {
+        font-size: 0.9rem;
+        color: #28a745;
+        font-weight: 600;
+    }
+    
+    @media (max-width: 768px) {
+        .section-title {
+            font-size: 2rem;
+        }
+        
+        .filter-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .filter-btn {
+            width: 200px;
+        }
+        
+        .resource-meta {
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        
+        .resource-stats {
+            flex-direction: column;
+            gap: 8px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="resources-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="section-title">
+                    <i class="fas fa-download text-primary me-3"></i>
+                    {% trans "Ressources Téléchargeables" %}
+                </h1>
+                <p class="section-subtitle">
+                    {% trans "Accédez à mes documents, templates et ressources gratuites pour votre développement professionnel" %}
+                </p>
+            </div>
+        </div>
+
+        <!-- Filtres par catégorie -->
+        <div class="row">
+            <div class="col-12">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-category="all">
+                        {% trans "Toutes les ressources" %}
+                    </button>
+                    {% for category in resource_categories %}
+                    <button class="filter-btn" data-category="{{ category.category }}">
+                        {{ category.get_category_display }} ({{ category.count }})
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="resources-container">
+            {% for resource in resources %}
+            <div class="col-lg-4 col-md-6 mb-4" data-category="{{ resource.category }}">
+                <div class="resource-card">
+                    <div class="resource-content">
+                        <!-- Icône selon le type de fichier -->
+                        <div class="text-center">
+                            {% if resource.file_type == 'pdf' %}
+                            <i class="fas fa-file-pdf resource-icon"></i>
+                            {% elif resource.file_type == 'doc' %}
+                            <i class="fas fa-file-word resource-icon"></i>
+                            {% elif resource.file_type == 'image' %}
+                            <i class="fas fa-file-image resource-icon"></i>
+                            {% elif resource.file_type == 'video' %}
+                            <i class="fas fa-file-video resource-icon"></i>
+                            {% elif resource.file_type == 'code' %}
+                            <i class="fas fa-code resource-icon"></i>
+                            {% else %}
+                            <i class="fas fa-file resource-icon"></i>
+                            {% endif %}
+                        </div>
+                        
+                        <h3 class="resource-title">{{ resource.title }}</h3>
+                        <p class="resource-description">
+                            {{ resource.description }}
+                        </p>
+                        
+                        <div class="resource-meta">
+                            <span class="resource-category">
+                                {{ resource.get_category_display }}
+                            </span>
+                            <span class="resource-file-type">
+                                {{ resource.get_file_type_display|upper }}
+                            </span>
+                        </div>
+                        
+                        <div class="resource-stats">
+                            <span class="stat-item">
+                                <i class="fas fa-download"></i>
+                                <span class="download-count">{{ resource.download_count }} {% trans "téléchargements" %}</span>
+                            </span>
+                            {% if resource.file_size %}
+                            <span class="stat-item">
+                                <i class="fas fa-weight-hanging"></i>
+                                <span class="file-size">{{ resource.file_size|filesizeformat }}</span>
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="text-center">
+                            <a href="{% url 'portfolio:resource_download' resource.id %}" class="btn-download">
+                                <i class="fas fa-download me-2"></i>
+                                {% trans "Télécharger" %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <h3>{% trans "Aucune ressource disponible" %}</h3>
+                    <p>{% trans "Revenez bientôt pour découvrir de nouvelles ressources !" %}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Statistiques globales -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card card-enhanced text-center">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">{% trans "Statistiques des Ressources" %}</h4>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <h3 class="text-primary">{{ resources|length }}</h3>
+                                <p class="text-muted">{% trans "Ressources totales" %}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <h3 class="text-success">
+                                    {% with total_downloads=0 %}
+                                        {% for resource in resources %}
+                                            {% with total_downloads=total_downloads|add:resource.download_count %}
+                                            {% endwith %}
+                                        {% endfor %}
+                                        {{ total_downloads }}
+                                    {% endwith %}
+                                </h3>
+                                <p class="text-muted">{% trans "Téléchargements totaux" %}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <h3 class="text-info">{{ resource_categories|length }}</h3>
+                                <p class="text-muted">{% trans "Catégories" %}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <h3 class="text-warning">
+                                    {% with total_size=0 %}
+                                        {% for resource in resources %}
+                                            {% if resource.file_size %}
+                                                {% with total_size=total_size|add:resource.file_size %}
+                                                {% endwith %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ total_size|filesizeformat }}
+                                    {% endwith %}
+                                </h3>
+                                <p class="text-muted">{% trans "Espace total" %}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const resources = document.querySelectorAll('#resources-container > div[data-category]');
+        const emptyState = document.querySelector('.empty-state');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Retirer la classe active de tous les boutons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Ajouter la classe active au bouton cliqué
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                
+                let visibleCount = 0;
+                
+                // Filtrer les ressources
+                resources.forEach(resource => {
+                    const resourceCategory = resource.getAttribute('data-category');
+                    
+                    if (category === 'all' || resourceCategory === category) {
+                        resource.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        resource.style.display = 'none';
+                    }
+                });
+                
+                // Afficher/masquer l'état vide
+                if (visibleCount === 0 && emptyState) {
+                    emptyState.style.display = 'block';
+                } else if (emptyState) {
+                    emptyState.style.display = 'none';
+                }
+            });
+        });
+
+        // Animation au scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Appliquer l'animation à toutes les cartes
+        resources.forEach(resource => {
+            resource.style.opacity = '0';
+            resource.style.transform = 'translateY(30px)';
+            resource.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(resource);
+        });
+    });
+</script>
+{% endblock %}

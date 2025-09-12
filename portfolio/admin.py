@@ -11,6 +11,8 @@ from .models import (
     Service, Achievement, Newsletter, VisitorStats, SiteCustomization
 )
 from .models import Collaboration  # Import the Collaboration model
+from .models import Resource  # Import the Resource model
+
 
 # Custom Admin Site
 class PortfolioAdminSite(AdminSite):
@@ -404,3 +406,54 @@ class CollaborationAdmin(admin.ModelAdmin):
         updated = queryset.update(status='completed')
         self.message_user(request, f"{updated} collaboration(s) marquée(s) comme terminée(s).")
     mark_as_completed.short_description = _("Marquer comme terminé")
+
+
+
+
+# admin.py - Ajoutez cette classe
+@admin.register(Resource, site=admin_site)
+class ResourceAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'file_type', 'download_count', 'is_public', 'created_at')
+    list_filter = ('category', 'file_type', 'is_public', 'created_at')
+    search_fields = ('title', 'description')
+    readonly_fields = ('download_count', 'file_size', 'created_at')
+    list_editable = ('is_public',)
+    ordering = ['-created_at']
+    
+    fieldsets = (
+        (_('Informations générales'), {
+            'fields': ('title', 'description', 'file')
+        }),
+        (_('Classification'), {
+            'fields': ('category', 'file_type', 'is_public')
+        }),
+        (_('Statistiques'), {
+            'fields': ('download_count', 'file_size', 'created_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['make_public', 'make_private', 'reset_download_count']
+    
+    def save_model(self, request, obj, form, change):
+        # Calculer la taille du fichier
+        if obj.file:
+            obj.file_size = obj.file.size
+        super().save_model(request, obj, form, change)
+    
+    def make_public(self, request, queryset):
+        updated = queryset.update(is_public=True)
+        self.message_user(request, f"{updated} ressource(s) rendue(s) publique(s).")
+    make_public.short_description = _("Rendre public")
+    
+    def make_private(self, request, queryset):
+        updated = queryset.update(is_public=False)
+        self.message_user(request, f"{updated} ressource(s) rendue(s) privée(s).")
+    make_private.short_description = _("Rendre privé")
+    
+    def reset_download_count(self, request, queryset):
+        updated = queryset.update(download_count=0)
+        self.message_user(request, f"{updated} compteur(s) de téléchargement(s) réinitialisé(s).")
+    reset_download_count.short_description = _("Réinitialiser les compteurs")
+
+admin.site.register(Resource, ResourceAdmin)

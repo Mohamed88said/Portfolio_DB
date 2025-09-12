@@ -788,15 +788,25 @@ class CollaborationsView(ListView):
         ).order_by('category')
         return context
 
+# views.py - Modifiez la classe ResourcesView
 class ResourcesView(BaseView):
     template_name = 'portfolio/resources.html'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['resources'] = Resource.objects.filter(is_public=True).order_by('-created_at')
+        resources = Resource.objects.filter(is_public=True).order_by('-created_at')
+        
+        # Calculer les statistiques
+        total_downloads = sum(resource.download_count for resource in resources)
+        total_size = sum(resource.file_size or 0 for resource in resources)
+        
+        context['resources'] = resources
         context['resource_categories'] = Resource.objects.filter(is_public=True).values('category').annotate(
             count=Count('category')
         ).order_by('category')
+        context['total_downloads'] = total_downloads
+        context['total_size'] = total_size
+        
         return context
 
 class ResourceDownloadView(BaseView):
