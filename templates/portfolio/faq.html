@@ -1,0 +1,380 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "FAQ" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5" data-aos="fade-up">
+                <i class="fas fa-question-circle text-primary me-3"></i>
+                {% trans "Questions Fréquentes" %}
+            </h1>
+            <p class="text-center lead mb-5" data-aos="fade-up" data-aos-delay="100">
+                {% trans "Trouvez rapidement les réponses à vos questions" %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Recherche dans les FAQ -->
+    <div class="row mb-5">
+        <div class="col-lg-8 mx-auto">
+            <div class="search-faq">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" class="form-control" id="faqSearch" 
+                           placeholder="{% trans 'Rechercher dans les FAQ...' %}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Catégories FAQ -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="faq-categories text-center">
+                <button class="btn btn-outline-primary active me-2 mb-2" data-category="all">
+                    {% trans "Toutes" %}
+                </button>
+                {% for category in faq_categories %}
+                    <button class="btn btn-outline-primary me-2 mb-2" data-category="{{ category.category }}">
+                        {% if category.category == 'general' %}{% trans "Général" %}
+                        {% elif category.category == 'services' %}{% trans "Services" %}
+                        {% elif category.category == 'pricing' %}{% trans "Tarifs" %}
+                        {% elif category.category == 'technical' %}{% trans "Technique" %}
+                        {% elif category.category == 'process' %}{% trans "Processus" %}
+                        {% endif %}
+                        <span class="badge bg-primary ms-1">{{ category.count }}</span>
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="accordion" id="faqAccordion">
+                {% for faq in faqs %}
+                    <div class="accordion-item faq-item" data-category="{{ faq.category }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                        <h2 class="accordion-header" id="heading{{ faq.id }}">
+                            <button class="accordion-button collapsed" type="button" 
+                                    data-bs-toggle="collapse" data-bs-target="#collapse{{ faq.id }}" 
+                                    aria-expanded="false" aria-controls="collapse{{ faq.id }}">
+                                <div class="faq-question-content">
+                                    <span class="faq-category-badge badge bg-secondary me-2">
+                                        {% if faq.category == 'general' %}{% trans "Général" %}
+                                        {% elif faq.category == 'services' %}{% trans "Services" %}
+                                        {% elif faq.category == 'pricing' %}{% trans "Tarifs" %}
+                                        {% elif faq.category == 'technical' %}{% trans "Technique" %}
+                                        {% elif faq.category == 'process' %}{% trans "Processus" %}
+                                        {% endif %}
+                                    </span>
+                                    <span class="faq-question">{{ faq.question }}</span>
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="collapse{{ faq.id }}" class="accordion-collapse collapse" 
+                             aria-labelledby="heading{{ faq.id }}" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                <div class="faq-answer">
+                                    {{ faq.answer|linebreaks }}
+                                </div>
+                                <div class="faq-actions mt-3">
+                                    <small class="text-muted me-3">
+                                        <i class="fas fa-eye me-1"></i>{{ faq.views_count }} vues
+                                    </small>
+                                    <div class="faq-helpful">
+                                        <span class="text-muted me-2">{% trans "Cette réponse vous a-t-elle aidé ?" %}</span>
+                                        <button class="btn btn-sm btn-outline-success me-1" onclick="markHelpful({{ faq.id }})">
+                                            <i class="fas fa-thumbs-up me-1"></i>{% trans "Oui" %} ({{ faq.helpful_votes }})
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-thumbs-down me-1"></i>{% trans "Non" %}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Pas de réponse trouvée -->
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <div class="no-answer-found">
+                <h4>{% trans "Vous ne trouvez pas votre réponse ?" %}</h4>
+                <p class="text-muted mb-4">{% trans "N'hésitez pas à me contacter directement" %}</p>
+                <a href="{% url 'portfolio:contact' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-envelope me-2"></i>{% trans "Poser une question" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.search-faq .input-group-text {
+    background: transparent;
+    border-right: none;
+}
+
+.search-faq .form-control {
+    border-left: none;
+    box-shadow: none;
+}
+
+.search-faq .form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+.faq-categories .btn {
+    transition: all 0.3s ease;
+}
+
+.faq-categories .btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.accordion-item {
+    border: none;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.accordion-button {
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 20px;
+}
+
+.accordion-button:not(.collapsed) {
+    background: var(--primary);
+    color: white;
+    border-radius: 10px 10px 0 0;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: var(--primary);
+}
+
+.faq-question-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.faq-category-badge {
+    font-size: 0.7rem;
+    flex-shrink: 0;
+}
+
+.faq-question {
+    flex: 1;
+}
+
+.faq-answer {
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+.faq-actions {
+    border-top: 1px solid #e9ecef;
+    padding-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.faq-helpful {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.faq-item.hidden {
+    display: none;
+}
+
+.no-answer-found {
+    background: #f8f9fa;
+    padding: 40px;
+    border-radius: 15px;
+    margin-top: 30px;
+}
+
+body.dark-mode .accordion-item {
+    background: #2d2d2d;
+}
+
+body.dark-mode .accordion-button {
+    background: #2d2d2d;
+    color: white;
+    border-color: #404040;
+}
+
+body.dark-mode .accordion-button:not(.collapsed) {
+    background: var(--primary);
+}
+
+body.dark-mode .no-answer-found {
+    background: #2d2d2d;
+}
+
+@media (max-width: 768px) {
+    .faq-question-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .faq-category-badge {
+        margin-bottom: 5px;
+    }
+    
+    .faq-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .faq-helpful {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('faqSearch');
+    const categoryButtons = document.querySelectorAll('[data-category]');
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    // Recherche dans les FAQ
+    searchInput.addEventListener('input', function() {
+        const query = this.value.toLowerCase();
+        filterFAQs(query, getCurrentCategory());
+    });
+    
+    // Filtrage par catégorie
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Mettre à jour les boutons actifs
+            categoryButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            const category = this.dataset.category;
+            const query = searchInput.value.toLowerCase();
+            filterFAQs(query, category);
+        });
+    });
+    
+    function getCurrentCategory() {
+        const activeButton = document.querySelector('[data-category].active');
+        return activeButton ? activeButton.dataset.category : 'all';
+    }
+    
+    function filterFAQs(query, category) {
+        faqItems.forEach(item => {
+            const itemCategory = item.dataset.category;
+            const questionText = item.querySelector('.faq-question').textContent.toLowerCase();
+            const answerText = item.querySelector('.faq-answer').textContent.toLowerCase();
+            
+            const matchesCategory = category === 'all' || itemCategory === category;
+            const matchesSearch = !query || questionText.includes(query) || answerText.includes(query);
+            
+            if (matchesCategory && matchesSearch) {
+                item.classList.remove('hidden');
+                // Surligner les termes de recherche
+                if (query) {
+                    highlightSearchTerms(item, query);
+                } else {
+                    removeHighlights(item);
+                }
+            } else {
+                item.classList.add('hidden');
+            }
+        });
+        
+        // Afficher un message si aucun résultat
+        const visibleItems = document.querySelectorAll('.faq-item:not(.hidden)');
+        const noResultsMessage = document.getElementById('noFAQResults');
+        
+        if (visibleItems.length === 0 && !noResultsMessage) {
+            const message = document.createElement('div');
+            message.id = 'noFAQResults';
+            message.className = 'text-center py-5';
+            message.innerHTML = `
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">{% trans "Aucune FAQ trouvée" %}</h5>
+                <p class="text-muted">{% trans "Essayez avec d'autres mots-clés ou contactez-nous directement" %}</p>
+            `;
+            document.querySelector('#faqAccordion').appendChild(message);
+        } else if (visibleItems.length > 0 && noResultsMessage) {
+            noResultsMessage.remove();
+        }
+    }
+    
+    function highlightSearchTerms(item, query) {
+        const questionElement = item.querySelector('.faq-question');
+        const answerElement = item.querySelector('.faq-answer');
+        
+        [questionElement, answerElement].forEach(element => {
+            const originalText = element.textContent;
+            const highlightedText = originalText.replace(
+                new RegExp(`(${query})`, 'gi'),
+                '<mark>$1</mark>'
+            );
+            element.innerHTML = highlightedText;
+        });
+    }
+    
+    function removeHighlights(item) {
+        const marks = item.querySelectorAll('mark');
+        marks.forEach(mark => {
+            mark.outerHTML = mark.textContent;
+        });
+    }
+});
+
+// Fonction pour marquer une FAQ comme utile
+function markHelpful(faqId) {
+    fetch(`/api/faq/${faqId}/helpful/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Mettre à jour le compteur
+            const button = document.querySelector(`button[onclick="markHelpful(${faqId})"]`);
+            const currentCount = parseInt(button.textContent.match(/\((\d+)\)/)[1]);
+            button.innerHTML = button.innerHTML.replace(`(${currentCount})`, `(${currentCount + 1})`);
+            
+            // Désactiver le bouton
+            button.disabled = true;
+            button.classList.add('btn-success');
+            button.classList.remove('btn-outline-success');
+        }
+    })
+    .catch(error => console.error('Erreur:', error));
+}
+</script>
+{% endblock %}

@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Timeline" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5" data-aos="fade-up">
+                <i class="fas fa-history text-primary me-3"></i>
+                {% trans "Mon Parcours" %}
+            </h1>
+            <p class="text-center lead mb-5" data-aos="fade-up" data-aos-delay="100">
+                {% trans "Découvrez les étapes importantes de mon parcours professionnel et personnel" %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Filtres de catégorie -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <div class="timeline-filters">
+                <button class="btn btn-outline-primary active me-2 mb-2" data-category="all">
+                    {% trans "Tout" %}
+                </button>
+                {% for category in categories %}
+                    <button class="btn btn-outline-primary me-2 mb-2" data-category="{{ category.category }}">
+                        {% if category.category == 'education' %}
+                            <i class="fas fa-graduation-cap me-1"></i>{% trans "Formation" %}
+                        {% elif category.category == 'career' %}
+                            <i class="fas fa-briefcase me-1"></i>{% trans "Carrière" %}
+                        {% elif category.category == 'project' %}
+                            <i class="fas fa-project-diagram me-1"></i>{% trans "Projets" %}
+                        {% elif category.category == 'achievement' %}
+                            <i class="fas fa-trophy me-1"></i>{% trans "Réalisations" %}
+                        {% elif category.category == 'personal' %}
+                            <i class="fas fa-heart me-1"></i>{% trans "Personnel" %}
+                        {% endif %}
+                        <span class="badge bg-primary ms-1">{{ category.count }}</span>
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="timeline-container">
+                {% for event in timeline_events %}
+                    <div class="timeline-event" data-category="{{ event.category }}" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+                        <div class="timeline-date">
+                            <div class="date-circle {% if event.is_milestone %}milestone{% endif %}" style="background-color: {{ event.color }};">
+                                <i class="{{ event.icon }}"></i>
+                            </div>
+                            <div class="date-text">
+                                <strong>{{ event.date|date:"Y" }}</strong>
+                                <small class="d-block">{{ event.date|date:"M" }}</small>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-content">
+                            <div class="timeline-card">
+                                {% if event.image %}
+                                    <div class="timeline-image">
+                                        <img src="{{ event.image.url }}" alt="{{ event.title }}" class="img-fluid rounded">
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="timeline-body">
+                                    <div class="timeline-header">
+                                        <h4 class="timeline-title">{{ event.title }}</h4>
+                                        <span class="timeline-category badge" style="background-color: {{ event.color }};">
+                                            {% if event.category == 'education' %}{% trans "Formation" %}
+                                            {% elif event.category == 'career' %}{% trans "Carrière" %}
+                                            {% elif event.category == 'project' %}{% trans "Projet" %}
+                                            {% elif event.category == 'achievement' %}{% trans "Réalisation" %}
+                                            {% elif event.category == 'personal' %}{% trans "Personnel" %}
+                                            {% endif %}
+                                        </span>
+                                        {% if event.is_milestone %}
+                                            <span class="milestone-badge">
+                                                <i class="fas fa-star"></i> {% trans "Étape importante" %}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <div class="timeline-description">
+                                        {{ event.description|linebreaks }}
+                                    </div>
+                                    
+                                    {% if event.link %}
+                                        <div class="timeline-link">
+                                            <a href="{{ event.link }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                                <i class="fas fa-external-link-alt me-1"></i>{% trans "En savoir plus" %}
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="timeline-stats">
+                <div class="row text-center">
+                    <div class="col-md-2 mb-3">
+                        <div class="stat-item">
+                            <h3 class="text-primary">{{ timeline_events|length }}</h3>
+                            <p class="mb-0">{% trans "Événements" %}</p>
+                        </div>
+                    </div>
+                    {% for category in categories %}
+                        <div class="col-md-2 mb-3">
+                            <div class="stat-item">
+                                <h3 class="text-primary">{{ category.count }}</h3>
+                                <p class="mb-0">
+                                    {% if category.category == 'education' %}{% trans "Formations" %}
+                                    {% elif category.category == 'career' %}{% trans "Postes" %}
+                                    {% elif category.category == 'project' %}{% trans "Projets" %}
+                                    {% elif category.category == 'achievement' %}{% trans "Réalisations" %}
+                                    {% elif category.category == 'personal' %}{% trans "Personnel" %}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline-filters .btn {
+    transition: all 0.3s ease;
+}
+
+.timeline-filters .btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.timeline-container {
+    position: relative;
+    padding: 20px 0;
+}
+
+.timeline-container::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, var(--primary), var(--secondary));
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.timeline-event {
+    position: relative;
+    margin-bottom: 60px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.timeline-event:nth-child(odd) {
+    flex-direction: row;
+}
+
+.timeline-event:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.timeline-date {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 120px;
+    z-index: 2;
+}
+
+.timeline-event:nth-child(even) .timeline-date {
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+.date-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.date-circle.milestone {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+    animation: pulse 2s infinite;
+}
+
+.date-text {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.timeline-content {
+    flex: 1;
+    margin: 0 30px;
+    max-width: 500px;
+}
+
+.timeline-event:nth-child(odd) .timeline-content {
+    margin-left: 30px;
+    margin-right: 0;
+}
+
+.timeline-event:nth-child(even) .timeline-content {
+    margin-right: 30px;
+    margin-left: 0;
+}
+
+.timeline-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.timeline-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.timeline-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.timeline-body {
+    padding: 25px;
+}
+
+.timeline-header {
+    margin-bottom: 15px;
+}
+
+.timeline-title {
+    margin-bottom: 10px;
+    color: var(--primary);
+}
+
+.timeline-category {
+    font-size: 0.8rem;
+    margin-right: 10px;
+}
+
+.milestone-badge {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 15px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.timeline-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.timeline-link {
+    margin-top: 15px;
+}
+
+.timeline-stats {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 40px;
+    border-radius: 15px;
+    margin-top: 40px;
+}
+
+.stat-item h3 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.timeline-event.hidden {
+    display: none;
+}
+
+/* Mode sombre */
+body.dark-mode .timeline-card {
+    background: #2d2d2d;
+    color: white;
+}
+
+body.dark-mode .timeline-description {
+    color: #adb5bd;
+}
+
+body.dark-mode .timeline-stats {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+}
+
+body.dark-mode .date-text {
+    color: #adb5bd;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .timeline-container::before {
+        left: 30px;
+    }
+    
+    .timeline-event {
+        flex-direction: row !important;
+        margin-left: 0;
+    }
+    
+    .timeline-date {
+        min-width: 80px;
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+    
+    .date-circle {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .date-circle.milestone {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .timeline-content {
+        margin: 0 0 0 20px !important;
+        max-width: none;
+    }
+    
+    .timeline-body {
+        padding: 20px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('[data-category]');
+    const timelineEvents = document.querySelectorAll('.timeline-event');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const category = this.dataset.category;
+            
+            // Mettre à jour les boutons actifs
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Filtrer les événements
+            timelineEvents.forEach(event => {
+                if (category === 'all' || event.dataset.category === category) {
+                    event.classList.remove('hidden');
+                } else {
+                    event.classList.add('hidden');
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

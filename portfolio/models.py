@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import EmailValidator
@@ -5,6 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 import uuid
+from django.contrib.contenttypes.models import ContentType
 
 class Profile(models.Model):
     name = models.CharField(_("Nom"), max_length=100)
@@ -29,12 +31,26 @@ class Profile(models.Model):
     availability_status = models.CharField(_("Statut de disponibilité"), max_length=20, 
                                          choices=[
                                              ('available', 'Disponible'),
+                                             ('partially_available', 'Partiellement disponible'),
+                                             ('busy', 'Occupé'),
+                                             ('not_available', 'Non disponible')
+                                         ], default='available')
+    work_preference = models.CharField(_("Préférence de travail"), max_length=20,
+                                     choices=[
                                              ('busy', 'Occupé'),
                                              ('not_available', 'Non disponible')
                                          ], default='available')
     hourly_rate = models.DecimalField(_("Tarif horaire"), max_digits=10, decimal_places=2, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # Nouveaux champs avancés
+    timezone = models.CharField(_("Fuseau horaire"), max_length=50, default='Europe/Paris')
+    work_hours_start = models.TimeField(_("Début heures de travail"), null=True, blank=True)
+    work_hours_end = models.TimeField(_("Fin heures de travail"), null=True, blank=True)
+    preferred_contact_method = models.CharField(_("Méthode de contact préférée"), max_length=20,
+                                              choices=[('email', 'Email'), ('phone', 'Téléphone'), ('linkedin', 'LinkedIn')],
+                                              default='email')
 
     class Meta:
         verbose_name = _("Profil")
@@ -531,3 +547,182 @@ class SiteSettings(models.Model):
     
     def __str__(self):
         return self.site_title
+
+# Nouveaux modèles avancés
+
+class Tag(models.Model):
+    """Système de tags universel pour tous les contenus"""
+    name = models.CharField(_("Nom"), max_length=50, unique=True)
+    slug = models.SlugField(_("Slug"), unique=True, blank=True)
+    color = models.CharField(_("Couleur"), max_length=7, default="#007bff")
+    description = models.TextField(_("Description"), blank=True)
+    usage_count = models.PositiveIntegerField(_("Nombre d'utilisations"), default=0)
+    is_featured = models.BooleanField(_("Tag vedette"), default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = _("Tag")
+        verbose_name_plural = _("Tags")
+        ordering = ['-usage_count', 'name']
+    
+    def __str__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+class SearchQuery(models.Model):
+    """Historique des recherches pour améliorer les suggestions"""
+    query = models.CharField(_("Requête"), max_length=200)
+    results_count = models.PositiveIntegerField(_("Nombre de résultats"), default=0)
+    ip_address = models.GenericIPAddressField(_("Adresse IP"), null=True, blank=True)
+    user_agent = models.TextField(_("User Agent"), blank=True)
+    search_date = models.DateTimeField(auto_now_add=True)
+    clicked_result = models.CharField(_("Résultat cliqué"), max_length=200, blank=True)
+    
+    class Meta:
+        verbose_name = _("Requête de recherche")
+        verbose_name_plural = _("Requêtes de recherche")
+        ordering = ['-search_date']
+
+class FAQ(models.Model):
+    """Questions fréquemment posées"""
+    question = models.CharField(_("Question"), max_length=300)
+    answer = models.TextField(_("Réponse"))
+    category = models.CharField(_("Catégorie"), max_length=50, choices=[
+        ('general', _('Général')),
+        ('services', _('Services')),
+        ('pricing', _('Tarifs')),
+        ('technical', _('Technique')),
+        ('process', _('Processus')),
+    ], default='general')
+    order = models.PositiveIntegerField(_("Ordre"), default=0)
+    is_active = models.BooleanField(_("Actif"), default=True)
+    views_count = models.PositiveIntegerField(_("Nombre de vues"), default=0)
+    helpful_votes = models.PositiveIntegerField(_("Votes utiles"), default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _("FAQ")
+        verbose_name_plural = _("FAQ")
+        ordering = ['category', 'order']
+    
+    def __str__(self):
+        return self.question[:100]
+
+class Timeline(models.Model):
+    """Timeline des événements importants"""
+    title = models.CharField(_("Titre"), max_length=200)
+    description = models.TextField(_("Description"))
+    date = models.DateField(_("Date"))
+    category = models.CharField(_("Catégorie"), max_length=50, choices=[
+        ('education', _('Formation')),
+        ('career', _('Carrière')),
+        ('project', _('Projet')),
+        ('achievement', _('Réalisation')),
+        ('personal', _('Personnel')),
+    ])
+    icon = models.CharField(_("Icône"), max_length=50, default="fas fa-calendar")
+    color = models.CharField(_("Couleur"), max_length=7, default="#007bff")
+    is_milestone = models.BooleanField(_("Étape importante"), default=False)
+    image = models.ImageField(_("Image"), upload_to='timeline/', blank=True)
+    link = models.URLField(_("Lien"), blank=True)
+    
+    class Meta:
+        verbose_name = _("Événement Timeline")
+        verbose_name_plural = _("Timeline")
+        ordering = ['-date']
+    
+    def __str__(self):
+        return f"{self.date.year} - {self.title}"
+
+class Collaboration(models.Model):
+    """Collaborations et partenariats"""
+    partner_name = models.CharField(_("Nom du partenaire"), max_length=200)
+    partner_logo = models.ImageField(_("Logo du partenaire"), upload_to='collaborations/', blank=True)
+    collaboration_type = models.CharField(_("Type de collaboration"), max_length=50, choices=[
+        ('client', _('Client')),
+        ('partner', _('Partenaire')),
+        ('employer', _('Employeur')),
+        ('mentor', _('Mentor')),
+        ('mentee', _('Mentoré')),
+        ('contributor', _('Contributeur')),
+    ])
+    description = models.TextField(_("Description"))
+    start_date = models.DateField(_("Date de début"))
+    end_date = models.DateField(_("Date de fin"), null=True, blank=True)
+    is_ongoing = models.BooleanField(_("En cours"), default=False)
+    website = models.URLField(_("Site web"), blank=True)
+    testimonial = models.TextField(_("Témoignage"), blank=True)
+    
+    class Meta:
+        verbose_name = _("Collaboration")
+        verbose_name_plural = _("Collaborations")
+        ordering = ['-start_date']
+    
+    def __str__(self):
+        return f"{self.partner_name} - {self.get_collaboration_type_display()}"
+
+class Resource(models.Model):
+    """Ressources téléchargeables"""
+    title = models.CharField(_("Titre"), max_length=200)
+    description = models.TextField(_("Description"))
+    file = models.FileField(_("Fichier"), upload_to='resources/')
+    file_type = models.CharField(_("Type de fichier"), max_length=20, choices=[
+        ('pdf', 'PDF'),
+        ('doc', 'Document'),
+        ('image', 'Image'),
+        ('video', 'Vidéo'),
+        ('code', 'Code'),
+        ('other', 'Autre'),
+    ])
+    category = models.CharField(_("Catégorie"), max_length=50, choices=[
+        ('cv', _('CV/Résumé')),
+        ('portfolio', _('Portfolio')),
+        ('template', _('Template')),
+        ('guide', _('Guide')),
+        ('presentation', _('Présentation')),
+        ('other', _('Autre')),
+    ])
+    is_public = models.BooleanField(_("Public"), default=True)
+    download_count = models.PositiveIntegerField(_("Nombre de téléchargements"), default=0)
+    file_size = models.PositiveIntegerField(_("Taille du fichier (bytes)"), null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = _("Ressource")
+        verbose_name_plural = _("Ressources")
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return self.title
+
+class Analytics(models.Model):
+    """Analytics avancées du site"""
+    date = models.DateField(_("Date"))
+    page_views = models.PositiveIntegerField(_("Vues de page"), default=0)
+    unique_visitors = models.PositiveIntegerField(_("Visiteurs uniques"), default=0)
+    bounce_rate = models.DecimalField(_("Taux de rebond"), max_digits=5, decimal_places=2, default=0)
+    avg_session_duration = models.DurationField(_("Durée moyenne de session"), null=True, blank=True)
+    top_pages = models.JSONField(_("Pages populaires"), default=dict)
+    referrers = models.JSONField(_("Référents"), default=dict)
+    devices = models.JSONField(_("Appareils"), default=dict)
+    countries = models.JSONField(_("Pays"), default=dict)
+    
+    class Meta:
+        verbose_name = _("Analytics")
+        verbose_name_plural = _("Analytics")
+        ordering = ['-date']
+        unique_together = ['date']
+    
+    def __str__(self):
+        return f"Analytics - {self.date}"
+
+# Ajout de tags aux modèles existants
+Project.add_to_class('tags', models.ManyToManyField(Tag, blank=True, verbose_name=_("Tags")))
+BlogPost.add_to_class('tags_new', models.ManyToManyField(Tag, blank=True, verbose_name=_("Tags")))
+Experience.add_to_class('tags', models.ManyToManyField(Tag, blank=True, verbose_name=_("Tags")))
+Skill.add_to_class('tags', models.ManyToManyField(Tag, blank=True, verbose_name=_("Tags")))

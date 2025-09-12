@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.db.models import Q, Count, Avg
 from django.views.generic import TemplateView, ListView, DetailView, FormView, CreateView
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -17,12 +18,15 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import cache_page
 import json
 from datetime import datetime, timedelta
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.core.serializers import serialize
 
 from .models import (
     Profile, Education, Experience, Skill, Certification, Project, 
     Contact, SiteSettings, BlogPost, BlogCategory, Testimonial, 
     Service, Achievement, Newsletter, VisitorStats, SiteCustomization
 )
+from .models import Tag, FAQ, Timeline, Collaboration, Resource, Analytics, SearchQuery as SearchQueryModel
 from .forms import ContactForm, TestimonialForm, SiteCustomizationForm, NewsletterForm
 
 class BaseView(TemplateView):
@@ -31,6 +35,7 @@ class BaseView(TemplateView):
         try:
             context['profile'] = Profile.objects.first()
             context['site_settings'] = SiteSettings.objects.first()
+            context['popular_tags'] = Tag.objects.filter(is_featured=True)[:10]
             context['site_customization'] = SiteCustomization.objects.filter(is_active=True).first()
         except:
             context['profile'] = None
@@ -61,6 +66,18 @@ class BaseView(TemplateView):
             ip = request.META.get('REMOTE_ADDR')
         return ip
 
+    def log_search_query(self, request, query, results_count):
+        """Enregistrer les requêtes de recherche pour analytics"""
+        try:
+            SearchQueryModel.objects.create(
+                query=query,
+                results_count=results_count,
+                ip_address=self.get_client_ip(request),
+                user_agent=request.META.get('HTTP_USER_AGENT', '')[:500]
+            )
+        except:
+            pass
+
 
 
 class HomeView(BaseView):
@@ -77,6 +94,10 @@ class HomeView(BaseView):
             context['services'] = Service.objects.filter(is_active=True)[:4]
             context['recent_blog_posts'] = BlogPost.objects.filter(is_published=True)[:3]
             context['achievements'] = Achievement.objects.all()[:3]
+            context['timeline_events'] = Timeline.objects.filter(is_milestone=True)[:5]
+            context['collaborations'] = Collaboration.objects.filter(is_ongoing=True)[:6]
+            context['faq_items'] = FAQ.objects.filter(is_active=True, category='general')[:3]
+            context['popular_resources'] = Resource.objects.filter(is_public=True).order_by('-download_count')[:3]
         except Exception as e:
             # Ajout d'un message d'erreur pour le débogage
             print(f"Erreur lors du chargement des données: {e}")
@@ -88,6 +109,10 @@ class HomeView(BaseView):
             context['services'] = []
             context['recent_blog_posts'] = []
             context['achievements'] = []
+            context['timeline_events'] = []
+            context['collaborations'] = []
+            context['faq_items'] = []
+            context['popular_resources'] = []
         return context
 
 
@@ -473,6 +498,204 @@ class SuperuserRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_superuser
 
+# Nouvelles vues avancées
+
+class UniversalSearchView(BaseView):
+    """Recherche universelle dans tout le contenu"""
+    template_name = 'portfolio/search_results.html'
+    
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('q', '').strip()
+        category = request.GET.get('category', 'all')
+        
+        if not query:
+            return render(request, self.template_name, {
+                'query': query,
+                'results': [],
+                'total_results': 0,
+                'suggestions': self.get_search_suggestions(),
+                'popular_searches': self.get_popular_searches(),
+            })
+        
+        results = self.perform_universal_search(query, category)
+        total_results = sum(len(category_results) for category_results in results.values())
+        
+        # Enregistrer la recherche
+        self.log_search_query(request, query, total_results)
+        
+        context = {
+            'query': query,
+            'category': category,
+            'results': results,
+            'total_results': total_results,
+            'suggestions': self.get_search_suggestions(query),
+            'popular_searches': self.get_popular_searches(),
+        }
+        
+        return render(request, self.template_name, context)
+    
+    def perform_universal_search(self, query, category='all'):
+        """Effectuer une recherche dans tous les contenus"""
+        results = {}
+        
+        # Recherche dans les projets
+        if category in ['all', 'projects']:
+            projects = Project.objects.filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query) |
+                Q(detailed_description__icontains=query) |
+                Q(technologies__icontains=query) |
+                Q(client__icontains=query) |
+                Q(challenges_faced__icontains=query)
+            )
+            results['projects'] = [{
+                'title': p.title,
+                'description': p.description,
+                'url': p.get_absolute_url(),
+                'type': 'Projet',
+                'date': p.start_date,
+                'tags': p.technologies.split(',') if p.technologies else [],
+                'image': p.image.url if p.image else None,
+            } for p in projects]
+        
+        # Recherche dans les expériences
+        if category in ['all', 'experiences']:
+            experiences = Experience.objects.filter(
+                Q(title__icontains=query) |
+                Q(company__icontains=query) |
+                Q(description__icontains=query) |
+                Q(achievements__icontains=query) |
+                Q(technologies__icontains=query)
+            )
+            results['experiences'] = [{
+                'title': f"{e.title} - {e.company}",
+                'description': e.description,
+                'url': '/experience/',
+                'type': 'Expérience',
+                'date': e.start_date,
+                'tags': e.technologies.split(',') if e.technologies else [],
+            } for e in experiences]
+        
+        # Recherche dans les compétences
+        if category in ['all', 'skills']:
+            skills = Skill.objects.filter(
+                Q(name__icontains=query) |
+                Q(certification_level__icontains=query)
+            )
+            results['skills'] = [{
+                'title': s.name,
+                'description': f"{s.get_category_display()} - {s.get_proficiency_display()}",
+                'url': '/academic/',
+                'type': 'Compétence',
+                'tags': [s.get_category_display(), s.get_proficiency_display()],
+            } for s in skills]
+        
+        # Recherche dans le blog
+        if category in ['all', 'blog']:
+            blog_posts = BlogPost.objects.filter(
+                is_published=True
+            ).filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(excerpt__icontains=query) |
+                Q(tags__icontains=query)
+            )
+            results['blog'] = [{
+                'title': b.title,
+                'description': b.excerpt or b.content[:200],
+                'url': b.get_absolute_url(),
+                'type': 'Article',
+                'date': b.published_at,
+                'tags': b.tags.split(',') if b.tags else [],
+                'image': b.featured_image.url if b.featured_image else None,
+            } for b in blog_posts]
+        
+        # Recherche dans les certifications
+        if category in ['all', 'certifications']:
+            certifications = Certification.objects.filter(
+                Q(name__icontains=query) |
+                Q(issuing_organization__icontains=query) |
+                Q(credential_id__icontains=query)
+            )
+            results['certifications'] = [{
+                'title': c.name,
+                'description': f"Délivré par {c.issuing_organization}",
+                'url': '/certifications/',
+                'type': 'Certification',
+                'date': c.issue_date,
+                'tags': [c.issuing_organization],
+            } for c in certifications]
+        
+        # Recherche dans les témoignages
+        if category in ['all', 'testimonials']:
+            testimonials = Testimonial.objects.filter(
+                is_approved=True
+            ).filter(
+                Q(content__icontains=query) |
+                Q(name__icontains=query) |
+                Q(company__icontains=query) |
+                Q(position__icontains=query)
+            )
+            results['testimonials'] = [{
+                'title': f"Témoignage de {t.name if not t.is_anonymous else 'Anonyme'}",
+                'description': t.content[:200],
+                'url': '/testimonials/',
+                'type': 'Témoignage',
+                'date': t.created_at,
+                'tags': [t.company] if t.company else [],
+            } for t in testimonials]
+        
+        # Recherche dans les FAQ
+        if category in ['all', 'faq']:
+            faqs = FAQ.objects.filter(
+                is_active=True
+            ).filter(
+                Q(question__icontains=query) |
+                Q(answer__icontains=query)
+            )
+            results['faq'] = [{
+                'title': f.question,
+                'description': f.answer[:200],
+                'url': '/faq/',
+                'type': 'FAQ',
+                'tags': [f.get_category_display()],
+            } for f in faqs]
+        
+        # Recherche dans les ressources
+        if category in ['all', 'resources']:
+            resources = Resource.objects.filter(
+                is_public=True
+            ).filter(
+                Q(title__icontains=query) |
+                Q(description__icontains=query)
+            )
+            results['resources'] = [{
+                'title': r.title,
+                'description': r.description,
+                'url': f'/resources/{r.id}/',
+                'type': 'Ressource',
+                'date': r.created_at,
+                'tags': [r.get_category_display(), r.get_file_type_display()],
+            } for r in resources]
+        
+        return results
+    
+    def get_search_suggestions(self, query=None):
+        """Obtenir des suggestions de recherche"""
+        if query:
+            # Suggestions basées sur la requête actuelle
+            tags = Tag.objects.filter(name__icontains=query)[:5]
+            return [tag.name for tag in tags]
+        else:
+            # Suggestions populaires
+            return Tag.objects.filter(is_featured=True).values_list('name', flat=True)[:10]
+    
+    def get_popular_searches(self):
+        """Obtenir les recherches populaires"""
+        return SearchQueryModel.objects.values('query').annotate(
+            count=Count('query')
+        ).order_by('-count')[:10]
+
 class AdminDashboardView(SuperuserRequiredMixin, TemplateView):
     template_name = 'portfolio/admin/dashboard.html'
     
@@ -497,6 +720,15 @@ class AdminDashboardView(SuperuserRequiredMixin, TemplateView):
             visit_date__gte=thirty_days_ago
         ).values('ip_address').distinct().count()
         
+        # Nouvelles statistiques avancées
+        context['total_tags'] = Tag.objects.count()
+        context['total_searches'] = SearchQueryModel.objects.count()
+        context['total_faq'] = FAQ.objects.filter(is_active=True).count()
+        context['total_resources'] = Resource.objects.filter(is_public=True).count()
+        context['total_collaborations'] = Collaboration.objects.count()
+        context['recent_searches'] = SearchQueryModel.objects.order_by('-search_date')[:10]
+        context['popular_tags'] = Tag.objects.order_by('-usage_count')[:10]
+        
         # Pages les plus visitées
         context['popular_pages'] = VisitorStats.objects.filter(
             visit_date__gte=thirty_days_ago
@@ -511,6 +743,157 @@ class AdminDashboardView(SuperuserRequiredMixin, TemplateView):
         context['recent_testimonials'] = Testimonial.objects.order_by('-created_at')[:5]
         
         return context
+
+class FAQView(BaseView):
+    template_name = 'portfolio/faq.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['faq_categories'] = FAQ.objects.filter(is_active=True).values('category').annotate(
+            count=Count('category')
+        ).order_by('category')
+        context['faqs'] = FAQ.objects.filter(is_active=True).order_by('category', 'order')
+        return context
+
+class TimelineView(BaseView):
+    template_name = 'portfolio/timeline.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['timeline_events'] = Timeline.objects.all().order_by('-date')
+        context['categories'] = Timeline.objects.values('category').annotate(
+            count=Count('category')
+        ).order_by('category')
+        return context
+
+class CollaborationsView(BaseView):
+    template_name = 'portfolio/collaborations.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['collaborations'] = Collaboration.objects.all().order_by('-start_date')
+        context['collaboration_types'] = Collaboration.objects.values('collaboration_type').annotate(
+            count=Count('collaboration_type')
+        ).order_by('collaboration_type')
+        return context
+
+class ResourcesView(BaseView):
+    template_name = 'portfolio/resources.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['resources'] = Resource.objects.filter(is_public=True).order_by('-created_at')
+        context['resource_categories'] = Resource.objects.filter(is_public=True).values('category').annotate(
+            count=Count('category')
+        ).order_by('category')
+        return context
+
+class ResourceDownloadView(BaseView):
+    def get(self, request, resource_id):
+        resource = get_object_or_404(Resource, id=resource_id, is_public=True)
+        resource.download_count += 1
+        resource.save()
+        
+        response = HttpResponse(resource.file.read(), content_type='application/octet-stream')
+        response['Content-Disposition'] = f'attachment; filename="{resource.file.name}"'
+        return response
+
+class AdvancedAnalyticsView(SuperuserRequiredMixin, TemplateView):
+    template_name = 'portfolio/admin/analytics.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Analytics des 30 derniers jours
+        thirty_days_ago = timezone.now() - timedelta(days=30)
+        
+        # Statistiques de recherche
+        search_stats = SearchQueryModel.objects.filter(
+            search_date__gte=thirty_days_ago
+        ).values('query').annotate(
+            count=Count('query'),
+            avg_results=Avg('results_count')
+        ).order_by('-count')[:20]
+        
+        context['search_stats'] = search_stats
+        
+        # Statistiques des tags
+        tag_stats = Tag.objects.annotate(
+            projects_count=Count('project'),
+            blog_posts_count=Count('blogpost_set'),
+            total_usage=Count('project') + Count('blogpost_set')
+        ).order_by('-total_usage')[:15]
+        
+        context['tag_stats'] = tag_stats
+        
+        # Statistiques des téléchargements
+        download_stats = Resource.objects.filter(
+            is_public=True
+        ).order_by('-download_count')[:10]
+        
+        context['download_stats'] = download_stats
+        
+        # FAQ les plus consultées
+        faq_stats = FAQ.objects.filter(
+            is_active=True
+        ).order_by('-views_count')[:10]
+        
+        context['faq_stats'] = faq_stats
+        
+        return context
+
+# API Views pour AJAX
+class SearchSuggestionsAPIView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('q', '').strip()
+        
+        if len(query) < 2:
+            return JsonResponse({'suggestions': []})
+        
+        # Suggestions de tags
+        tag_suggestions = Tag.objects.filter(
+            name__icontains=query
+        ).values_list('name', flat=True)[:5]
+        
+        # Suggestions de projets
+        project_suggestions = Project.objects.filter(
+            title__icontains=query
+        ).values_list('title', flat=True)[:3]
+        
+        # Suggestions de compétences
+        skill_suggestions = Skill.objects.filter(
+            name__icontains=query
+        ).values_list('name', flat=True)[:3]
+        
+        # Suggestions de recherches populaires
+        popular_suggestions = SearchQueryModel.objects.filter(
+            query__icontains=query
+        ).values('query').annotate(
+            count=Count('query')
+        ).order_by('-count').values_list('query', flat=True)[:3]
+        
+        all_suggestions = list(tag_suggestions) + list(project_suggestions) + \
+                         list(skill_suggestions) + list(popular_suggestions)
+        
+        # Supprimer les doublons et limiter
+        unique_suggestions = list(dict.fromkeys(all_suggestions))[:10]
+        
+        return JsonResponse({'suggestions': unique_suggestions})
+
+class TagCloudAPIView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        tags = Tag.objects.annotate(
+            total_usage=Count('project') + Count('blogpost_set')
+        ).filter(total_usage__gt=0).order_by('-total_usage')[:50]
+        
+        tag_data = [{
+            'name': tag.name,
+            'count': tag.total_usage,
+            'color': tag.color,
+            'url': f'/search/?q={tag.name}'
+        } for tag in tags]
+        
+        return JsonResponse({'tags': tag_data})
 
 class AdminCustomizationView(SuperuserRequiredMixin, FormView):
     template_name = 'portfolio/admin/customization.html'
