@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Laisser un témoignage" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h1 class="display-5 mb-3">
+                    <i class="fas fa-quote-left text-primary me-3"></i>
+                    {% trans "Partagez votre expérience" %}
+                </h1>
+                <p class="lead text-muted">
+                    {% trans "Votre témoignage m'aide à améliorer mes services et inspire d'autres clients" %}
+                </p>
+            </div>
+
+            <div class="card card-enhanced shadow" data-aos="fade-up" data-aos-delay="100">
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" id="testimonialForm">
+                        {% csrf_token %}
+                        
+                        <!-- Anonyme Toggle -->
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                {{ form.is_anonymous }}
+                                <label class="form-check-label" for="{{ form.is_anonymous.id_for_label }}">
+                                    <i class="fas fa-user-secret me-2"></i>
+                                    {% trans "Témoignage anonyme" %}
+                                </label>
+                                <small class="form-text text-muted d-block mt-1">
+                                    {% trans "Cochez cette case si vous souhaitez rester anonyme" %}
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="row" id="personalInfo">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">
+                                    <i class="fas fa-user me-2"></i>{{ form.name.label }}
+                                </label>
+                                {{ form.name }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">
+                                    <i class="fas fa-envelope me-2"></i>{{ form.email.label }}
+                                </label>
+                                {{ form.email }}
+                            </div>
+                        </div>
+
+                        <div class="row" id="professionalInfo">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.company.id_for_label }}" class="form-label">
+                                    <i class="fas fa-building me-2"></i>{{ form.company.label }}
+                                </label>
+                                {{ form.company }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.position.id_for_label }}" class="form-label">
+                                    <i class="fas fa-briefcase me-2"></i>{{ form.position.label }}
+                                </label>
+                                {{ form.position }}
+                            </div>
+                        </div>
+
+                        <div class="row" id="contactInfo">
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.location.id_for_label }}" class="form-label">
+                                    <i class="fas fa-map-marker-alt me-2"></i>{{ form.location.label }}
+                                </label>
+                                {{ form.location }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.website.id_for_label }}" class="form-label">
+                                    <i class="fas fa-globe me-2"></i>{{ form.website.label }}
+                                </label>
+                                {{ form.website }}
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.phone.id_for_label }}" class="form-label">
+                                    <i class="fas fa-phone me-2"></i>{{ form.phone.label }}
+                                </label>
+                                {{ form.phone }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.rating.id_for_label }}" class="form-label">
+                                <i class="fas fa-star me-2"></i>{{ form.rating.label }} *
+                            </label>
+                            <div class="rating-input">
+                                {{ form.rating }}
+                                <div class="star-display mt-2">
+                                    <span class="stars">
+                                        <i class="far fa-star" data-rating="1"></i>
+                                        <i class="far fa-star" data-rating="2"></i>
+                                        <i class="far fa-star" data-rating="3"></i>
+                                        <i class="far fa-star" data-rating="4"></i>
+                                        <i class="far fa-star" data-rating="5"></i>
+                                    </span>
+                                    <small class="text-muted ms-2" id="ratingText">{% trans "Sélectionnez une note" %}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.content.id_for_label }}" class="form-label">
+                                <i class="fas fa-comment me-2"></i>{{ form.content.label }} *
+                            </label>
+                            {{ form.content }}
+                            <small class="form-text text-muted">
+                                {% trans "Partagez votre expérience, ce qui vous a plu, les résultats obtenus..." %}
+                            </small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3" id="photoSection">
+                                <label for="{{ form.photo.id_for_label }}" class="form-label">
+                                    <i class="fas fa-camera me-2"></i>{{ form.photo.label }}
+                                </label>
+                                {{ form.photo }}
+                                <small class="form-text text-muted">
+                                    {% trans "Photo optionnelle pour personnaliser votre témoignage" %}
+                                </small>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.project_related.id_for_label }}" class="form-label">
+                                    <i class="fas fa-project-diagram me-2"></i>{{ form.project_related.label }}
+                                </label>
+                                {{ form.project_related }}
+                                <small class="form-text text-muted">
+                                    {% trans "Projet associé à ce témoignage (optionnel)" %}
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                {% trans "Publier mon témoignage" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Témoignages récents -->
+            {% if recent_testimonials %}
+            <div class="mt-5" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-center mb-4">{% trans "Témoignages récents" %}</h3>
+                <div class="row">
+                    {% for testimonial in recent_testimonials %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="rating mb-2">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= testimonial.rating %}
+                                            <i class="fas fa-star text-warning"></i>
+                                        {% else %}
+                                            <i class="far fa-star text-muted"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <p class="card-text">{{ testimonial.content|truncatewords:15 }}</p>
+                                <footer class="blockquote-footer">
+                                    {% if testimonial.is_anonymous %}
+                                        {% trans "Anonyme" %}
+                                    {% else %}
+                                        {{ testimonial.name }}
+                                        {% if testimonial.company %}, {{ testimonial.company }}{% endif %}
+                                    {% endif %}
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.rating-input select {
+    display: none;
+}
+
+.star-display .stars i {
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    margin-right: 5px;
+}
+
+.star-display .stars i:hover,
+.star-display .stars i.active {
+    color: #ffc107;
+}
+
+.form-check-switch .form-check-input {
+    width: 3rem;
+    height: 1.5rem;
+}
+
+#personalInfo.hidden,
+#professionalInfo.hidden,
+#contactInfo.hidden,
+#photoSection.hidden {
+    display: none;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const anonymousToggle = document.getElementById('{{ form.is_anonymous.id_for_label }}');
+    const personalInfo = document.getElementById('personalInfo');
+    const professionalInfo = document.getElementById('professionalInfo');
+    const contactInfo = document.getElementById('contactInfo');
+    const photoSection = document.getElementById('photoSection');
+    const ratingSelect = document.getElementById('{{ form.rating.id_for_label }}');
+    const stars = document.querySelectorAll('.star-display .stars i');
+    const ratingText = document.getElementById('ratingText');
+    
+    // Gestion de l'anonymat
+    function toggleAnonymous() {
+        if (anonymousToggle.checked) {
+            personalInfo.classList.add('hidden');
+            professionalInfo.classList.add('hidden');
+            contactInfo.classList.add('hidden');
+            photoSection.classList.add('hidden');
+        } else {
+            personalInfo.classList.remove('hidden');
+            professionalInfo.classList.remove('hidden');
+            contactInfo.classList.remove('hidden');
+            photoSection.classList.remove('hidden');
+        }
+    }
+    
+    anonymousToggle.addEventListener('change', toggleAnonymous);
+    toggleAnonymous(); // Initial state
+    
+    // Gestion des étoiles
+    const ratingTexts = {
+        1: '{% trans "Très insatisfait" %}',
+        2: '{% trans "Insatisfait" %}',
+        3: '{% trans "Neutre" %}',
+        4: '{% trans "Satisfait" %}',
+        5: '{% trans "Très satisfait" %}'
+    };
+    
+    stars.forEach((star, index) => {
+        star.addEventListener('click', function() {
+            const rating = parseInt(this.dataset.rating);
+            ratingSelect.value = rating;
+            
+            // Update visual stars
+            stars.forEach((s, i) => {
+                if (i < rating) {
+                    s.classList.remove('far');
+                    s.classList.add('fas');
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('fas');
+                    s.classList.add('far');
+                    s.classList.remove('active');
+                }
+            });
+            
+            ratingText.textContent = ratingTexts[rating];
+        });
+        
+        star.addEventListener('mouseover', function() {
+            const rating = parseInt(this.dataset.rating);
+            stars.forEach((s, i) => {
+                if (i < rating) {
+                    s.style.color = '#ffc107';
+                } else {
+                    s.style.color = '';
+                }
+            });
+        });
+    });
+    
+    document.querySelector('.star-display').addEventListener('mouseleave', function() {
+        const currentRating = parseInt(ratingSelect.value) || 0;
+        stars.forEach((s, i) => {
+            if (i < currentRating) {
+                s.style.color = '#ffc107';
+            } else {
+                s.style.color = '';
+            }
+        });
+    });
+    
+    // Set initial rating if exists
+    const initialRating = parseInt(ratingSelect.value) || 0;
+    if (initialRating > 0) {
+        stars.forEach((s, i) => {
+            if (i < initialRating) {
+                s.classList.remove('far');
+                s.classList.add('fas');
+                s.classList.add('active');
+            }
+        });
+        ratingText.textContent = ratingTexts[initialRating];
+    }
+});
+</script>
+{% endblock %}

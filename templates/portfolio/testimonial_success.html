@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Témoignage envoyé" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+            <div class="success-message" data-aos="zoom-in">
+                <div class="success-icon mb-4">
+                    <i class="fas fa-heart text-danger" style="font-size: 5rem;"></i>
+                </div>
+                
+                <h1 class="display-4 text-primary mb-4">{% trans "Merci beaucoup !" %}</h1>
+                
+                <p class="lead mb-4">
+                    {% trans "Votre témoignage a été reçu avec gratitude." %}
+                </p>
+                
+                {% if site_settings.moderate_testimonials %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    {% trans "Votre témoignage sera publié après modération." %}
+                </div>
+                {% else %}
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {% trans "Votre témoignage a été publié immédiatement." %}
+                </div>
+                {% endif %}
+                
+                <div class="success-actions mt-4">
+                    <a href="{% url 'portfolio:home' %}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-home me-2"></i>{% trans "Retour à l'accueil" %}
+                    </a>
+                    <a href="{% url 'portfolio:testimonials' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-quote-left me-2"></i>{% trans "Voir les témoignages" %}
+                    </a>
+                </div>
+                
+                <div class="mt-5">
+                    <h5>{% trans "Partagez votre expérience" %}</h5>
+                    <p class="text-muted">{% trans "Aidez d'autres personnes en partageant ce portfolio" %}</p>
+                    <div class="social-share">
+                        <a href="https://twitter.com/intent/tweet?text={% trans 'Je recommande ce portfolio professionnel' %}&url={{ request.build_absolute_uri }}" 
+                           class="btn btn-outline-info btn-sm me-2" target="_blank">
+                            <i class="fab fa-twitter me-1"></i>Twitter
+                        </a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" 
+                           class="btn btn-outline-primary btn-sm me-2" target="_blank">
+                            <i class="fab fa-linkedin me-1"></i>LinkedIn
+                        </a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                           class="btn btn-outline-primary btn-sm" target="_blank">
+                            <i class="fab fa-facebook me-1"></i>Facebook
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.success-message {
+    padding: 3rem 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+body.dark-mode .success-message {
+    background: #2d2d2d;
+}
+
+.success-icon {
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+    14% {
+        transform: scale(1.1);
+    }
+    28% {
+        transform: scale(1);
+    }
+    42% {
+        transform: scale(1.1);
+    }
+    70% {
+        transform: scale(1);
+    }
+}
+
+.social-share .btn {
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .success-actions .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .social-share .btn {
+        display: block;
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,361 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Tableau de bord Admin" %} - {{ block.super }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5 mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="display-5">
+                    <i class="fas fa-tachometer-alt text-primary me-3"></i>
+                    {% trans "Tableau de bord" %}
+                </h1>
+                <div class="admin-actions">
+                    <a href="{% url 'portfolio:admin_customization' %}" class="btn btn-primary me-2">
+                        <i class="fas fa-palette me-2"></i>{% trans "Personnalisation" %}
+                    </a>
+                    <a href="/admin/" class="btn btn-outline-secondary">
+                        <i class="fas fa-cog me-2"></i>{% trans "Admin Django" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques principales -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="dashboard-card stats-widget">
+                <div class="d-flex align-items-center">
+                    <div class="widget-icon me-3">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div>
+                        <div class="widget-number">{{ total_projects }}</div>
+                        <div class="widget-label">{% trans "Projets" %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="dashboard-card stats-widget" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="d-flex align-items-center">
+                    <div class="widget-icon me-3">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div>
+                        <div class="widget-number">{{ total_experiences }}</div>
+                        <div class="widget-label">{% trans "Expériences" %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="dashboard-card stats-widget" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                <div class="d-flex align-items-center">
+                    <div class="widget-icon me-3">
+                        <i class="fas fa-blog"></i>
+                    </div>
+                    <div>
+                        <div class="widget-number">{{ published_posts }}</div>
+                        <div class="widget-label">{% trans "Articles publiés" %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="dashboard-card stats-widget" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                <div class="d-flex align-items-center">
+                    <div class="widget-icon me-3">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div>
+                        <div class="widget-number">{{ recent_visits }}</div>
+                        <div class="widget-label">{% trans "Visites (30j)" %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Métriques détaillées -->
+    <div class="row mb-4">
+        <div class="col-lg-4 mb-3">
+            <div class="card dashboard-chart">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-envelope me-2"></i>{% trans "Messages" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h3 class="text-primary">{{ total_contacts }}</h3>
+                            <small class="text-muted">{% trans "Total" %}</small>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="text-warning">{{ unread_contacts }}</h3>
+                            <small class="text-muted">{% trans "Non lus" %}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <div class="card dashboard-chart">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-quote-left me-2"></i>{% trans "Témoignages" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h3 class="text-success">{{ total_testimonials }}</h3>
+                            <small class="text-muted">{% trans "Total" %}</small>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="text-danger">{{ pending_testimonials }}</h3>
+                            <small class="text-muted">{% trans "En attente" %}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mb-3">
+            <div class="card dashboard-chart">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users me-2"></i>{% trans "Visiteurs" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h3 class="text-info">{{ recent_visits }}</h3>
+                            <small class="text-muted">{% trans "Visites" %}</small>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="text-primary">{{ unique_visitors }}</h3>
+                            <small class="text-muted">{% trans "Uniques" %}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pages populaires -->
+    {% if popular_pages %}
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-3">
+            <div class="card dashboard-chart">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>{% trans "Pages les plus visitées" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for page in popular_pages %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>{{ page.page_visited }}</span>
+                        <div class="d-flex align-items-center">
+                            <div class="progress me-2" style="width: 100px; height: 8px;">
+                                <div class="progress-bar" style="width: {% widthratio page.count popular_pages.0.count 100 %}%"></div>
+                            </div>
+                            <span class="badge bg-primary">{{ page.count }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <div class="card dashboard-chart">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>{% trans "Répartition du contenu" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="contentChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Messages récents -->
+    <div class="row">
+        <div class="col-lg-6 mb-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-envelope me-2"></i>{% trans "Messages récents" %}
+                    </h5>
+                    <a href="/admin/portfolio/contact/" class="btn btn-sm btn-outline-primary">
+                        {% trans "Voir tout" %}
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    {% for contact in recent_contacts %}
+                    <div class="d-flex align-items-center p-3 border-bottom">
+                        <div class="me-3">
+                            {% if contact.is_read %}
+                                <i class="fas fa-envelope-open text-muted"></i>
+                            {% else %}
+                                <i class="fas fa-envelope text-primary"></i>
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">{{ contact.name }}</h6>
+                            <p class="mb-1 text-muted small">{{ contact.subject }}</p>
+                            <small class="text-muted">{{ contact.created_at|timesince }} ago</small>
+                        </div>
+                        {% if not contact.is_read %}
+                            <span class="badge bg-primary">{% trans "Nouveau" %}</span>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <div class="p-3 text-center text-muted">
+                        {% trans "Aucun message récent" %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6 mb-3">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-quote-left me-2"></i>{% trans "Témoignages récents" %}
+                    </h5>
+                    <a href="/admin/portfolio/testimonial/" class="btn btn-sm btn-outline-primary">
+                        {% trans "Voir tout" %}
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    {% for testimonial in recent_testimonials %}
+                    <div class="d-flex align-items-start p-3 border-bottom">
+                        <div class="me-3">
+                            {% if testimonial.is_approved %}
+                                <i class="fas fa-check-circle text-success"></i>
+                            {% else %}
+                                <i class="fas fa-clock text-warning"></i>
+                            {% endif %}
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">
+                                {% if testimonial.is_anonymous %}
+                                    {% trans "Anonyme" %}
+                                {% else %}
+                                    {{ testimonial.name }}
+                                {% endif %}
+                            </h6>
+                            <div class="rating mb-1">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= testimonial.rating %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-muted"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p class="mb-1 text-muted small">{{ testimonial.content|truncatewords:10 }}</p>
+                            <small class="text-muted">{{ testimonial.created_at|timesince }} ago</small>
+                        </div>
+                        {% if not testimonial.is_approved %}
+                            <span class="badge bg-warning">{% trans "En attente" %}</span>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <div class="p-3 text-center text-muted">
+                        {% trans "Aucun témoignage récent" %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>{% trans "Actions rapides" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <a href="/admin/portfolio/project/add/" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-plus me-2"></i>{% trans "Nouveau projet" %}
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="/admin/portfolio/blogpost/add/" class="btn btn-outline-success w-100">
+                                <i class="fas fa-plus me-2"></i>{% trans "Nouvel article" %}
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="/admin/portfolio/experience/add/" class="btn btn-outline-info w-100">
+                                <i class="fas fa-plus me-2"></i>{% trans "Nouvelle expérience" %}
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <a href="{% url 'portfolio:admin_customization' %}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-palette me-2"></i>{% trans "Personnaliser" %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Graphique de répartition du contenu
+    const ctx = document.getElementById('contentChart');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['{% trans "Projets" %}', '{% trans "Articles" %}', '{% trans "Expériences" %}', '{% trans "Compétences" %}'],
+                datasets: [{
+                    data: [{{ total_projects }}, {{ published_posts }}, {{ total_experiences }}, {{ total_skills }}],
+                    backgroundColor: [
+                        '#667eea',
+                        '#764ba2',
+                        '#f093fb',
+                        '#f5576c'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
