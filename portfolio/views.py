@@ -1055,14 +1055,63 @@ class DownloadCVView(TemplateView):
     def get(self, request, *args, **kwargs):
         try:
             profile = Profile.objects.first()
-            if profile and profile.cv_file:
+            if profile and profile.cv_file and profile.cv_file.name:
                 response = HttpResponse(profile.cv_file.read(), content_type='application/pdf')
                 response['Content-Disposition'] = f'attachment; filename="CV_{profile.name.replace(" ", "_")}.pdf"'
                 return response
             else:
-                raise Http404("CV non disponible")
+                # Créer un CV temporaire avec les informations du profil
+                from django.template.loader import render_to_string
+                from django.http import HttpResponse
+                import io
+                from reportlab.pdfgen import canvas
+                from reportlab.lib.pagesizes import letter
+                
+                # Créer un PDF simple avec les informations du profil
+                buffer = io.BytesIO()
+                p = canvas.Canvas(buffer, pagesize=letter)
+                
+                # Ajouter le contenu du CV
+                y = 750
+                p.setFont("Helvetica-Bold", 16)
+                p.drawString(100, y, f"CV - {profile.name if profile else 'Portfolio'}")
+                
+                y -= 40
+                p.setFont("Helvetica", 12)
+                if profile:
+                    p.drawString(100, y, f"Titre: {profile.title}")
+                    y -= 20
+                    p.drawString(100, y, f"Email: {profile.email}")
+                    y -= 20
+                    if profile.phone:
+                        p.drawString(100, y, f"Téléphone: {profile.phone}")
+                        y -= 20
+                    if profile.location:
+                        p.drawString(100, y, f"Localisation: {profile.location}")
+                        y -= 40
+                    
+                    # Ajouter la bio
+                    p.drawString(100, y, "Biographie:")
+                    y -= 20
+                    bio_lines = profile.bio.split('\n') if profile.bio else []
+                    for line in bio_lines[:10]:  # Limiter à 10 lignes
+                        if y > 100:
+                            p.drawString(120, y, line[:80])  # Limiter la longueur
+                            y -= 15
+                
+                p.showPage()
+                p.save()
+                
+                buffer.seek(0)
+                response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+                response['Content-Disposition'] = f'attachment; filename="CV_{profile.name.replace(" ", "_") if profile else "Portfolio"}.pdf"'
+                return response
         except Exception:
-            raise Http404("CV non disponible")
+            # En cas d'erreur, rediriger vers la page de contact
+            from django.shortcuts import redirect
+            from django.contrib import messages
+            messages.error(request, "CV temporairement indisponible. Contactez-moi pour l'obtenir.")
+            return redirect('portfolio:contact')
 
 class FAQHelpfulAPIView(TemplateView):
     def post(self, request, faq_id):

@@ -139,7 +139,12 @@
                                     {% csrf_token %}
                                     <input name="next" type="hidden" value="{{ request.path }}">
                                     <input name="language" type="hidden" value="{{ lang_code }}">
-                                    <button type="submit" class="dropdown-item">{{ lang_name }}</button>
+                                    <button type="submit" class="dropdown-item {% if LANGUAGE_CODE == lang_code %}active{% endif %}">
+                                        {{ lang_name }}
+                                        {% if LANGUAGE_CODE == lang_code %}
+                                            <i class="fas fa-check ms-2"></i>
+                                        {% endif %}
+                                    </button>
                                 </form>
                             </li>
                         {% endfor %}

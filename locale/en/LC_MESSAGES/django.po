@@ -1,0 +1,221 @@
+# English translations for Portfolio
+# Copyright (C) 2025
+# This file is distributed under the same license as the Portfolio package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Portfolio 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-01 12:00+0000\n"
+"PO-Revision-Date: 2025-01-01 12:00+0000\n"
+"Last-Translator: Portfolio Team\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Navigation
+msgid "Accueil"
+msgstr "Home"
+
+msgid "Parcours Académique"
+msgstr "Academic Path"
+
+msgid "Expériences"
+msgstr "Experiences"
+
+msgid "Certifications"
+msgstr "Certifications"
+
+msgid "Projets"
+msgstr "Projects"
+
+msgid "Blog"
+msgstr "Blog"
+
+msgid "Témoignages"
+msgstr "Testimonials"
+
+msgid "Services"
+msgstr "Services"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Plus"
+msgstr "More"
+
+msgid "Rechercher"
+msgstr "Search"
+
+# Common terms
+msgid "Tous droits réservés"
+msgstr "All rights reserved"
+
+msgid "Me Contacter"
+msgstr "Contact Me"
+
+msgid "Télécharger CV"
+msgstr "Download CV"
+
+msgid "Laisser un témoignage"
+msgstr "Leave a Testimonial"
+
+msgid "Compétences Principales"
+msgstr "Main Skills"
+
+msgid "Expériences Récentes"
+msgstr "Recent Experiences"
+
+msgid "Mes Services"
+msgstr "My Services"
+
+msgid "Témoignages Clients"
+msgstr "Client Testimonials"
+
+msgid "Articles Récents"
+msgstr "Recent Articles"
+
+msgid "Réalisations Récentes"
+msgstr "Recent Achievements"
+
+# Forms
+msgid "Nom"
+msgstr "Name"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Sujet"
+msgstr "Subject"
+
+msgid "Message"
+msgstr "Message"
+
+msgid "Envoyer le Message"
+msgstr "Send Message"
+
+msgid "Témoignage"
+msgstr "Testimonial"
+
+msgid "Note"
+msgstr "Rating"
+
+msgid "Publier mon témoignage"
+msgstr "Publish my testimonial"
+
+# Search
+msgid "Rechercher dans tout le portfolio..."
+msgstr "Search throughout the portfolio..."
+
+msgid "Toutes les catégories"
+msgstr "All categories"
+
+msgid "Aucun résultat trouvé"
+msgstr "No results found"
+
+msgid "Recherches populaires"
+msgstr "Popular searches"
+
+msgid "Explorer par sujets"
+msgstr "Explore by topics"
+
+msgid "Rechercher par catégorie"
+msgstr "Search by category"
+
+# Status and labels
+msgid "En cours"
+msgstr "In Progress"
+
+msgid "Terminé"
+msgstr "Completed"
+
+msgid "Planifié"
+msgstr "Planned"
+
+msgid "Présent"
+msgstr "Present"
+
+msgid "Vedette"
+msgstr "Featured"
+
+msgid "Voir plus"
+msgstr "See more"
+
+msgid "Lire l'article"
+msgstr "Read article"
+
+msgid "Voir détails"
+msgstr "View details"
+
+# Time and dates
+msgid "ans"
+msgstr "years"
+
+msgid "mois"
+msgstr "months"
+
+msgid "min de lecture"
+msgstr "min read"
+
+msgid "vues"
+msgstr "views"
+
+# Categories
+msgid "Technique"
+msgstr "Technical"
+
+msgid "Soft Skills"
+msgstr "Soft Skills"
+
+msgid "Langues"
+msgstr "Languages"
+
+msgid "Outils"
+msgstr "Tools"
+
+msgid "Formation"
+msgstr "Education"
+
+msgid "Carrière"
+msgstr "Career"
+
+msgid "Projet"
+msgstr "Project"
+
+msgid "Réalisation"
+msgstr "Achievement"
+
+msgid "Personnel"
+msgstr "Personal"
+
+# Levels
+msgid "Débutant"
+msgstr "Beginner"
+
+msgid "Intermédiaire"
+msgstr "Intermediate"
+
+msgid "Avancé"
+msgstr "Advanced"
+
+msgid "Expert"
+msgstr "Expert"
+
+# Messages
+msgid "Message envoyé avec succès!"
+msgstr "Message sent successfully!"
+
+msgid "Merci pour votre témoignage!"
+msgstr "Thank you for your testimonial!"
+
+msgid "Inscription réussie à la newsletter!"
+msgstr "Successfully subscribed to newsletter!"
+
+msgid "CV non disponible"
+msgstr "CV not available"
+
+msgid "Contactez-moi pour l'obtenir"
+msgstr "Contact me to get it"

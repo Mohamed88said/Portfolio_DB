@@ -1,0 +1,221 @@
+# Arabic translations for Portfolio
+# Copyright (C) 2025
+# This file is distributed under the same license as the Portfolio package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Portfolio 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-01 12:00+0000\n"
+"PO-Revision-Date: 2025-01-01 12:00+0000\n"
+"Last-Translator: Portfolio Team\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+
+# Navigation
+msgid "Accueil"
+msgstr "الرئيسية"
+
+msgid "Parcours Académique"
+msgstr "المسار الأكاديمي"
+
+msgid "Expériences"
+msgstr "الخبرات"
+
+msgid "Certifications"
+msgstr "الشهادات"
+
+msgid "Projets"
+msgstr "المشاريع"
+
+msgid "Blog"
+msgstr "المدونة"
+
+msgid "Témoignages"
+msgstr "الشهادات"
+
+msgid "Services"
+msgstr "الخدمات"
+
+msgid "Contact"
+msgstr "اتصل"
+
+msgid "Plus"
+msgstr "المزيد"
+
+msgid "Rechercher"
+msgstr "بحث"
+
+# Common terms
+msgid "Tous droits réservés"
+msgstr "جميع الحقوق محفوظة"
+
+msgid "Me Contacter"
+msgstr "اتصل بي"
+
+msgid "Télécharger CV"
+msgstr "تحميل السيرة الذاتية"
+
+msgid "Laisser un témoignage"
+msgstr "اترك شهادة"
+
+msgid "Compétences Principales"
+msgstr "المهارات الرئيسية"
+
+msgid "Expériences Récentes"
+msgstr "الخبرات الحديثة"
+
+msgid "Mes Services"
+msgstr "خدماتي"
+
+msgid "Témoignages Clients"
+msgstr "شهادات العملاء"
+
+msgid "Articles Récents"
+msgstr "المقالات الحديثة"
+
+msgid "Réalisations Récentes"
+msgstr "الإنجازات الحديثة"
+
+# Forms
+msgid "Nom"
+msgstr "الاسم"
+
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+msgid "Sujet"
+msgstr "الموضوع"
+
+msgid "Message"
+msgstr "الرسالة"
+
+msgid "Envoyer le Message"
+msgstr "إرسال الرسالة"
+
+msgid "Témoignage"
+msgstr "الشهادة"
+
+msgid "Note"
+msgstr "التقييم"
+
+msgid "Publier mon témoignage"
+msgstr "نشر شهادتي"
+
+# Search
+msgid "Rechercher dans tout le portfolio..."
+msgstr "البحث في جميع أنحاء المحفظة..."
+
+msgid "Toutes les catégories"
+msgstr "جميع الفئات"
+
+msgid "Aucun résultat trouvé"
+msgstr "لم يتم العثور على نتائج"
+
+msgid "Recherches populaires"
+msgstr "البحث الشائع"
+
+msgid "Explorer par sujets"
+msgstr "استكشف حسب المواضيع"
+
+msgid "Rechercher par catégorie"
+msgstr "البحث حسب الفئة"
+
+# Status and labels
+msgid "En cours"
+msgstr "قيد التنفيذ"
+
+msgid "Terminé"
+msgstr "مكتمل"
+
+msgid "Planifié"
+msgstr "مخطط"
+
+msgid "Présent"
+msgstr "الحاضر"
+
+msgid "Vedette"
+msgstr "مميز"
+
+msgid "Voir plus"
+msgstr "شاهد المزيد"
+
+msgid "Lire l'article"
+msgstr "اقرأ المقال"
+
+msgid "Voir détails"
+msgstr "عرض التفاصيل"
+
+# Time and dates
+msgid "ans"
+msgstr "سنوات"
+
+msgid "mois"
+msgstr "أشهر"
+
+msgid "min de lecture"
+msgstr "دقيقة قراءة"
+
+msgid "vues"
+msgstr "مشاهدات"
+
+# Categories
+msgid "Technique"
+msgstr "تقني"
+
+msgid "Soft Skills"
+msgstr "المهارات الناعمة"
+
+msgid "Langues"
+msgstr "اللغات"
+
+msgid "Outils"
+msgstr "الأدوات"
+
+msgid "Formation"
+msgstr "التكوين"
+
+msgid "Carrière"
+msgstr "المهنة"
+
+msgid "Projet"
+msgstr "مشروع"
+
+msgid "Réalisation"
+msgstr "إنجاز"
+
+msgid "Personnel"
+msgstr "شخصي"
+
+# Levels
+msgid "Débutant"
+msgstr "مبتدئ"
+
+msgid "Intermédiaire"
+msgstr "متوسط"
+
+msgid "Avancé"
+msgstr "متقدم"
+
+msgid "Expert"
+msgstr "خبير"
+
+# Messages
+msgid "Message envoyé avec succès!"
+msgstr "تم إرسال الرسالة بنجاح!"
+
+msgid "Merci pour votre témoignage!"
+msgstr "شكرا لك على شهادتك!"
+
+msgid "Inscription réussie à la newsletter!"
+msgstr "تم الاشتراك في النشرة الإخبارية بنجاح!"
+
+msgid "CV non disponible"
+msgstr "السيرة الذاتية غير متوفرة"
+
+msgid "Contactez-moi pour l'obtenir"
+msgstr "اتصل بي للحصول عليها"
