@@ -598,26 +598,33 @@ class DownloadCVView(View):
         language = request.GET.get('lang', 'fr')
         
         try:
-            # Chercher un CV correspondant
-            cv = CVDocument.objects.filter(
-                is_public=True,
-                cv_type=cv_type,
-                language=language
-            ).first()
+            # Vérifier si la table CVDocument existe
+            from django.db import connection
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='portfolio_cvdocument';")
+                table_exists = cursor.fetchone()
             
-            if not cv:
-                # Chercher le CV principal
-                cv = CVDocument.objects.filter(is_primary=True, is_public=True).first()
-            
-            if cv and cv.file:
-                # Incrémenter le compteur
-                cv.download_count += 1
-                cv.save(update_fields=['download_count'])
+            if table_exists:
+                # Chercher un CV correspondant
+                cv = CVDocument.objects.filter(
+                    is_public=True,
+                    cv_type=cv_type,
+                    language=language
+                ).first()
                 
-                # Retourner le fichier
-                response = HttpResponse(cv.file.read(), content_type='application/pdf')
-                response['Content-Disposition'] = f'attachment; filename="{cv.title}.pdf"'
-                return response
+                if not cv:
+                    # Chercher le CV principal
+                    cv = CVDocument.objects.filter(is_primary=True, is_public=True).first()
+                
+                if cv and cv.file:
+                    # Incrémenter le compteur
+                    cv.download_count += 1
+                    cv.save(update_fields=['download_count'])
+                    
+                    # Retourner le fichier
+                    response = HttpResponse(cv.file.read(), content_type='application/pdf')
+                    response['Content-Disposition'] = f'attachment; filename="{cv.title}.pdf"'
+                    return response
         except:
             pass
         
@@ -672,11 +679,24 @@ class CVListView(BasePortfolioView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            context.update({
-                'cv_documents': CVDocument.objects.filter(is_public=True),
-                'cv_types': CVDocument.CV_TYPES,
-                'languages': [('fr', 'Français'), ('en', 'English'), ('ar', 'العربية')],
-            })
+            # Vérifier si la table existe
+            from django.db import connection
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='portfolio_cvdocument';")
+                table_exists = cursor.fetchone()
+            
+            if table_exists:
+                context.update({
+                    'cv_documents': CVDocument.objects.filter(is_public=True),
+                    'cv_types': CVDocument.CV_TYPES,
+                    'languages': [('fr', 'Français'), ('en', 'English'), ('ar', 'العربية')],
+                })
+            else:
+                context.update({
+                    'cv_documents': [],
+                    'cv_types': [],
+                    'languages': [('fr', 'Français'), ('en', 'English'), ('ar', 'العربية')],
+                })
         except:
             context.update({
                 'cv_documents': [],
