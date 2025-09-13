@@ -352,8 +352,6 @@ admin.site.register(Newsletter, NewsletterAdmin)
 admin.site.register(VisitorStats, VisitorStatsAdmin)
 admin.site.register(SiteCustomization, SiteCustomizationAdmin)
 admin.site.register(SiteSettings, SiteSettingsAdmin)
-admin.site.register(Collaboration, CollaborationAdmin)
-admin.site.register(Resource, ResourceAdmin)
 
 # Nouveaux modèles avancés
 @admin.register(Tag, site=admin_site)
@@ -372,6 +370,102 @@ class TagAdmin(admin.ModelAdmin):
             obj.color
         )
     color_preview.short_description = _('Couleur')
+
+@admin.register(Collaboration, site=admin_site)
+class CollaborationAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'status', 'client', 'start_date', 'is_featured', 'is_active', 'order')
+    list_filter = ('category', 'status', 'is_featured', 'is_active', 'start_date')
+    search_fields = ('title', 'description', 'client', 'technologies')
+    prepopulated_fields = {'slug': ('title',)}
+    list_editable = ('is_featured', 'is_active', 'order')
+    readonly_fields = ('created_at', 'updated_at')
+    date_hierarchy = 'start_date'
+    ordering = ['order', '-created_at']
+    
+    fieldsets = (
+        (_('Informations générales'), {
+            'fields': ('title', 'slug', 'description', 'detailed_description', 'image')
+        }),
+        (_('Classification'), {
+            'fields': ('category', 'status', 'is_featured', 'is_active', 'client', 'order')
+        }),
+        (_('Technologie et liens'), {
+            'fields': ('technologies', 'project_url', 'github_url', 'demo_url')
+        }),
+        (_('Période et équipe'), {
+            'fields': ('start_date', 'end_date', 'team_size', 'budget')
+        }),
+        (_('Détails du projet'), {
+            'fields': ('challenges_faced', 'results_achieved'),
+            'classes': ('collapse',)
+        }),
+        (_('Métadonnées'), {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['mark_as_featured', 'mark_as_active', 'mark_as_completed']
+    
+    def mark_as_featured(self, request, queryset):
+        updated = queryset.update(is_featured=True)
+        self.message_user(request, f"{updated} collaboration(s) mise(s) en vedette.")
+    mark_as_featured.short_description = _("Mettre en vedette")
+    
+    def mark_as_active(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f"{updated} collaboration(s) activée(s).")
+    mark_as_active.short_description = _("Activer")
+    
+    def mark_as_completed(self, request, queryset):
+        updated = queryset.update(status='completed')
+        self.message_user(request, f"{updated} collaboration(s) marquée(s) comme terminée(s).")
+    mark_as_completed.short_description = _("Marquer comme terminé")
+
+@admin.register(Resource, site=admin_site)
+class ResourceAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'file_type', 'download_count', 'is_public', 'created_at')
+    list_filter = ('category', 'file_type', 'is_public', 'created_at')
+    search_fields = ('title', 'description')
+    readonly_fields = ('download_count', 'file_size', 'created_at')
+    list_editable = ('is_public',)
+    ordering = ['-created_at']
+    
+    fieldsets = (
+        (_('Informations générales'), {
+            'fields': ('title', 'description', 'file')
+        }),
+        (_('Classification'), {
+            'fields': ('category', 'file_type', 'is_public')
+        }),
+        (_('Statistiques'), {
+            'fields': ('download_count', 'file_size', 'created_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['make_public', 'make_private', 'reset_download_count']
+    
+    def save_model(self, request, obj, form, change):
+        # Calculer la taille du fichier
+        if obj.file:
+            obj.file_size = obj.file.size
+        super().save_model(request, obj, form, change)
+    
+    def make_public(self, request, queryset):
+        updated = queryset.update(is_public=True)
+        self.message_user(request, f"{updated} ressource(s) rendue(s) publique(s).")
+    make_public.short_description = _("Rendre public")
+    
+    def make_private(self, request, queryset):
+        updated = queryset.update(is_public=False)
+        self.message_user(request, f"{updated} ressource(s) rendue(s) privée(s).")
+    make_private.short_description = _("Rendre privé")
+    
+    def reset_download_count(self, request, queryset):
+        updated = queryset.update(download_count=0)
+        self.message_user(request, f"{updated} compteur(s) de téléchargement(s) réinitialisé(s).")
+    reset_download_count.short_description = _("Réinitialiser les compteurs")
 
 @admin.register(SearchQuery, site=admin_site)
 class SearchQueryAdmin(admin.ModelAdmin):
@@ -462,104 +556,5 @@ admin.site.register(SearchQuery, SearchQueryAdmin)
 admin.site.register(FAQ, FAQAdmin)
 admin.site.register(Timeline, TimelineAdmin)
 admin.site.register(Analytics, AnalyticsAdmin)
-
-
-@admin.register(Collaboration, site=admin_site)
-class CollaborationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'status', 'client', 'start_date', 'is_featured', 'is_active', 'order')
-    list_filter = ('category', 'status', 'is_featured', 'is_active', 'start_date')
-    search_fields = ('title', 'description', 'client', 'technologies')
-    prepopulated_fields = {'slug': ('title',)}
-    list_editable = ('is_featured', 'is_active', 'order')
-    readonly_fields = ('created_at', 'updated_at')
-    date_hierarchy = 'start_date'
-    ordering = ['order', '-created_at']
-    
-    fieldsets = (
-        (_('Informations générales'), {
-            'fields': ('title', 'slug', 'description', 'detailed_description', 'image')
-        }),
-        (_('Classification'), {
-            'fields': ('category', 'status', 'is_featured', 'is_active', 'client', 'order')
-        }),
-        (_('Technologie et liens'), {
-            'fields': ('technologies', 'project_url', 'github_url', 'demo_url')
-        }),
-        (_('Période et équipe'), {
-            'fields': ('start_date', 'end_date', 'team_size', 'budget')
-        }),
-        (_('Détails du projet'), {
-            'fields': ('challenges_faced', 'results_achieved'),
-            'classes': ('collapse',)
-        }),
-        (_('Métadonnées'), {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
-        }),
-    )
-    
-    actions = ['mark_as_featured', 'mark_as_active', 'mark_as_completed']
-    
-    def mark_as_featured(self, request, queryset):
-        updated = queryset.update(is_featured=True)
-        self.message_user(request, f"{updated} collaboration(s) mise(s) en vedette.")
-    mark_as_featured.short_description = _("Mettre en vedette")
-    
-    def mark_as_active(self, request, queryset):
-        updated = queryset.update(is_active=True)
-        self.message_user(request, f"{updated} collaboration(s) activée(s).")
-    mark_as_active.short_description = _("Activer")
-    
-    def mark_as_completed(self, request, queryset):
-        updated = queryset.update(status='completed')
-        self.message_user(request, f"{updated} collaboration(s) marquée(s) comme terminée(s).")
-    mark_as_completed.short_description = _("Marquer comme terminé")
-
-
-
-
-@admin.register(Resource, site=admin_site)
-class ResourceAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'file_type', 'download_count', 'is_public', 'created_at')
-    list_filter = ('category', 'file_type', 'is_public', 'created_at')
-    search_fields = ('title', 'description')
-    readonly_fields = ('download_count', 'file_size', 'created_at')
-    list_editable = ('is_public',)
-    ordering = ['-created_at']
-    
-    fieldsets = (
-        (_('Informations générales'), {
-            'fields': ('title', 'description', 'file')
-        }),
-        (_('Classification'), {
-            'fields': ('category', 'file_type', 'is_public')
-        }),
-        (_('Statistiques'), {
-            'fields': ('download_count', 'file_size', 'created_at'),
-            'classes': ('collapse',)
-        }),
-    )
-    
-    actions = ['make_public', 'make_private', 'reset_download_count']
-    
-    def save_model(self, request, obj, form, change):
-        # Calculer la taille du fichier
-        if obj.file:
-            obj.file_size = obj.file.size
-        super().save_model(request, obj, form, change)
-    
-    def make_public(self, request, queryset):
-        updated = queryset.update(is_public=True)
-        self.message_user(request, f"{updated} ressource(s) rendue(s) publique(s).")
-    make_public.short_description = _("Rendre public")
-    
-    def make_private(self, request, queryset):
-        updated = queryset.update(is_public=False)
-        self.message_user(request, f"{updated} ressource(s) rendue(s) privée(s).")
-    make_private.short_description = _("Rendre privé")
-    
-    def reset_download_count(self, request, queryset):
-        updated = queryset.update(download_count=0)
-        self.message_user(request, f"{updated} compteur(s) de téléchargement(s) réinitialisé(s).")
-    reset_download_count.short_description = _("Réinitialiser les compteurs")
-
+admin.site.register(Collaboration, CollaborationAdmin)
+admin.site.register(Resource, ResourceAdmin)
