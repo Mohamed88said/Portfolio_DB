@@ -9,23 +9,11 @@ from .models import (
     Profile, Education, Experience, Skill, Certification, Project, 
     Contact, SiteSettings, BlogPost, BlogCategory, Testimonial, 
     Service, Achievement, Newsletter, VisitorStats, SiteCustomization,
-    Tag, SearchQuery, FAQ, Timeline, Collaboration, Resource, Analytics
+    Tag, SearchQuery, FAQ, Timeline, Collaboration, Resource, Analytics,
+    CVDocument
 )
 
-
-# Custom Admin Site
-class PortfolioAdminSite(AdminSite):
-    site_header = _("Administration Portfolio")
-    site_title = _("Portfolio Admin")
-    index_title = _("Tableau de bord")
-    
-    def has_permission(self, request):
-        return request.user.is_active and request.user.is_superuser
-
-# Create custom admin site instance
-admin_site = PortfolioAdminSite(name='portfolio_admin')
-
-@admin.register(Profile, site=admin_site)
+@admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('name', 'title', 'email', 'availability_status', 'updated_at')
     search_fields = ('name', 'title', 'email')
@@ -51,7 +39,7 @@ class ProfileAdmin(admin.ModelAdmin):
         }),
     )
 
-@admin.register(CVDocument, site=admin_site)
+@admin.register(CVDocument)
 class CVDocumentAdmin(admin.ModelAdmin):
     list_display = ('title', 'cv_type', 'language', 'is_primary', 'is_public', 'download_count', 'file_size_display', 'created_at')
     list_filter = ('cv_type', 'language', 'is_primary', 'is_public', 'created_at')
@@ -107,7 +95,8 @@ class CVDocumentAdmin(admin.ModelAdmin):
         updated = queryset.update(download_count=0)
         self.message_user(request, f"{updated} compteur(s) de téléchargement réinitialisé(s).")
     reset_download_count.short_description = _("Réinitialiser les téléchargements")
-@admin.register(Education, site=admin_site)
+
+@admin.register(Education)
 class EducationAdmin(admin.ModelAdmin):
     list_display = ('degree', 'field_of_study', 'institution', 'start_date', 'is_current', 'grade')
     list_filter = ('degree', 'is_current', 'start_date')
@@ -115,31 +104,15 @@ class EducationAdmin(admin.ModelAdmin):
     date_hierarchy = 'start_date'
     ordering = ['-start_date']
 
-@admin.register(Experience, site=admin_site)
+@admin.register(Experience)
 class ExperienceAdmin(admin.ModelAdmin):
     list_display = ('title', 'company', 'category', 'job_type', 'start_date', 'is_current')
     list_filter = ('category', 'job_type', 'is_current', 'start_date')
     search_fields = ('title', 'company', 'description')
     date_hierarchy = 'start_date'
     ordering = ['-start_date']
-    
-    fieldsets = (
-        (_('Informations générales'), {
-            'fields': ('title', 'company', 'location', 'category', 'job_type')
-        }),
-        (_('Période'), {
-            'fields': ('start_date', 'end_date', 'is_current')
-        }),
-        (_('Description'), {
-            'fields': ('description', 'achievements', 'technologies')
-        }),
-        (_('Détails'), {
-            'fields': ('team_size', 'budget_managed', 'key_metrics', 'references'),
-            'classes': ('collapse',)
-        }),
-    )
 
-@admin.register(Skill, site=admin_site)
+@admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
     list_display = ('name', 'category', 'proficiency', 'years_of_experience', 'is_featured', 'projects_count')
     list_filter = ('category', 'proficiency', 'is_featured')
@@ -147,7 +120,7 @@ class SkillAdmin(admin.ModelAdmin):
     list_editable = ('is_featured',)
     ordering = ['category', 'name']
 
-@admin.register(Certification, site=admin_site)
+@admin.register(Certification)
 class CertificationAdmin(admin.ModelAdmin):
     list_display = ('name', 'issuing_organization', 'issue_date', 'expiration_date', 'renewal_required')
     list_filter = ('issuing_organization', 'renewal_required', 'issue_date')
@@ -155,7 +128,7 @@ class CertificationAdmin(admin.ModelAdmin):
     date_hierarchy = 'issue_date'
     ordering = ['-issue_date']
 
-@admin.register(Project, site=admin_site)
+@admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('title', 'project_type', 'status', 'start_date', 'is_featured', 'client')
     list_filter = ('project_type', 'status', 'is_featured', 'start_date')
@@ -163,27 +136,8 @@ class ProjectAdmin(admin.ModelAdmin):
     date_hierarchy = 'start_date'
     list_editable = ('is_featured',)
     ordering = ['-start_date']
-    
-    fieldsets = (
-        (_('Informations générales'), {
-            'fields': ('title', 'description', 'detailed_description', 'image')
-        }),
-        (_('Classification'), {
-            'fields': ('project_type', 'status', 'is_featured', 'client')
-        }),
-        (_('Technique'), {
-            'fields': ('technologies', 'project_url', 'github_url')
-        }),
-        (_('Période et équipe'), {
-            'fields': ('start_date', 'end_date', 'duration_months', 'team_members')
-        }),
-        (_('Gestion'), {
-            'fields': ('budget', 'challenges_faced', 'lessons_learned', 'metrics', 'awards'),
-            'classes': ('collapse',)
-        }),
-    )
 
-@admin.register(BlogCategory, site=admin_site)
+@admin.register(BlogCategory)
 class BlogCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'color_preview', 'is_active', 'order')
     list_filter = ('is_active',)
@@ -199,7 +153,7 @@ class BlogCategoryAdmin(admin.ModelAdmin):
         )
     color_preview.short_description = _('Couleur')
 
-@admin.register(BlogPost, site=admin_site)
+@admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'author', 'is_published', 'is_featured', 'views_count', 'published_at')
     list_filter = ('category', 'is_published', 'is_featured', 'created_at', 'published_at')
@@ -209,33 +163,8 @@ class BlogPostAdmin(admin.ModelAdmin):
     list_editable = ('is_published', 'is_featured')
     date_hierarchy = 'published_at'
     ordering = ['-published_at', '-created_at']
-    
-    fieldsets = (
-        (_('Contenu'), {
-            'fields': ('title', 'slug', 'content', 'excerpt', 'featured_image')
-        }),
-        (_('Classification'), {
-            'fields': ('category', 'tags', 'author')
-        }),
-        (_('Publication'), {
-            'fields': ('is_published', 'is_featured', 'published_at', 'allow_comments')
-        }),
-        (_('SEO'), {
-            'fields': ('meta_description', 'reading_time'),
-            'classes': ('collapse',)
-        }),
-        (_('Statistiques'), {
-            'fields': ('views_count', 'created_at', 'updated_at'),
-            'classes': ('collapse',)
-        }),
-    )
-    
-    def save_model(self, request, obj, form, change):
-        if not change:  # Si c'est un nouvel objet
-            obj.author = request.user
-        super().save_model(request, obj, form, change)
 
-@admin.register(Testimonial, site=admin_site)
+@admin.register(Testimonial)
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ('display_name', 'company', 'rating', 'is_featured', 'is_approved', 'is_anonymous', 'created_at')
     list_filter = ('rating', 'is_featured', 'is_approved', 'is_anonymous', 'created_at')
@@ -244,26 +173,13 @@ class TestimonialAdmin(admin.ModelAdmin):
     list_editable = ('is_featured', 'is_approved')
     ordering = ['-created_at']
     
-    actions = ['approve_testimonials', 'feature_testimonials']
-    
     def display_name(self, obj):
         if obj.is_anonymous:
             return _("Anonyme")
         return obj.name
     display_name.short_description = _('Nom')
-    
-    def approve_testimonials(self, request, queryset):
-        from django.utils import timezone
-        updated = queryset.update(is_approved=True, approved_at=timezone.now())
-        self.message_user(request, f"{updated} témoignage(s) approuvé(s).")
-    approve_testimonials.short_description = _("Approuver les témoignages sélectionnés")
-    
-    def feature_testimonials(self, request, queryset):
-        updated = queryset.update(is_featured=True)
-        self.message_user(request, f"{updated} témoignage(s) mis en vedette.")
-    feature_testimonials.short_description = _("Mettre en vedette")
 
-@admin.register(Service, site=admin_site)
+@admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ('name', 'price_starting', 'duration', 'is_active', 'order')
     list_filter = ('is_active',)
@@ -271,7 +187,7 @@ class ServiceAdmin(admin.ModelAdmin):
     list_editable = ('order', 'is_active')
     ordering = ['order', 'name']
 
-@admin.register(Achievement, site=admin_site)
+@admin.register(Achievement)
 class AchievementAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'organization', 'date_achieved')
     list_filter = ('category', 'date_achieved')
@@ -279,7 +195,7 @@ class AchievementAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_achieved'
     ordering = ['-date_achieved']
 
-@admin.register(Contact, site=admin_site)
+@admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'subject', 'company', 'budget', 'created_at', 'is_read', 'is_replied')
     list_filter = ('is_read', 'is_replied', 'budget', 'timeline', 'created_at')
@@ -287,20 +203,8 @@ class ContactAdmin(admin.ModelAdmin):
     readonly_fields = ('created_at', 'ip_address')
     date_hierarchy = 'created_at'
     ordering = ['-created_at']
-    
-    actions = ['mark_as_read', 'mark_as_replied']
-    
-    def mark_as_read(self, request, queryset):
-        updated = queryset.update(is_read=True)
-        self.message_user(request, f"{updated} message(s) marqué(s) comme lu(s).")
-    mark_as_read.short_description = _("Marquer comme lu")
-    
-    def mark_as_replied(self, request, queryset):
-        updated = queryset.update(is_replied=True)
-        self.message_user(request, f"{updated} message(s) marqué(s) comme répondu(s).")
-    mark_as_replied.short_description = _("Marquer comme répondu")
 
-@admin.register(Newsletter, site=admin_site)
+@admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
     list_display = ('email', 'name', 'is_active', 'subscribed_at')
     list_filter = ('is_active', 'subscribed_at')
@@ -308,7 +212,7 @@ class NewsletterAdmin(admin.ModelAdmin):
     readonly_fields = ('subscribed_at', 'unsubscribed_at')
     ordering = ['-subscribed_at']
 
-@admin.register(VisitorStats, site=admin_site)
+@admin.register(VisitorStats)
 class VisitorStatsAdmin(admin.ModelAdmin):
     list_display = ('ip_address', 'page_visited', 'visit_date', 'referrer_domain')
     list_filter = ('visit_date', 'page_visited')
@@ -327,63 +231,17 @@ class VisitorStatsAdmin(admin.ModelAdmin):
         return '-'
     referrer_domain.short_description = _('Domaine référent')
 
-@admin.register(SiteCustomization, site=admin_site)
+@admin.register(SiteCustomization)
 class SiteCustomizationAdmin(admin.ModelAdmin):
     list_display = ('color_scheme', 'layout_style', 'font_family', 'is_active', 'updated_at')
     list_filter = ('color_scheme', 'layout_style', 'font_family', 'is_active')
     readonly_fields = ('created_at', 'updated_at')
     list_editable = ('is_active',)
     ordering = ['-updated_at']
-    
-    fieldsets = (
-        (_('Schéma de couleurs'), {
-            'fields': ('color_scheme', 'primary_color', 'secondary_color', 'accent_color', 'background_color', 'text_color')
-        }),
-        (_('Typographie'), {
-            'fields': ('font_family', 'heading_font_size', 'body_font_size', 'line_height')
-        }),
-        (_('Mise en page'), {
-            'fields': ('layout_style', 'container_width', 'border_radius', 'spacing_unit')
-        }),
-        (_('En-tête'), {
-            'fields': ('header_style', 'show_logo', 'logo_image')
-        }),
-        (_('Pied de page'), {
-            'fields': ('footer_text', 'show_social_links')
-        }),
-        (_('Personnalisation avancée'), {
-            'fields': ('custom_css', 'custom_js'),
-            'classes': ('collapse',)
-        }),
-        (_('Statut'), {
-            'fields': ('is_active', 'created_at', 'updated_at')
-        }),
-    )
-    
-    def save_model(self, request, obj, form, change):
-        # Désactiver les autres personnalisations si celle-ci est activée
-        if obj.is_active:
-            SiteCustomization.objects.exclude(pk=obj.pk).update(is_active=False)
-        super().save_model(request, obj, form, change)
 
-@admin.register(SiteSettings, site=admin_site)
+@admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     list_display = ('site_title', 'maintenance_mode', 'allow_testimonials', 'moderate_testimonials')
-    
-    fieldsets = (
-        (_('Informations générales'), {
-            'fields': ('site_title', 'site_description', 'site_keywords', 'contact_email')
-        }),
-        (_('Apparence'), {
-            'fields': ('footer_text',)
-        }),
-        (_('Témoignages'), {
-            'fields': ('allow_testimonials', 'moderate_testimonials', 'allow_anonymous_testimonials')
-        }),
-        (_('Maintenance et Analytics'), {
-            'fields': ('maintenance_mode', 'google_analytics_id')
-        }),
-    )
     
     def has_add_permission(self, request):
         return not SiteSettings.objects.exists()
@@ -391,26 +249,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-# Register the default admin site models for fallback
-admin.site.register(Profile, ProfileAdmin)
-admin.site.register(Education, EducationAdmin)
-admin.site.register(Experience, ExperienceAdmin)
-admin.site.register(Skill, SkillAdmin)
-admin.site.register(Certification, CertificationAdmin)
-admin.site.register(Project, ProjectAdmin)
-admin.site.register(BlogCategory, BlogCategoryAdmin)
-admin.site.register(BlogPost, BlogPostAdmin)
-admin.site.register(Testimonial, TestimonialAdmin)
-admin.site.register(Service, ServiceAdmin)
-admin.site.register(Achievement, AchievementAdmin)
-admin.site.register(Contact, ContactAdmin)
-admin.site.register(Newsletter, NewsletterAdmin)
-admin.site.register(VisitorStats, VisitorStatsAdmin)
-admin.site.register(SiteCustomization, SiteCustomizationAdmin)
-admin.site.register(SiteSettings, SiteSettingsAdmin)
-
-# Nouveaux modèles avancés
-@admin.register(Tag, site=admin_site)
+@admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'color_preview', 'usage_count', 'is_featured', 'created_at')
     list_filter = ('is_featured', 'created_at')
@@ -427,103 +266,7 @@ class TagAdmin(admin.ModelAdmin):
         )
     color_preview.short_description = _('Couleur')
 
-@admin.register(Collaboration, site=admin_site)
-class CollaborationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'status', 'client', 'start_date', 'is_featured', 'is_active', 'order')
-    list_filter = ('category', 'status', 'is_featured', 'is_active', 'start_date')
-    search_fields = ('title', 'description', 'client', 'technologies')
-    prepopulated_fields = {'slug': ('title',)}
-    list_editable = ('is_featured', 'is_active', 'order')
-    readonly_fields = ('created_at', 'updated_at')
-    date_hierarchy = 'start_date'
-    ordering = ['order', '-created_at']
-    
-    fieldsets = (
-        (_('Informations générales'), {
-            'fields': ('title', 'slug', 'description', 'detailed_description', 'image')
-        }),
-        (_('Classification'), {
-            'fields': ('category', 'status', 'is_featured', 'is_active', 'client', 'order')
-        }),
-        (_('Technologie et liens'), {
-            'fields': ('technologies', 'project_url', 'github_url', 'demo_url')
-        }),
-        (_('Période et équipe'), {
-            'fields': ('start_date', 'end_date', 'team_size', 'budget')
-        }),
-        (_('Détails du projet'), {
-            'fields': ('challenges_faced', 'results_achieved'),
-            'classes': ('collapse',)
-        }),
-        (_('Métadonnées'), {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
-        }),
-    )
-    
-    actions = ['mark_as_featured', 'mark_as_active', 'mark_as_completed']
-    
-    def mark_as_featured(self, request, queryset):
-        updated = queryset.update(is_featured=True)
-        self.message_user(request, f"{updated} collaboration(s) mise(s) en vedette.")
-    mark_as_featured.short_description = _("Mettre en vedette")
-    
-    def mark_as_active(self, request, queryset):
-        updated = queryset.update(is_active=True)
-        self.message_user(request, f"{updated} collaboration(s) activée(s).")
-    mark_as_active.short_description = _("Activer")
-    
-    def mark_as_completed(self, request, queryset):
-        updated = queryset.update(status='completed')
-        self.message_user(request, f"{updated} collaboration(s) marquée(s) comme terminée(s).")
-    mark_as_completed.short_description = _("Marquer comme terminé")
-
-@admin.register(Resource, site=admin_site)
-class ResourceAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'file_type', 'download_count', 'is_public', 'created_at')
-    list_filter = ('category', 'file_type', 'is_public', 'created_at')
-    search_fields = ('title', 'description')
-    readonly_fields = ('download_count', 'file_size', 'created_at')
-    list_editable = ('is_public',)
-    ordering = ['-created_at']
-    
-    fieldsets = (
-        (_('Informations générales'), {
-            'fields': ('title', 'description', 'file')
-        }),
-        (_('Classification'), {
-            'fields': ('category', 'file_type', 'is_public')
-        }),
-        (_('Statistiques'), {
-            'fields': ('download_count', 'file_size', 'created_at'),
-            'classes': ('collapse',)
-        }),
-    )
-    
-    actions = ['make_public', 'make_private', 'reset_download_count']
-    
-    def save_model(self, request, obj, form, change):
-        # Calculer la taille du fichier
-        if obj.file:
-            obj.file_size = obj.file.size
-        super().save_model(request, obj, form, change)
-    
-    def make_public(self, request, queryset):
-        updated = queryset.update(is_public=True)
-        self.message_user(request, f"{updated} ressource(s) rendue(s) publique(s).")
-    make_public.short_description = _("Rendre public")
-    
-    def make_private(self, request, queryset):
-        updated = queryset.update(is_public=False)
-        self.message_user(request, f"{updated} ressource(s) rendue(s) privée(s).")
-    make_private.short_description = _("Rendre privé")
-    
-    def reset_download_count(self, request, queryset):
-        updated = queryset.update(download_count=0)
-        self.message_user(request, f"{updated} compteur(s) de téléchargement(s) réinitialisé(s).")
-    reset_download_count.short_description = _("Réinitialiser les compteurs")
-
-@admin.register(SearchQuery, site=admin_site)
+@admin.register(SearchQuery)
 class SearchQueryAdmin(admin.ModelAdmin):
     list_display = ('query', 'results_count', 'search_date', 'clicked_result')
     list_filter = ('search_date', 'results_count')
@@ -538,7 +281,7 @@ class SearchQueryAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
-@admin.register(FAQ, site=admin_site)
+@admin.register(FAQ)
 class FAQAdmin(admin.ModelAdmin):
     list_display = ('question_short', 'category', 'order', 'is_active', 'views_count', 'helpful_votes')
     list_filter = ('category', 'is_active', 'created_at')
@@ -550,21 +293,8 @@ class FAQAdmin(admin.ModelAdmin):
     def question_short(self, obj):
         return obj.question[:100] + '...' if len(obj.question) > 100 else obj.question
     question_short.short_description = _('Question')
-    
-    fieldsets = (
-        (_('Contenu'), {
-            'fields': ('question', 'answer', 'category')
-        }),
-        (_('Affichage'), {
-            'fields': ('order', 'is_active')
-        }),
-        (_('Statistiques'), {
-            'fields': ('views_count', 'helpful_votes', 'created_at', 'updated_at'),
-            'classes': ('collapse',)
-        }),
-    )
 
-@admin.register(Timeline, site=admin_site)
+@admin.register(Timeline)
 class TimelineAdmin(admin.ModelAdmin):
     list_display = ('title', 'date', 'category', 'is_milestone', 'color_preview')
     list_filter = ('category', 'is_milestone', 'date')
@@ -579,20 +309,28 @@ class TimelineAdmin(admin.ModelAdmin):
             obj.color
         )
     color_preview.short_description = _('Couleur')
-    
-    fieldsets = (
-        (_('Informations générales'), {
-            'fields': ('title', 'description', 'date', 'category')
-        }),
-        (_('Apparence'), {
-            'fields': ('icon', 'color', 'is_milestone', 'image')
-        }),
-        (_('Lien'), {
-            'fields': ('link',)
-        }),
-    )
 
-@admin.register(Analytics, site=admin_site)
+@admin.register(Collaboration)
+class CollaborationAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'status', 'client', 'start_date', 'is_featured', 'is_active', 'order')
+    list_filter = ('category', 'status', 'is_featured', 'is_active', 'start_date')
+    search_fields = ('title', 'description', 'client', 'technologies')
+    prepopulated_fields = {'slug': ('title',)}
+    list_editable = ('is_featured', 'is_active', 'order')
+    readonly_fields = ('created_at', 'updated_at')
+    date_hierarchy = 'start_date'
+    ordering = ['order', '-created_at']
+
+@admin.register(Resource)
+class ResourceAdmin(admin.ModelAdmin):
+    list_display = ('title', 'category', 'file_type', 'download_count', 'is_public', 'created_at')
+    list_filter = ('category', 'file_type', 'is_public', 'created_at')
+    search_fields = ('title', 'description')
+    readonly_fields = ('download_count', 'file_size', 'created_at')
+    list_editable = ('is_public',)
+    ordering = ['-created_at']
+
+@admin.register(Analytics)
 class AnalyticsAdmin(admin.ModelAdmin):
     list_display = ('date', 'page_views', 'unique_visitors', 'bounce_rate', 'avg_session_duration')
     list_filter = ('date',)
@@ -605,13 +343,3 @@ class AnalyticsAdmin(admin.ModelAdmin):
     
     def has_change_permission(self, request, obj=None):
         return False
-
-# Enregistrer les nouveaux modèles dans l'admin par défaut aussi
-admin.site.register(Tag, TagAdmin)
-admin.site.register(SearchQuery, SearchQueryAdmin)
-admin.site.register(FAQ, FAQAdmin)
-admin.site.register(Timeline, TimelineAdmin)
-admin.site.register(Analytics, AnalyticsAdmin)
-admin.site.register(Collaboration, CollaborationAdmin)
-admin.site.register(Resource, ResourceAdmin)
-admin.site.register(CVDocument, CVDocumentAdmin)

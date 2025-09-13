@@ -5,8 +5,7 @@ from django.core.validators import EmailValidator
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils.text import slugify
-import uuid
-from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 
 class Profile(models.Model):
     name = models.CharField(_("Nom"), max_length=100)
@@ -31,11 +30,6 @@ class Profile(models.Model):
                                          choices=[
                                              ('available', 'Disponible'),
                                              ('partially_available', 'Partiellement disponible'),
-                                             ('busy', 'Occupé'),
-                                             ('not_available', 'Non disponible')
-                                         ], default='available')
-    work_preference = models.CharField(_("Préférence de travail"), max_length=20,
-                                     choices=[
                                              ('busy', 'Occupé'),
                                              ('not_available', 'Non disponible')
                                          ], default='available')
@@ -133,6 +127,7 @@ class CVDocument(models.Model):
             else:
                 return f"{self.file_size / (1024 * 1024):.1f} MB"
         return "Taille inconnue"
+
 class Education(models.Model):
     DEGREE_CHOICES = [
         ('bachelor', _('Licence')),
@@ -162,7 +157,7 @@ class Education(models.Model):
         ordering = ['-start_date']
 
     def __str__(self):
-        return f"{self.degree} - {self.field_of_study}"
+        return f"{self.get_degree_display()} - {self.field_of_study}"
 
 class Experience(models.Model):
     JOB_TYPE_CHOICES = [
@@ -367,7 +362,6 @@ class BlogPost(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         if self.is_published and not self.published_at:
-            from django.utils import timezone
             self.published_at = timezone.now()
         super().save(*args, **kwargs)
     
@@ -605,8 +599,6 @@ class SiteSettings(models.Model):
     def __str__(self):
         return self.site_title
 
-# Nouveaux modèles avancés
-
 class Tag(models.Model):
     """Système de tags universel pour tous les contenus"""
     name = models.CharField(_("Nom"), max_length=50, unique=True)
@@ -696,7 +688,6 @@ class Timeline(models.Model):
     def __str__(self):
         return f"{self.date.year} - {self.title}"
 
-# models.py - Ajoutez cette classe
 class Collaboration(models.Model):
     STATUS_CHOICES = (
         ('completed', 'Terminé'),
@@ -750,6 +741,11 @@ class Collaboration(models.Model):
     def __str__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
     def get_duration(self):
         if self.end_date:
             delta = self.end_date - self.start_date
@@ -758,21 +754,6 @@ class Collaboration(models.Model):
 
     def get_technologies_list(self):
         return [tech.strip() for tech in self.technologies.split(',')]
-
-    def get_status_class(self):
-        return f'status-{self.status}'
-
-    @property
-    def is_ongoing(self):
-        return self.status == 'ongoing'
-
-    @property
-    def is_completed(self):
-        return self.status == 'completed'
-
-    @property
-    def is_planned(self):
-        return self.status == 'planned'
 
 class Resource(models.Model):
     """Ressources téléchargeables"""
@@ -828,9 +809,3 @@ class Analytics(models.Model):
     
     def __str__(self):
         return f"Analytics - {self.date}"
-
-# Ajout de tags aux modèles existants
-Project.add_to_class('tags', models.ManyToManyField(Tag, blank=True, verbose_name=_("Tags")))
-BlogPost.add_to_class('tags_new', models.ManyToManyField(Tag, blank=True, verbose_name=_("Tags")))
-Experience.add_to_class('tags', models.ManyToManyField(Tag, blank=True, verbose_name=_("Tags")))
-Skill.add_to_class('tags', models.ManyToManyField(Tag, blank=True, verbose_name=_("Tags")))

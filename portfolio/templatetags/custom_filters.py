@@ -9,7 +9,7 @@ def split(value, delimiter=','):
     """Split a string by the given delimiter"""
     if value is None:
         return []
-    return [item.strip() for item in value.split(delimiter)]
+    return [item.strip() for item in str(value).split(delimiter)]
 
 @register.filter
 def trim(value):
@@ -31,7 +31,7 @@ def truncatewords_html(value, arg):
     if not value:
         return ''
     
-    words = value.split()
+    words = str(value).split()
     if len(words) <= int(arg):
         return value
     
@@ -92,3 +92,16 @@ def filesizeformat_custom(bytes_value):
             return f"{bytes_value:.1f} {unit}"
         bytes_value /= 1024.0
     return f"{bytes_value:.1f} TB"
+
+@register.inclusion_tag('portfolio/includes/social_links.html')
+def social_links(profile, size='normal'):
+    """Render social media links"""
+    return {
+        'profile': profile,
+        'size': size
+    }
+
+@register.inclusion_tag('portfolio/includes/skill_badge.html')
+def skill_badge(skill):
+    """Render skill badge with progress"""
+    return {'skill': skill}
