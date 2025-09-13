@@ -97,6 +97,9 @@ class ProjectListView(BasePortfolioView, ListView):
     template_name = 'portfolio/projects.html'
     context_object_name = 'projects'
     paginate_by = 9
+    
+    def get_queryset(self):
+        return Project.objects.all()
 
 class ProjectDetailView(BasePortfolioView, DetailView):
     model = Project
@@ -594,26 +597,29 @@ class DownloadCVView(View):
         cv_type = request.GET.get('type', 'main')
         language = request.GET.get('lang', 'fr')
         
-        # Chercher un CV correspondant
-        cv = CVDocument.objects.filter(
-            is_public=True,
-            cv_type=cv_type,
-            language=language
-        ).first()
-        
-        if not cv:
-            # Chercher le CV principal
-            cv = CVDocument.objects.filter(is_primary=True, is_public=True).first()
-        
-        if cv and cv.file:
-            # Incrémenter le compteur
-            cv.download_count += 1
-            cv.save(update_fields=['download_count'])
+        try:
+            # Chercher un CV correspondant
+            cv = CVDocument.objects.filter(
+                is_public=True,
+                cv_type=cv_type,
+                language=language
+            ).first()
             
-            # Retourner le fichier
-            response = HttpResponse(cv.file.read(), content_type='application/pdf')
-            response['Content-Disposition'] = f'attachment; filename="{cv.title}.pdf"'
-            return response
+            if not cv:
+                # Chercher le CV principal
+                cv = CVDocument.objects.filter(is_primary=True, is_public=True).first()
+            
+            if cv and cv.file:
+                # Incrémenter le compteur
+                cv.download_count += 1
+                cv.save(update_fields=['download_count'])
+                
+                # Retourner le fichier
+                response = HttpResponse(cv.file.read(), content_type='application/pdf')
+                response['Content-Disposition'] = f'attachment; filename="{cv.title}.pdf"'
+                return response
+        except:
+            pass
         
         # Générer un CV automatique si aucun fichier n'est disponible
         return self.generate_auto_cv(request)
@@ -665,11 +671,18 @@ class CVListView(BasePortfolioView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({
-            'cv_documents': CVDocument.objects.filter(is_public=True),
-            'cv_types': CVDocument.CV_TYPES,
-            'languages': [('fr', 'Français'), ('en', 'English'), ('ar', 'العربية')],
-        })
+        try:
+            context.update({
+                'cv_documents': CVDocument.objects.filter(is_public=True),
+                'cv_types': CVDocument.CV_TYPES,
+                'languages': [('fr', 'Français'), ('en', 'English'), ('ar', 'العربية')],
+            })
+        except:
+            context.update({
+                'cv_documents': [],
+                'cv_types': [],
+                'languages': [('fr', 'Français'), ('en', 'English'), ('ar', 'العربية')],
+            })
         return context
 
 class ResourceDownloadView(View):

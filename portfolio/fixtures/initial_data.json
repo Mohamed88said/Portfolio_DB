@@ -1,0 +1,292 @@
+[
+  {
+    "model": "portfolio.profile",
+    "pk": 1,
+    "fields": {
+      "name": "Mohamed Saïd Diallo",
+      "title": "Développeur Full Stack & Data Scientist",
+      "bio": "Passionné par le développement web et l'intelligence artificielle, je crée des solutions innovantes qui allient performance technique et expérience utilisateur exceptionnelle. Avec une expertise en Python, Django, React et Machine Learning, je transforme les idées en applications robustes et scalables.",
+      "short_bio": "Développeur Full Stack spécialisé en Python/Django et IA",
+      "email": "mohamedsaiddiallo88@gmail.com",
+      "phone": "+33 6 12 34 56 78",
+      "location": "Paris, France",
+      "linkedin": "https://linkedin.com/in/mohamed-said-diallo",
+      "github": "https://github.com/msdiallo",
+      "website": "https://msdiallo.dev",
+      "availability_status": "available",
+      "hourly_rate": "75.00",
+      "timezone": "Europe/Paris",
+      "preferred_contact_method": "email"
+    }
+  },
+  {
+    "model": "portfolio.sitesettings",
+    "pk": 1,
+    "fields": {
+      "site_title": "Mohamed Saïd Diallo - Portfolio",
+      "site_description": "Portfolio professionnel de Mohamed Saïd Diallo, Développeur Full Stack et Data Scientist spécialisé en Python, Django, React et Intelligence Artificielle.",
+      "site_keywords": "développeur, full stack, python, django, react, machine learning, data science, portfolio",
+      "footer_text": "Créé avec passion et Django ❤️",
+      "maintenance_mode": false,
+      "allow_testimonials": true,
+      "moderate_testimonials": true,
+      "allow_anonymous_testimonials": true,
+      "contact_email": "mohamedsaiddiallo88@gmail.com"
+    }
+  },
+  {
+    "model": "portfolio.education",
+    "pk": 1,
+    "fields": {
+      "degree": "master",
+      "field_of_study": "Intelligence Artificielle et Data Science",
+      "institution": "Université Paris-Saclay",
+      "location": "Paris, France",
+      "start_date": "2020-09-01",
+      "end_date": "2022-06-30",
+      "is_current": false,
+      "description": "Master spécialisé en IA avec focus sur le Machine Learning, Deep Learning et Big Data.",
+      "grade": "Mention Très Bien"
+    }
+  },
+  {
+    "model": "portfolio.education",
+    "pk": 2,
+    "fields": {
+      "degree": "bachelor",
+      "field_of_study": "Informatique et Mathématiques Appliquées",
+      "institution": "Université Pierre et Marie Curie",
+      "location": "Paris, France",
+      "start_date": "2017-09-01",
+      "end_date": "2020-06-30",
+      "is_current": false,
+      "description": "Formation solide en programmation, algorithmes et mathématiques.",
+      "grade": "Mention Bien"
+    }
+  },
+  {
+    "model": "portfolio.skill",
+    "pk": 1,
+    "fields": {
+      "name": "Python",
+      "category": "technical",
+      "proficiency": "expert",
+      "years_of_experience": 5,
+      "is_featured": true,
+      "projects_count": 15
+    }
+  },
+  {
+    "model": "portfolio.skill",
+    "pk": 2,
+    "fields": {
+      "name": "Django",
+      "category": "technical",
+      "proficiency": "expert",
+      "years_of_experience": 4,
+      "is_featured": true,
+      "projects_count": 12
+    }
+  },
+  {
+    "model": "portfolio.skill",
+    "pk": 3,
+    "fields": {
+      "name": "React.js",
+      "category": "technical",
+      "proficiency": "advanced",
+      "years_of_experience": 3,
+      "is_featured": true,
+      "projects_count": 8
+    }
+  },
+  {
+    "model": "portfolio.skill",
+    "pk": 4,
+    "fields": {
+      "name": "Machine Learning",
+      "category": "technical",
+      "proficiency": "advanced",
+      "years_of_experience": 2,
+      "is_featured": true,
+      "projects_count": 6
+    }
+  },
+  {
+    "model": "portfolio.skill",
+    "pk": 5,
+    "fields": {
+      "name": "JavaScript",
+      "category": "technical",
+      "proficiency": "advanced",
+      "years_of_experience": 4,
+      "is_featured": true,
+      "projects_count": 10
+    }
+  },
+  {
+    "model": "portfolio.skill",
+    "pk": 6,
+    "fields": {
+      "name": "PostgreSQL",
+      "category": "technical",
+      "proficiency": "advanced",
+      "years_of_experience": 3,
+      "is_featured": true,
+      "projects_count": 8
+    }
+  },
+  {
+    "model": "portfolio.project",
+    "pk": 1,
+    "fields": {
+      "title": "EcoTrack - Application de Suivi Environnemental",
+      "description": "Application mobile et web pour suivre son empreinte carbone personnelle avec recommandations IA.",
+      "detailed_description": "EcoTrack est une application complète qui permet aux utilisateurs de suivre leur impact environnemental quotidien. L'application utilise l'intelligence artificielle pour fournir des recommandations personnalisées et aide les utilisateurs à réduire leur empreinte carbone.",
+      "technologies": "Django, React Native, PostgreSQL, TensorFlow, AWS, Docker",
+      "status": "completed",
+      "project_type": "mobile",
+      "start_date": "2023-01-01",
+      "end_date": "2023-08-31",
+      "project_url": "https://ecotrack-app.com",
+      "github_url": "https://github.com/msdiallo/ecotrack",
+      "is_featured": true,
+      "client": "EcoTech Solutions"
+    }
+  },
+  {
+    "model": "portfolio.project",
+    "pk": 2,
+    "fields": {
+      "title": "SmartFinance - Plateforme de Gestion Financière",
+      "description": "Plateforme SaaS de gestion financière avec IA prédictive pour PME.",
+      "detailed_description": "SmartFinance révolutionne la gestion financière des PME grâce à l'intelligence artificielle. La plateforme offre des prédictions de trésorerie, l'automatisation comptable et des rapports financiers en temps réel.",
+      "technologies": "Django, Vue.js, PostgreSQL, Scikit-learn, AWS Lambda, Stripe",
+      "status": "completed",
+      "project_type": "web",
+      "start_date": "2022-06-01",
+      "end_date": "2023-02-28",
+      "project_url": "https://smartfinance-platform.com",
+      "github_url": "https://github.com/msdiallo/smartfinance",
+      "is_featured": true,
+      "client": "FinTech Innovations"
+    }
+  },
+  {
+    "model": "portfolio.project",
+    "pk": 3,
+    "fields": {
+      "title": "HealthBot - Assistant Médical IA",
+      "description": "Chatbot intelligent pour pré-diagnostic médical et orientation des patients.",
+      "detailed_description": "HealthBot utilise le NLP avancé pour fournir une première évaluation médicale. Le système analyse les symptômes en langage naturel et recommande des spécialistes appropriés.",
+      "technologies": "Python, FastAPI, Transformers, PostgreSQL, Redis, Docker",
+      "status": "in_progress",
+      "project_type": "api",
+      "start_date": "2023-09-01",
+      "project_url": "https://healthbot-ai.com",
+      "is_featured": true,
+      "client": "MedTech Solutions"
+    }
+  },
+  {
+    "model": "portfolio.experience",
+    "pk": 1,
+    "fields": {
+      "title": "Lead Developer Full Stack",
+      "company": "TechCorp Solutions",
+      "location": "Paris, France",
+      "job_type": "full_time",
+      "category": "professional",
+      "start_date": "2022-07-01",
+      "is_current": true,
+      "description": "Direction technique d'une équipe de 5 développeurs pour la création d'applications web innovantes. Développement d'APIs REST avec Django et interfaces React.js performantes.",
+      "achievements": "• Augmentation de 40% des performances des applications\n• Réduction de 60% du temps de déploiement\n• Formation et mentorat de 3 développeurs juniors",
+      "technologies": "Python, Django, React.js, PostgreSQL, AWS, Docker, Kubernetes"
+    }
+  },
+  {
+    "model": "portfolio.experience",
+    "pk": 2,
+    "fields": {
+      "title": "Développeur Full Stack",
+      "company": "StartupInnovante",
+      "location": "Lyon, France",
+      "job_type": "full_time",
+      "category": "professional",
+      "start_date": "2021-01-15",
+      "end_date": "2022-06-30",
+      "is_current": false,
+      "description": "Développement d'une plateforme SaaS de gestion de projets utilisée par plus de 10,000 utilisateurs. Création d'APIs robustes et d'interfaces utilisateur intuitives.",
+      "achievements": "• Développement de 15+ fonctionnalités majeures\n• Optimisation des requêtes SQL (-50% temps de réponse)\n• Intégration de 5 APIs tierces",
+      "technologies": "Django, Vue.js, MySQL, Redis, Celery, Stripe API"
+    }
+  },
+  {
+    "model": "portfolio.service",
+    "pk": 1,
+    "fields": {
+      "name": "Développement Web Full Stack",
+      "short_description": "Création d'applications web complètes avec Django et React",
+      "description": "Développement d'applications web modernes et performantes utilisant les dernières technologies. De la conception à la mise en production, je vous accompagne dans tous les aspects de votre projet web.",
+      "icon": "fas fa-code",
+      "price_starting": "2500.00",
+      "duration": "4-8 semaines",
+      "deliverables": "• Application web complète\n• Code source documenté\n• Tests automatisés\n• Déploiement en production\n• Formation utilisateur",
+      "is_active": true,
+      "order": 1
+    }
+  },
+  {
+    "model": "portfolio.service",
+    "pk": 2,
+    "fields": {
+      "name": "Intelligence Artificielle & Machine Learning",
+      "short_description": "Intégration d'IA dans vos applications et analyse de données",
+      "description": "Développement de solutions d'intelligence artificielle sur mesure pour automatiser vos processus et analyser vos données. Modèles de Machine Learning, NLP, et Computer Vision.",
+      "icon": "fas fa-brain",
+      "price_starting": "3500.00",
+      "duration": "6-12 semaines",
+      "deliverables": "• Modèles IA entraînés\n• API d'intégration\n• Dashboard d'analyse\n• Documentation technique\n• Formation équipe",
+      "is_active": true,
+      "order": 2
+    }
+  },
+  {
+    "model": "portfolio.service",
+    "pk": 3,
+    "fields": {
+      "name": "Consulting & Architecture",
+      "short_description": "Conseil technique et architecture de solutions",
+      "description": "Audit de votre architecture existante, recommandations d'amélioration et conception de solutions scalables. Accompagnement stratégique pour vos projets techniques.",
+      "icon": "fas fa-chart-line",
+      "price_starting": "150.00",
+      "duration": "Sur mesure",
+      "deliverables": "• Audit technique complet\n• Recommandations d'architecture\n• Plan de migration\n• Formation équipe\n• Support continu",
+      "is_active": true,
+      "order": 3
+    }
+  },
+  {
+    "model": "portfolio.certification",
+    "pk": 1,
+    "fields": {
+      "name": "AWS Certified Solutions Architect",
+      "issuing_organization": "Amazon Web Services",
+      "issue_date": "2023-03-15",
+      "expiration_date": "2026-03-15",
+      "credential_id": "AWS-CSA-2023-001234",
+      "credential_url": "https://aws.amazon.com/verification"
+    }
+  },
+  {
+    "model": "portfolio.certification",
+    "pk": 2,
+    "fields": {
+      "name": "Professional Scrum Master I",
+      "issuing_organization": "Scrum.org",
+      "issue_date": "2022-11-20",
+      "credential_id": "PSM-I-2022-567890",
+      "credential_url": "https://scrum.org/certificates"
+    }
+  }
+]
