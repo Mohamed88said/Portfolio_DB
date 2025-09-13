@@ -26,7 +26,6 @@ class Profile(models.Model):
     youtube = models.URLField(_("YouTube"), blank=True)
     website = models.URLField(_("Site Web"), blank=True)
     profile_image = models.ImageField(_("Photo de profil"), upload_to='profile/', blank=True)
-    cv_file = models.FileField(_("CV"), upload_to='cv/', blank=True)
     resume_summary = models.TextField(_("Résumé professionnel"), blank=True)
     availability_status = models.CharField(_("Statut de disponibilité"), max_length=20, 
                                          choices=[
@@ -76,6 +75,64 @@ class Profile(models.Model):
             return date.today().year - first_job.start_date.year
         return 0
 
+class CVDocument(models.Model):
+    CV_TYPES = [
+        ('main', _('CV Principal')),
+        ('technical', _('CV Technique')),
+        ('academic', _('CV Académique')),
+        ('creative', _('CV Créatif')),
+        ('short', _('CV Court')),
+        ('detailed', _('CV Détaillé')),
+        ('english', _('CV Anglais')),
+        ('french', _('CV Français')),
+        ('arabic', _('CV Arabe')),
+    ]
+    
+    title = models.CharField(_("Titre"), max_length=200)
+    description = models.TextField(_("Description"), blank=True)
+    cv_type = models.CharField(_("Type de CV"), max_length=20, choices=CV_TYPES, default='main')
+    file = models.FileField(_("Fichier CV"), upload_to='cv/')
+    language = models.CharField(_("Langue"), max_length=10, choices=[
+        ('fr', 'Français'),
+        ('en', 'English'),
+        ('ar', 'العربية'),
+    ], default='fr')
+    is_primary = models.BooleanField(_("CV Principal"), default=False)
+    is_public = models.BooleanField(_("Public"), default=True, help_text="Visible pour téléchargement")
+    download_count = models.PositiveIntegerField(_("Téléchargements"), default=0)
+    file_size = models.PositiveIntegerField(_("Taille (bytes)"), null=True, blank=True)
+    created_at = models.DateTimeField(_("Créé le"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("Modifié le"), auto_now=True)
+    
+    class Meta:
+        verbose_name = _("CV")
+        verbose_name_plural = _("CVs")
+        ordering = ['-is_primary', '-created_at']
+    
+    def __str__(self):
+        return f"{self.title} ({self.get_language_display()})"
+    
+    def save(self, *args, **kwargs):
+        # Si c'est le CV principal, désactiver les autres
+        if self.is_primary:
+            CVDocument.objects.exclude(pk=self.pk).update(is_primary=False)
+        
+        # Calculer la taille du fichier
+        if self.file:
+            self.file_size = self.file.size
+        
+        super().save(*args, **kwargs)
+    
+    @property
+    def file_size_formatted(self):
+        if self.file_size:
+            if self.file_size < 1024:
+                return f"{self.file_size} B"
+            elif self.file_size < 1024 * 1024:
+                return f"{self.file_size / 1024:.1f} KB"
+            else:
+                return f"{self.file_size / (1024 * 1024):.1f} MB"
+        return "Taille inconnue"
 class Education(models.Model):
     DEGREE_CHOICES = [
         ('bachelor', _('Licence')),

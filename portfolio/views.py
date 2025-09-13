@@ -26,9 +26,18 @@ from .models import (
     Contact, SiteSettings, BlogPost, BlogCategory, Testimonial, 
     Service, Achievement, Newsletter, VisitorStats, SiteCustomization
 )
-from .models import Tag, FAQ, Timeline, Collaboration, Resource, Analytics, SearchQuery as SearchQueryModel
+from .models import Tag, FAQ, Timeline, Collaboration, Resource, Analytics, SearchQuery as SearchQueryModel, CVDocument
 from .forms import ContactForm, TestimonialForm, SiteCustomizationForm, NewsletterForm
 
+class CVListView(BaseView):
+    template_name = 'portfolio/cv_list.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cv_documents'] = CVDocument.objects.filter(is_public=True).order_by('-is_primary', '-created_at')
+        context['cv_types'] = CVDocument.CV_TYPES
+        context['languages'] = [('fr', 'Français'), ('en', 'English'), ('ar', 'العربية')]
+        return context
 class BaseView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1053,65 +1062,149 @@ class StatsAPIView(TemplateView):
 
 class DownloadCVView(TemplateView):
     def get(self, request, *args, **kwargs):
+        # Récupérer le type de CV demandé
+        cv_type = request.GET.get('type', 'main')
+        language = request.GET.get('lang', 'fr')
+        
         try:
-            profile = Profile.objects.first()
-            if profile and profile.cv_file and profile.cv_file.name:
-                response = HttpResponse(profile.cv_file.read(), content_type='application/pdf')
-                response['Content-Disposition'] = f'attachment; filename="CV_{profile.name.replace(" ", "_")}.pdf"'
+            # Chercher le CV demandé
+            cv_document = CVDocument.objects.filter(
+                cv_type=cv_type,
+                language=language,
+                is_public=True
+            ).first()
+            
+            # Si pas trouvé, prendre le CV principal
+            if not cv_document:
+                cv_document = CVDocument.objects.filter(
+                    is_primary=True,
+                    is_public=True
+                ).first()
+            
+            # Si toujours pas trouvé, prendre le premier CV public
+            if not cv_document:
+                cv_document = CVDocument.objects.filter(is_public=True).first()
+            
+            if cv_document and cv_document.file:
+                # Incrémenter le compteur de téléchargements
+                cv_document.download_count += 1
+                cv_document.save(update_fields=['download_count'])
+                
+                response = HttpResponse(cv_document.file.read(), content_type='application/pdf')
+                filename = f"CV_{cv_document.title.replace(' ', '_')}_{cv_document.get_language_display()}.pdf"
+                response['Content-Disposition'] = f'attachment; filename="{filename}"'
                 return response
             else:
-                # Créer un CV temporaire avec les informations du profil
-                from django.template.loader import render_to_string
-                from django.http import HttpResponse
-                import io
-                from reportlab.pdfgen import canvas
-                from reportlab.lib.pagesizes import letter
-                
-                # Créer un PDF simple avec les informations du profil
-                buffer = io.BytesIO()
-                p = canvas.Canvas(buffer, pagesize=letter)
-                
-                # Ajouter le contenu du CV
-                y = 750
-                p.setFont("Helvetica-Bold", 16)
-                p.drawString(100, y, f"CV - {profile.name if profile else 'Portfolio'}")
-                
-                y -= 40
-                p.setFont("Helvetica", 12)
-                if profile:
-                    p.drawString(100, y, f"Titre: {profile.title}")
-                    y -= 20
-                    p.drawString(100, y, f"Email: {profile.email}")
-                    y -= 20
-                    if profile.phone:
-                        p.drawString(100, y, f"Téléphone: {profile.phone}")
-                        y -= 20
-                    if profile.location:
-                        p.drawString(100, y, f"Localisation: {profile.location}")
-                        y -= 40
-                    
-                    # Ajouter la bio
-                    p.drawString(100, y, "Biographie:")
-                    y -= 20
-                    bio_lines = profile.bio.split('\n') if profile.bio else []
-                    for line in bio_lines[:10]:  # Limiter à 10 lignes
-                        if y > 100:
-                            p.drawString(120, y, line[:80])  # Limiter la longueur
-                            y -= 15
-                
-                p.showPage()
-                p.save()
-                
-                buffer.seek(0)
-                response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
-                response['Content-Disposition'] = f'attachment; filename="CV_{profile.name.replace(" ", "_") if profile else "Portfolio"}.pdf"'
-                return response
+                # Générer un CV automatique si aucun CV n'est disponible
+                return self.generate_automatic_cv(request)
         except Exception:
             # En cas d'erreur, rediriger vers la page de contact
             from django.shortcuts import redirect
             from django.contrib import messages
             messages.error(request, "CV temporairement indisponible. Contactez-moi pour l'obtenir.")
             return redirect('portfolio:contact')
+    
+    def generate_automatic_cv(self, request):
+        """Générer un CV automatique avec les informations du profil"""
+        from django.http import HttpResponse
+        import io
+        from reportlab.pdfgen import canvas
+        from reportlab.lib.pagesizes import letter
+        from reportlab.lib.colors import HexColor
+        
+        profile = Profile.objects.first()
+        
+        buffer = io.BytesIO()
+        p = canvas.Canvas(buffer, pagesize=letter)
+        width, height = letter
+        
+        # Couleurs
+        primary_color = HexColor('#2c3e50')
+        secondary_color = HexColor('#3498db')
+        
+        # En-tête
+        p.setFillColor(primary_color)
+        p.rect(0, height-100, width, 100, fill=1)
+        
+        # Nom et titre
+        p.setFillColor('white')
+        p.setFont("Helvetica-Bold", 24)
+        p.drawString(50, height-40, profile.name if profile else 'Portfolio')
+        
+        p.setFont("Helvetica", 16)
+        p.drawString(50, height-65, profile.title if profile else 'Professionnel')
+        
+        # Informations de contact
+        y = height - 130
+        p.setFillColor('black')
+        p.setFont("Helvetica", 12)
+        
+        if profile:
+            contact_info = [
+                f"📧 Email: {profile.email}",
+                f"📱 Téléphone: {profile.phone}" if profile.phone else None,
+                f"📍 Localisation: {profile.location}" if profile.location else None,
+                f"🔗 LinkedIn: {profile.linkedin}" if profile.linkedin else None,
+                f"💻 GitHub: {profile.github}" if profile.github else None,
+            ]
+            
+            for info in contact_info:
+                if info:
+                    p.drawString(50, y, info)
+                    y -= 20
+        
+        # Biographie
+        if profile and profile.bio:
+            y -= 20
+            p.setFont("Helvetica-Bold", 14)
+            p.drawString(50, y, "À PROPOS")
+            y -= 20
+            
+            p.setFont("Helvetica", 11)
+            bio_lines = profile.bio.split('\n')
+            for line in bio_lines:
+                if y > 100:
+                    # Diviser les lignes trop longues
+                    words = line.split()
+                    current_line = ""
+                    for word in words:
+                        if len(current_line + word) < 80:
+                            current_line += word + " "
+                        else:
+                            if current_line:
+                                p.drawString(50, y, current_line.strip())
+                                y -= 15
+                            current_line = word + " "
+                    if current_line:
+                        p.drawString(50, y, current_line.strip())
+                        y -= 15
+        
+        # Compétences principales
+        skills = Skill.objects.filter(is_featured=True)[:8]
+        if skills:
+            y -= 20
+            p.setFont("Helvetica-Bold", 14)
+            p.drawString(50, y, "COMPÉTENCES PRINCIPALES")
+            y -= 20
+            
+            p.setFont("Helvetica", 11)
+            skills_text = ", ".join([skill.name for skill in skills])
+            p.drawString(50, y, skills_text[:100] + "..." if len(skills_text) > 100 else skills_text)
+        
+        # Pied de page
+        p.setFont("Helvetica", 8)
+        p.setFillColor('gray')
+        p.drawString(50, 50, f"CV généré automatiquement le {timezone.now().strftime('%d/%m/%Y à %H:%M')}")
+        p.drawString(50, 35, "Pour un CV complet et à jour, contactez-moi directement.")
+        
+        p.showPage()
+        p.save()
+        
+        buffer.seek(0)
+        response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+        filename = f"CV_{profile.name.replace(' ', '_') if profile else 'Portfolio'}_Auto.pdf"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
 
 class FAQHelpfulAPIView(TemplateView):
     def post(self, request, faq_id):

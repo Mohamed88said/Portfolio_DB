@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% load custom_filters %}
+
+{% block title %}{% trans "CVs Disponibles" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="text-center mb-5" data-aos="fade-up">
+                <i class="fas fa-file-pdf text-primary me-3"></i>
+                {% trans "CVs Disponibles" %}
+            </h1>
+            <p class="text-center lead mb-5" data-aos="fade-up" data-aos-delay="100">
+                {% trans "Téléchargez le CV qui correspond le mieux à vos besoins" %}
+            </p>
+        </div>
+    </div>
+
+    {% if cv_documents %}
+    <div class="row">
+        {% for cv in cv_documents %}
+        <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+            <div class="card card-enhanced h-100 cv-card">
+                <div class="card-body text-center">
+                    <div class="cv-icon mb-3">
+                        <i class="fas fa-file-pdf fa-4x text-danger"></i>
+                        {% if cv.is_primary %}
+                            <div class="primary-badge">
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-star me-1"></i>{% trans "Principal" %}
+                                </span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h4 class="card-title">{{ cv.title }}</h4>
+                    
+                    <div class="cv-meta mb-3">
+                        <span class="badge bg-primary me-2">{{ cv.get_cv_type_display }}</span>
+                        <span class="badge bg-info">{{ cv.get_language_display }}</span>
+                    </div>
+                    
+                    {% if cv.description %}
+                        <p class="card-text text-muted">{{ cv.description }}</p>
+                    {% endif %}
+                    
+                    <div class="cv-stats mb-3">
+                        <small class="text-muted">
+                            <i class="fas fa-download me-1"></i>{{ cv.download_count }} téléchargements
+                        </small>
+                        <br>
+                        <small class="text-muted">
+                            <i class="fas fa-weight-hanging me-1"></i>{{ cv.file_size_formatted }}
+                        </small>
+                    </div>
+                    
+                    <div class="cv-actions">
+                        <a href="{% url 'portfolio:download_cv' %}?type={{ cv.cv_type }}&lang={{ cv.language }}" 
+                           class="btn btn-primary btn-lg mb-2">
+                            <i class="fas fa-download me-2"></i>{% trans "Télécharger" %}
+                        </a>
+                        
+                        {% if cv.file %}
+                            <a href="{{ cv.file.url }}" class="btn btn-outline-secondary btn-sm" target="_blank">
+                                <i class="fas fa-eye me-1"></i>{% trans "Aperçu" %}
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="card-footer bg-transparent text-center">
+                    <small class="text-muted">
+                        {% trans "Mis à jour le" %} {{ cv.updated_at|date:"d M Y" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Téléchargement rapide par type -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card card-enhanced">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>{% trans "Téléchargement Rapide" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h6>{% trans "Par Type" %}</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for type_code, type_name in cv_types %}
+                                    <a href="{% url 'portfolio:download_cv' %}?type={{ type_code }}" 
+                                       class="btn btn-outline-primary btn-sm">
+                                        {{ type_name }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6>{% trans "Par Langue" %}</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for lang_code, lang_name in languages %}
+                                    <a href="{% url 'portfolio:download_cv' %}?lang={{ lang_code }}" 
+                                       class="btn btn-outline-info btn-sm">
+                                        {{ lang_name }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="cv-statistics text-center">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h3 class="text-primary">{{ cv_documents|length }}</h3>
+                        <p class="text-muted">{% trans "CVs Disponibles" %}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="text-success">
+                            {% with total_downloads=0 %}
+                                {% for cv in cv_documents %}
+                                    {% with total_downloads=total_downloads|add:cv.download_count %}
+                                    {% endwith %}
+                                {% endfor %}
+                                {{ total_downloads }}
+                            {% endwith %}
+                        </h3>
+                        <p class="text-muted">{% trans "Téléchargements Totaux" %}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="text-info">
+                            {% regroup cv_documents by language as cvs_by_language %}
+                            {{ cvs_by_language|length }}
+                        </h3>
+                        <p class="text-muted">{% trans "Langues" %}</p>
+                    </div>
+                    <div class="col-md-3">
+                        <h3 class="text-warning">
+                            {% regroup cv_documents by cv_type as cvs_by_type %}
+                            {{ cvs_by_type|length }}
+                        </h3>
+                        <p class="text-muted">{% trans "Types" %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-file-pdf fa-5x text-muted mb-4"></i>
+        <h3 class="text-muted">{% trans "Aucun CV disponible pour le moment" %}</h3>
+        <p class="text-muted">{% trans "Contactez-moi pour obtenir mon CV" %}</p>
+        <a href="{% url 'portfolio:contact' %}" class="btn btn-primary">
+            <i class="fas fa-envelope me-2"></i>{% trans "Me contacter" %}
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.cv-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.cv-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.cv-icon {
+    position: relative;
+}
+
+.primary-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+}
+
+.cv-meta {
+    margin: 15px 0;
+}
+
+.cv-stats {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.cv-actions .btn {
+    margin: 5px;
+}
+
+.cv-statistics {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 30px;
+    border-radius: 15px;
+}
+
+.cv-statistics h3 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+body.dark-mode .cv-stats {
+    background: #2d2d2d;
+}
+
+body.dark-mode .cv-statistics {
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+}
+
+@media (max-width: 768px) {
+    .cv-actions .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+</style>
+{% endblock %}

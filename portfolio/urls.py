@@ -44,4 +44,6 @@ urlpatterns = [
     
     # Downloads
     path('download-cv/', views.DownloadCVView.as_view(), name='download_cv'),
+    path('download-cv/<str:cv_type>/', views.DownloadCVView.as_view(), name='download_cv_type'),
+    path('cv-list/', views.CVListView.as_view(), name='cv_list'),
 ]

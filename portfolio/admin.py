@@ -43,7 +43,7 @@ class ProfileAdmin(admin.ModelAdmin):
             'fields': ('linkedin', 'github', 'twitter', 'instagram', 'youtube', 'website')
         }),
         (_('Professionnel'), {
-            'fields': ('resume_summary', 'languages_spoken', 'cv_file')
+            'fields': ('resume_summary', 'languages_spoken')
         }),
         (_('Métadonnées'), {
             'fields': ('age', 'years_of_experience', 'created_at', 'updated_at'),
@@ -51,6 +51,62 @@ class ProfileAdmin(admin.ModelAdmin):
         }),
     )
 
+@admin.register(CVDocument, site=admin_site)
+class CVDocumentAdmin(admin.ModelAdmin):
+    list_display = ('title', 'cv_type', 'language', 'is_primary', 'is_public', 'download_count', 'file_size_display', 'created_at')
+    list_filter = ('cv_type', 'language', 'is_primary', 'is_public', 'created_at')
+    search_fields = ('title', 'description')
+    readonly_fields = ('download_count', 'file_size', 'file_size_formatted', 'created_at', 'updated_at')
+    list_editable = ('is_primary', 'is_public')
+    ordering = ['-is_primary', '-created_at']
+    
+    fieldsets = (
+        (_('Informations générales'), {
+            'fields': ('title', 'description', 'cv_type', 'language')
+        }),
+        (_('Fichier'), {
+            'fields': ('file', 'file_size_formatted')
+        }),
+        (_('Paramètres'), {
+            'fields': ('is_primary', 'is_public')
+        }),
+        (_('Statistiques'), {
+            'fields': ('download_count', 'file_size', 'created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['make_primary', 'make_public', 'make_private', 'reset_download_count']
+    
+    def file_size_display(self, obj):
+        return obj.file_size_formatted
+    file_size_display.short_description = _('Taille')
+    
+    def make_primary(self, request, queryset):
+        if queryset.count() > 1:
+            self.message_user(request, "Vous ne pouvez sélectionner qu'un seul CV comme principal.", level='error')
+            return
+        
+        # Désactiver tous les autres CV principaux
+        CVDocument.objects.update(is_primary=False)
+        updated = queryset.update(is_primary=True)
+        self.message_user(request, f"{updated} CV défini comme principal.")
+    make_primary.short_description = _("Définir comme CV principal")
+    
+    def make_public(self, request, queryset):
+        updated = queryset.update(is_public=True)
+        self.message_user(request, f"{updated} CV rendu(s) public(s).")
+    make_public.short_description = _("Rendre public")
+    
+    def make_private(self, request, queryset):
+        updated = queryset.update(is_public=False)
+        self.message_user(request, f"{updated} CV rendu(s) privé(s).")
+    make_private.short_description = _("Rendre privé")
+    
+    def reset_download_count(self, request, queryset):
+        updated = queryset.update(download_count=0)
+        self.message_user(request, f"{updated} compteur(s) de téléchargement réinitialisé(s).")
+    reset_download_count.short_description = _("Réinitialiser les téléchargements")
 @admin.register(Education, site=admin_site)
 class EducationAdmin(admin.ModelAdmin):
     list_display = ('degree', 'field_of_study', 'institution', 'start_date', 'is_current', 'grade')
@@ -558,3 +614,4 @@ admin.site.register(Timeline, TimelineAdmin)
 admin.site.register(Analytics, AnalyticsAdmin)
 admin.site.register(Collaboration, CollaborationAdmin)
 admin.site.register(Resource, ResourceAdmin)
+admin.site.register(CVDocument, CVDocumentAdmin)

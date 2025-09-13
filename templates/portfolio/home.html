@@ -39,15 +39,26 @@
                     <a href="{% url 'portfolio:testimonial_add' %}" class="btn btn-glass btn-lg hover-lift">
                         <i class="fas fa-quote-left me-2"></i>{% trans "Laisser un témoignage" %}
                     </a>
-                    {% if profile.cv_file %}
-                        <a href="{{ profile.cv_file.url }}" class="btn btn-glass btn-lg hover-lift" target="_blank">
+                    <div class="dropdown">
+                        <button class="btn btn-glass btn-lg dropdown-toggle hover-lift" type="button" data-bs-toggle="dropdown">
                             <i class="fas fa-download me-2"></i>{% trans "Télécharger CV" %}
-                        </a>
-                    {% else %}
-                        <a href="{% url 'portfolio:download_cv' %}" class="btn btn-glass btn-lg hover-lift">
-                            <i class="fas fa-download me-2"></i>{% trans "Télécharger CV" %}
-                        </a>
-                    {% endif %}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'portfolio:download_cv' %}">
+                                <i class="fas fa-star me-2"></i>{% trans "CV Principal" %}
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'portfolio:cv_list' %}">
+                                <i class="fas fa-list me-2"></i>{% trans "Tous les CVs" %}
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'portfolio:download_cv' %}?lang=en">
+                                <i class="fas fa-globe me-2"></i>{% trans "CV Anglais" %}
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'portfolio:download_cv' %}?type=technical">
+                                <i class="fas fa-code me-2"></i>{% trans "CV Technique" %}
+                            </a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-6 text-center" data-aos="fade-left">
